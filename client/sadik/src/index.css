@@ -1,0 +1,138 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  background-color: #fffaf2;
+  color: #2c3e4e;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Comic Neue', cursive;
+  font-weight: 700;
+  color: #2d4059;
+}
+
+.display-4 {
+  font-size: 2.8rem;
+}
+
+
+.container,
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 138, 92, 0.2);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.9;
+  border: 2px solid #ff8a5c;
+}
+
+.carousel-control-prev {
+  left: -30px;
+}
+
+.carousel-control-next {
+  right: -30px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: #ff8a5c;
+}
+
+.carousel-indicators {
+  bottom: -30px;
+}
+
+.carousel-indicators button {
+  background-color: #ff8a5c !important;
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  margin: 0 6px !important;
+}
+
+@media (max-width: 768px) {
+  .carousel-control-prev {
+    left: -10px;
+  }
+
+  .carousel-control-next {
+    right: -10px;
+  }
+}
+
+
+.dropdown-menu {
+  border: none;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 0;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background-color: #fff2e6;
+  color: #ff8a5c;
+}
+
+@media (min-width: 992px) {
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+}
+
+
+.btn-primary {
+  background-color: #ff8a5c !important;
+  border-color: #ff8a5c !important;
+  color: white;
+  border-radius: 40px;
+  padding: 0.7rem 2rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #e56f4a !important;
+  border-color: #e56f4a !important;
+}
+
+.btn-outline-dark {
+  border-radius: 40px;
+  padding: 0.7rem 2rem;
+  font-weight: 600;
+}

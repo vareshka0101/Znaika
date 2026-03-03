@@ -1,0 +1,77 @@
+
+.topBar {
+    background-color: #2d4059;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.contactInfo {
+    color: #f0e9d8;
+    display: flex;
+    gap: 1.8rem;
+    align-items: center;
+}
+
+.contactInfo svg {
+    margin-right: 0.4rem;
+    color: #ff8a5c;
+}
+
+.socialLinks a {
+    color: #f0e9d8;
+    margin-left: 1.2rem;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.socialLinks a:hover {
+    color: #ff8a5c;
+}
+
+.mainNavbar {
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    padding: 0.8rem 0;
+    width: 100%;
+}
+
+.brand {
+    font-family: 'Comic Neue', cursive;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #ff8a5c !important;
+    letter-spacing: 1px;
+}
+
+
+.mainNavbar :global(.navbar-nav .nav-link) {
+    font-weight: 600;
+    color: #2d4059;
+    padding: 0.5rem 1rem !important;
+    font-size: 1.05rem;
+}
+
+.mainNavbar :global(.navbar-nav .nav-link:hover) {
+    color: #ff8a5c;
+}
+
+.active {
+    color: #ff8a5c !important;
+}
+
+.loginButton {
+    background-color: #ff8a5c;
+    border-color: #ff8a5c;
+    color: white;
+    border-radius: 40px;
+    padding: 0.7rem 2rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.loginButton:hover {
+    background-color: #e56f4a;
+    border-color: #e56f4a;
+}
+

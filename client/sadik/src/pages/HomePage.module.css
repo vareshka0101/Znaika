@@ -1,0 +1,505 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+
+.heroSection {
+    background: linear-gradient(145deg, #fde5d4, #fcdac9);
+    padding: 4rem 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.heroTitle {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2d4059;
+    line-height: 1.2;
+    font-family: 'Comic Neue', cursive;
+}
+
+.heroTitle span {
+    color: #ff8a5c;
+    background: #ffd665;
+    padding: 0 0.5rem;
+    display: inline-block;
+    transform: rotate(-1deg);
+}
+
+.heroSubtitle {
+    color: #2d4059;
+}
+
+.heroImage {
+    border-radius: 60px;
+    transform: rotate(2deg);
+    box-shadow: 20px 25px 0 #58b4ae;
+}
+
+.excursionButton {
+    border-color: #58b4ae !important;
+    color: #2d4059 !important;
+    background-color: #a3d8c5 !important;
+    transition: all 0.3s ease;
+}
+
+.excursionButton:hover {
+    background-color: #58b4ae !important;
+    color: white !important;
+    border-color: #58b4ae !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(88, 180, 174, 0.3);
+}
+
+
+.categoryCircle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 3.5rem;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.categoryCircle:hover {
+    transform: scale(1.1) rotate(3deg);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: white;
+}
+
+.bgCoral {
+    background-color: #ff8a5c;
+}
+
+.bgTurq {
+    background-color: #58b4ae;
+}
+
+.bgGold {
+    background-color: #f9d56e;
+    color: #2d4059;
+}
+
+.bgRose {
+    background-color: #f6abb6;
+}
+
+.bgGold:hover {
+    color: #2d4059 !important;
+}
+
+
+.listCheck {
+    list-style: none;
+    padding-left: 0;
+}
+
+.listCheck li {
+    margin-bottom: 0.5rem;
+}
+
+.listCheck li::before {
+    content: "✓";
+    color: #58b4ae;
+    font-weight: 800;
+    margin-right: 10px;
+}
+
+.bgSoftGreen {
+    background-color: #d9f0ec;
+}
+
+
+.teacherImg {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+
+.bgLight {
+    background-color: #f8f9fa !important;
+}
+
+.testimonialCard {
+    background: white;
+    border-radius: 40px;
+    padding: 2rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    transition: 0.2s;
+    border: 2px solid rgba(255, 138, 92, 0.2);
+}
+
+.testimonialCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 30px rgba(255, 138, 92, 0.15);
+}
+
+.quoteIcon {
+    color: #ff8a5c;
+    opacity: 0.4;
+}
+
+
+.ctaBlock {
+    background: #fee9dd;
+    border-radius: 70px;
+}
+
+
+.classesSliderSection {
+    background-color: #fef8f2;
+    padding: 3rem 0;
+    width: 100%;
+}
+
+.classesGrid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+    margin: 0 -0.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.classesGrid::-webkit-scrollbar {
+    display: none;
+}
+
+.classCardSlide {
+    flex: 0 0 300px;
+    max-width: 300px;
+}
+
+.sliderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.sliderArrows {
+    display: flex;
+    gap: 10px;
+}
+
+.sliderArrow {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid #ff8a5c;
+    color: #ff8a5c;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sliderArrow:hover {
+    background-color: #ff8a5c;
+    color: white;
+    transform: scale(1.1);
+}
+
+.classCard {
+    background: white;
+    border-radius: 48px 48px 32px 32px;
+    padding: 1.8rem 1.2rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+    border: 2px solid rgba(88, 180, 174, 0.2);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.classCard:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 35px -8px rgba(255, 138, 92, 0.4);
+}
+
+.classPrice {
+    font-weight: 800;
+    color: #ff8a5c;
+    font-size: 2rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.classPrice small {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+
+.eventTile {
+    background: white;
+    border-radius: 30px;
+    padding: 1.2rem 1rem;
+    border-left: 12px solid #ff8a5c;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+    transition: 0.2s;
+}
+
+.eventTile:hover {
+    border-left-color: #58b4ae;
+    transform: translateX(5px);
+}
+
+.eventDate {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #ff8a5c;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.eventTitle {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+
+.eventTime {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+
+.newsCard {
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(88, 180, 174, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.newsCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px -8px rgba(255, 138, 92, 0.3);
+    border-color: #ff8a5c;
+}
+
+.newsImageContainer {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+}
+
+.newsImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.newsCard:hover .newsImage {
+    transform: scale(1.1);
+}
+
+.newsDate {
+    color: #58b4ae;
+    font-weight: 600;
+    padding: 1rem 1.2rem 0.3rem;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+.newsCard h4 {
+    font-size: 1.1rem;
+    padding: 0 1.2rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+.newsExcerpt {
+    padding: 0 1.2rem;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.newsCardFooter {
+    padding: 0 1.2rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.readMoreBtn {
+    color: #ff8a5c;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.readMoreBtn:hover {
+    color: #e56f4a;
+    transform: translateX(5px);
+}
+
+.readMoreBtn svg {
+    margin-left: 5px;
+    font-size: 0.7rem;
+    transition: transform 0.3s;
+}
+
+.readMoreBtn:hover svg {
+    transform: translateX(3px);
+}
+
+.newsViews {
+    color: #999;
+    font-size: 0.75rem;
+}
+
+.newsViews svg {
+    margin-right: 3px;
+}
+
+
+.contactForm :global(.form-control) {
+    border-radius: 40px;
+    border: 1px solid #e0d6cc;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    background: white;
+    transition: 0.2s;
+}
+
+.contactForm :global(.form-control:focus) {
+    border-color: #ff8a5c;
+    box-shadow: 0 0 0 4px rgba(255, 138, 92, 0.2);
+    outline: none;
+}
+
+.contactForm :global(textarea.form-control) {
+    border-radius: 20px;
+}
+
+
+.newsModal :global(.modal-content) {
+    border-radius: 48px;
+    border: 3px solid #58b4ae;
+}
+
+.newsModalHeader {
+    border-bottom: 2px solid #a3d8c5;
+    background: linear-gradient(135deg, #fee9dd 0%, #fff5e9 100%);
+    border-radius: 48px 48px 0 0 !important;
+}
+
+.modalNewsTitle {
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.8rem;
+    color: #2d4059;
+}
+
+.modalNewsImage {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modalNewsMeta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+    color: #666;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.modalNewsMeta svg {
+    color: #ff8a5c;
+    margin-right: 5px;
+}
+
+.modalNewsContent {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #2c3e4e;
+}
+
+.modalNewsContent p {
+    margin-bottom: 1.2rem;
+}
+
+.modalNewsContent h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+.modalNewsContent ul,
+.modalNewsContent ol {
+    margin-bottom: 1.2rem;
+    padding-left: 1.5rem;
+}
+
+.modalNewsContent li {
+    margin-bottom: 0.4rem;
+}
+
+.newsTags {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.newsTag {
+    display: inline-block;
+    background: #f0f0f0;
+    color: #666;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    transition: all 0.3s;
+    cursor: default;
+}
+
+.newsTag:hover {
+    background: #58b4ae;
+    color: white;
+}
+
+.newsModalFooter {
+    border-top: 2px solid #a3d8c5;
+}
