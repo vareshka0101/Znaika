@@ -24,7 +24,6 @@ import styles from "./ParentClubPage.module.css";
 const ParentClubPage = () => {
   const [secretCode, setSecretCode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showForum, setShowForum] = useState(false);
   const [error, setError] = useState("");
   const [forumPosts, setForumPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,9 +36,8 @@ const ParentClubPage = () => {
     });
 
     const savedCode = localStorage.getItem("parentClubCode");
-    if (savedCode === "SECRET2024") {
+    if (savedCode === "SECRET2026") {
       setIsAuthenticated(true);
-      setShowForum(true);
       fetchForumPosts();
     }
   }, []);
@@ -138,9 +136,8 @@ const ParentClubPage = () => {
     e.preventDefault();
     setError("");
 
-    if (secretCode === "SECRET2024" || secretCode === "DEMO2024") {
+    if (secretCode === "SECRET2026" || secretCode === "DEMO2026") {
       setIsAuthenticated(true);
-      setShowForum(true);
       localStorage.setItem("parentClubCode", secretCode);
       fetchForumPosts();
     } else {
@@ -152,7 +149,6 @@ const ParentClubPage = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setShowForum(false);
     setSecretCode("");
     localStorage.removeItem("parentClubCode");
   };
@@ -234,7 +230,7 @@ const ParentClubPage = () => {
               </p>
             </div>
 
-            {!showForum ? (
+            {!isAuthenticated ? (
               <div className={styles.loginForm}>
                 <Form
                   onSubmit={handleCodeSubmit}

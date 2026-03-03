@@ -28,7 +28,7 @@ const MenuPage = () => {
   const categories = [
     { id: "breakfast", label: "Завтрак", icon: FaSun },
     { id: "lunch", label: "Обед", icon: FaUtensils },
-    { id: "dessert", label: "Десерт", icon: FaBirthdayCake }, // Используем FaBirthdayCake
+    { id: "dessert", label: "Десерт", icon: FaBirthdayCake },
   ];
 
   useEffect(() => {
@@ -65,16 +65,14 @@ const MenuPage = () => {
           title: "Миска хлопьев на завтрак",
           description:
             "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-          image:
-            "https://images.unsplash.com/photo-1517519014922-8fc06b814a0e?w=400",
+          image: "/public/images/меню-картинка.png",
         },
         {
           id: 2,
           title: "Овсяная каша с ягодами",
           description:
             "Нежная овсяная каша на молоке с сезонными ягодами и медом.",
-          image:
-            "https://images.unsplash.com/photo-1494390248088-8e0f3a41e6b0?w=400",
+          image: "/public/images/wwwwww.png",
         },
       ],
       lunch: [
@@ -83,16 +81,14 @@ const MenuPage = () => {
           title: "Вегетарианская паста",
           description:
             "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-          image:
-            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400",
+          image: "/public/images/wwwwww.png",
         },
         {
           id: 4,
           title: "Тыквенный суп-пюре",
           description:
             "Ароматный суп из тыквы с кокосовым молоком и семечками.",
-          image:
-            "https://images.unsplash.com/photo-1547592180-85f173990554?w=400",
+          image: "/public/images/меню-картинка.png",
         },
       ],
       dessert: [
@@ -101,15 +97,13 @@ const MenuPage = () => {
           title: "Яблочный пирог с карамелью",
           description:
             "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-          image:
-            "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400",
+          image: "/public/images/меню-картинка.png",
         },
         {
           id: 6,
           title: "Фруктовое мороженое",
           description: "Натуральное мороженое из свежих фруктов без сахара.",
-          image:
-            "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400",
+          image: "/public/images/wwwwww.png",
         },
       ],
     };

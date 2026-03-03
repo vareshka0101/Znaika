@@ -75,3 +75,186 @@
     border-color: #e56f4a;
 }
 
+.authModal :global(.modal-content) {
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1.5rem 1.5rem 1rem;
+}
+
+.modalTitle {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.modalBody {
+    padding: 1.5rem;
+}
+
+.authTabs {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.authTabs :global(.nav-link) {
+    color: #666;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border: none;
+    position: relative;
+}
+
+.authTabs :global(.nav-link.active) {
+    color: #007bff;
+    background: transparent;
+    font-weight: 600;
+}
+
+.authTabs :global(.nav-link.active::after) {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #007bff;
+    border-radius: 3px 3px 0 0;
+}
+
+.authForm {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.inputGroup {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 15px;
+    color: #999;
+    font-size: 1rem;
+    z-index: 10;
+}
+
+.inputGroup :global(.form-control),
+.inputGroup :global(.form-select) {
+    padding-left: 45px;
+    height: 50px;
+    border-radius: 25px;
+    border: 2px solid #f0f0f0;
+    transition: all 0.3s;
+}
+
+.inputGroup :global(.form-control:focus),
+.inputGroup :global(.form-select:focus) {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
+}
+
+.selectInput {
+    height: 50px;
+    border-radius: 25px;
+    border: 2px solid #f0f0f0;
+}
+
+.forgotLink {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgotLink:hover {
+    text-decoration: underline;
+}
+
+.submitButton {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s;
+}
+
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.socialAuth {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.socialAuthText {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.socialAuthText::before,
+.socialAuthText::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: #f0f0f0;
+}
+
+.socialAuthText::before {
+    left: 0;
+}
+
+.socialAuthText::after {
+    right: 0;
+}
+
+.socialButtons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.socialButton {
+    flex: 1;
+    min-width: 120px;
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    border: 2px solid #f0f0f0;
+    background: white;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.socialButton:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.socialButton svg {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .socialButtons {
+        flex-direction: column;
+    }
+
+    .socialButton {
+        width: 100%;
+    }
+}

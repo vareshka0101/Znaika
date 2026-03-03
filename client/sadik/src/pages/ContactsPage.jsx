@@ -65,10 +65,7 @@ const ContactsPage = () => {
       <NavbarComponent />
 
       <div className={styles.heroImage}>
-        <img
-          src="/главная/images/69881b61a73389852c9c2a4fb0abbea9.jpg"
-          alt="Декоративная картинка"
-        />
+        <img src="/public/images/здание.jpg" alt="Декоративная картинка" />
       </div>
 
       <section className="py-5">

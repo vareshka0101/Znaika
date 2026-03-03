@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -24,6 +24,10 @@ import {
   FaShareAlt,
   FaUsers,
   FaStar,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaUser,
+  FaChild,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -32,18 +36,31 @@ import FooterComponent from "../components/FooterComponent";
 import styles from "./HomePage.module.css";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const classesScrollRef = useRef(null);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: false,
-      mirror: true,
-    });
-  }, []);
+  // Состояние для формы регистрации
+  const [registrationForm, setRegistrationForm] = useState({
+    parentName: "",
+    childName: "",
+    childAge: "",
+    phone: "",
+    email: "",
+    preferredClass: "",
+    message: "",
+  });
 
+  // Состояние для простой формы внизу
+  const [simpleForm, setSimpleForm] = useState({
+    phone: "",
+    name: "",
+    message: "",
+  });
+
+  // Данные для новостей
   const newsData = [
     {
       id: 1,
@@ -155,6 +172,7 @@ const HomePage = () => {
     },
   ];
 
+  // Данные для классов
   const classesData = [
     {
       id: 1,
@@ -212,6 +230,7 @@ const HomePage = () => {
     },
   ];
 
+  // Данные для отзывов
   const testimonials = [
     {
       id: 1,
@@ -245,6 +264,7 @@ const HomePage = () => {
     },
   ];
 
+  // Данные для мероприятий
   const upcomingEvents = [
     {
       id: 1,
@@ -291,6 +311,14 @@ const HomePage = () => {
     },
   ];
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: false,
+      mirror: true,
+    });
+  }, []);
+
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "long", year: "numeric" };
     const date = new Date(dateString);
@@ -328,10 +356,75 @@ const HomePage = () => {
     }
   };
 
+  // Обработчики для формы регистрации
+  const handleRegistrationInputChange = (e) => {
+    const { name, value } = e.target;
+    setRegistrationForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRegistrationSubmit = (e) => {
+    e.preventDefault();
+    // Здесь будет логика отправки формы на сервер
+    console.log("Registration form submitted:", registrationForm);
+    alert(
+      "Спасибо за заявку! Мы свяжемся с вами в ближайшее время для уточнения деталей.",
+    );
+    setRegistrationForm({
+      parentName: "",
+      childName: "",
+      childAge: "",
+      phone: "",
+      email: "",
+      preferredClass: "",
+      message: "",
+    });
+    setShowRegistrationModal(false);
+  };
+
+  // Обработчики для простой формы внизу
+  const handleSimpleFormChange = (e) => {
+    const { name, value } = e.target;
+    setSimpleForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSimpleFormSubmit = (e) => {
+    e.preventDefault();
+    // Переносим данные из простой формы в форму регистрации
+    setRegistrationForm({
+      ...registrationForm,
+      parentName: simpleForm.name,
+      phone: simpleForm.phone,
+      message: simpleForm.message,
+    });
+    // Открываем модальное окно регистрации
+    setShowRegistrationModal(true);
+    // Очищаем простую форму
+    setSimpleForm({
+      phone: "",
+      name: "",
+      message: "",
+    });
+  };
+
+  const openRegistrationModal = () => {
+    setShowRegistrationModal(true);
+  };
+
+  const handleExcursionClick = () => {
+    navigate("/classes");
+  };
+
   return (
     <>
       <NavbarComponent />
 
+      {/* Hero секция */}
       <section className={styles.heroSection} data-aos="fade-down">
         <Container>
           <Row className="align-items-center g-5">
@@ -356,13 +449,19 @@ const HomePage = () => {
                 data-aos="fade-right"
                 data-aos-delay="600"
               >
-                <Button variant="primary" size="lg" className="px-5">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="px-5"
+                  onClick={openRegistrationModal}
+                >
                   Записаться
                 </Button>
                 <Button
                   variant="excursion"
                   size="lg"
                   className={`px-4 ${styles.excursionButton}`}
+                  onClick={handleExcursionClick}
                 >
                   Экскурсия
                 </Button>
@@ -379,6 +478,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* 4 ярких кружка-ссылки */}
       <section className="py-5">
         <Container>
           <Row className="text-center g-4">
@@ -422,6 +522,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Учебная программа */}
       <section className={`py-5 ${styles.bgSoftGreen}`}>
         <Container>
           <Row className="align-items-center">
@@ -453,6 +554,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Сердце сада (воспитатели) */}
       <section className="py-5">
         <Container>
           <h2 className="display-4 text-center mb-5" data-aos="fade-up">
@@ -519,6 +621,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Отзывы: карусель */}
       <section className={`py-5 ${styles.bgLight}`}>
         <Container>
           <h2 className="display-4 text-center mb-5" data-aos="fade-up">
@@ -610,6 +713,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Блок CTA в центре */}
       <Container>
         <div
           className={`text-center my-5 p-5 ${styles.ctaBlock}`}
@@ -618,21 +722,47 @@ const HomePage = () => {
           <h2 className="display-8 mb-3">
             Собираетесь ли Вы записать своего ребенка в детский сад?
           </h2>
-          <Button variant="primary" size="lg" className="mt-3 px-5">
+          <Button
+            variant="primary"
+            size="lg"
+            className="mt-3 px-5"
+            onClick={openRegistrationModal}
+          >
             Записаться
           </Button>
         </div>
       </Container>
 
+      {/* Наши классы — слайдер */}
       <section className={styles.classesSliderSection}>
         <Container>
           <div className={styles.sliderHeader} data-aos="fade-right">
             <h2 className={`display-5 ${styles.sliderTitle}`}>Наши классы</h2>
             <div className={styles.sliderArrows}>
-              <div className={styles.sliderArrow} onClick={scrollLeft}>
+              <div
+                className={styles.sliderArrow}
+                onClick={scrollLeft}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    scrollLeft();
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
                 <FaChevronLeft />
               </div>
-              <div className={styles.sliderArrow} onClick={scrollRight}>
+              <div
+                className={styles.sliderArrow}
+                onClick={scrollRight}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    scrollRight();
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
                 <FaChevronRight />
               </div>
             </div>
@@ -665,6 +795,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Мероприятия */}
       <section className={`py-5 ${styles.bgLight}`}>
         <Container>
           <h2 className="display-5 text-center mb-5" data-aos="fade-up">
@@ -711,6 +842,7 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Новости и статьи с формой внизу */}
       <section className={`py-5 ${styles.bgSoftGreen}`}>
         <Container>
           <h2 className="display-5 text-center mb-5" data-aos="fade-up">
@@ -728,6 +860,13 @@ const HomePage = () => {
                 <div
                   className={styles.newsCard}
                   onClick={() => openNewsModal(news)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      openNewsModal(news);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
                 >
                   <div className={styles.newsImageContainer}>
                     <img
@@ -750,6 +889,7 @@ const HomePage = () => {
                         e.stopPropagation();
                         openNewsModal(news);
                       }}
+                      type="button"
                     >
                       Читать далее <FaArrowRight />
                     </button>
@@ -769,6 +909,7 @@ const HomePage = () => {
 
           <hr className="my-5" />
 
+          {/* Форма внизу страницы */}
           <Row className="justify-content-center">
             <Col
               md={8}
@@ -808,33 +949,50 @@ const HomePage = () => {
                   </video>
                 </div>
               </div>
-              <Form className={styles.contactForm}>
+
+              {/* Форма с обработчиком */}
+              <Form
+                className={styles.contactForm}
+                onSubmit={handleSimpleFormSubmit}
+              >
                 <Row className="g-3">
                   <Col md={6}>
                     <Form.Control
                       type="tel"
+                      name="phone"
                       placeholder="Контактный телефон"
                       className="rounded-pill"
+                      value={simpleForm.phone}
+                      onChange={handleSimpleFormChange}
+                      required
                     />
                   </Col>
                   <Col md={6}>
                     <Form.Control
                       type="text"
+                      name="name"
                       placeholder="Ваше имя"
                       className="rounded-pill"
+                      value={simpleForm.name}
+                      onChange={handleSimpleFormChange}
+                      required
                     />
                   </Col>
                   <Col xs={12}>
                     <Form.Control
                       as="textarea"
+                      name="message"
                       rows={3}
                       placeholder="Ваше сообщение"
                       className="rounded-4"
+                      value={simpleForm.message}
+                      onChange={handleSimpleFormChange}
                     />
                   </Col>
                   <Col xs={12}>
                     <Button
                       variant="primary"
+                      type="submit"
                       className="px-5 py-2 rounded-pill"
                     >
                       ОТПРАВИТЬ
@@ -847,6 +1005,155 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* Модальное окно для регистрации */}
+      <Modal
+        show={showRegistrationModal}
+        onHide={() => setShowRegistrationModal(false)}
+        size="lg"
+        centered
+        dialogClassName={styles.registrationModal}
+      >
+        <Modal.Header closeButton className={styles.registrationModalHeader}>
+          <Modal.Title as="h3" className={styles.registrationModalTitle}>
+            <FaChild className="me-2" style={{ color: "#ff8a5c" }} />
+            Запись в детский сад
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-center text-muted mb-4">
+            Заполните форму ниже, и мы свяжемся с вами для уточнения деталей и
+            приглашения на экскурсию
+          </p>
+          <Form onSubmit={handleRegistrationSubmit}>
+            <Row className="g-3">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Ваше имя *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="parentName"
+                    placeholder="Иванов Иван"
+                    value={registrationForm.parentName}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Имя ребенка *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="childName"
+                    placeholder="Петров Петя"
+                    value={registrationForm.childName}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Возраст ребенка *</Form.Label>
+                  <Form.Select
+                    name="childAge"
+                    value={registrationForm.childAge}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  >
+                    <option value="">Выберите возраст</option>
+                    <option value="3-4">3-4 года</option>
+                    <option value="4-5">4-5 лет</option>
+                    <option value="5-6">5-6 лет</option>
+                    <option value="6-7">6-7 лет</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Телефон *</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    placeholder="+7 (999) 123-45-67"
+                    value={registrationForm.phone}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="ivan@example.com"
+                    value={registrationForm.email}
+                    onChange={handleRegistrationInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Предпочитаемое направление</Form.Label>
+                  <Form.Select
+                    name="preferredClass"
+                    value={registrationForm.preferredClass}
+                    onChange={handleRegistrationInputChange}
+                  >
+                    <option value="">Выберите направление</option>
+                    <option value="Каллиграфия">Каллиграфия</option>
+                    <option value="Художественный класс">
+                      Художественный класс
+                    </option>
+                    <option value="Английский язык">Английский язык</option>
+                    <option value="Класс танцев">Класс танцев</option>
+                    <option value="Театральная студия">
+                      Театральная студия
+                    </option>
+                    <option value="Робототехника">Робототехника</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label>Дополнительная информация</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    name="message"
+                    rows={3}
+                    placeholder="Ваши пожелания или вопросы"
+                    value={registrationForm.message}
+                    onChange={handleRegistrationInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Check
+                    type="checkbox"
+                    label="Я согласен на обработку персональных данных"
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} className="text-center mt-4">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="px-5 py-3"
+                  style={{ borderRadius: "40px" }}
+                >
+                  Отправить заявку
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Модальное окно для новостей */}
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
