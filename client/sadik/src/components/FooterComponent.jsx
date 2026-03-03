@@ -36,16 +36,13 @@ const FooterComponent = () => {
               <li>
                 <Link to="/contacts">Контакты</Link>
               </li>
-              <li>
-                <Link to="/reviews">Отзывы</Link>
-              </li>
             </ul>
           </Col>
           <Col md={3}>
             <h5 className={styles.footerTitle}>Страницы</h5>
             <ul className={styles.footerLinks}>
               <li>
-                <Link to="/about">О нас</Link>
+                <Link to="/schedule">Расписание</Link>
               </li>
               <li>
                 <Link to="/menu">Меню</Link>
@@ -59,25 +56,19 @@ const FooterComponent = () => {
               <li>
                 <Link to="/gallery">Галерея</Link>
               </li>
-              <li>
-                <Link to="/reviews">Отзывы</Link>
-              </li>
             </ul>
           </Col>
           <Col md={3}>
-            <h5 className={styles.footerTitle}>Классы</h5>
+            <h5 className={styles.footerTitle}>Документы</h5>
             <ul className={styles.footerLinks}>
               <li>
-                <Link to="/classes">Классы</Link>
+                <Link to="/license">Лицензия</Link>
               </li>
               <li>
-                <Link to="/programs">Программы</Link>
+                <Link to="/program">Программа</Link>
               </li>
               <li>
-                <Link to="/schedule">Расписание</Link>
-              </li>
-              <li>
-                <Link to="/teachers">Преподаватели</Link>
+                <Link to="/faq">Частые вопросы</Link>
               </li>
             </ul>
           </Col>
@@ -97,24 +88,21 @@ const FooterComponent = () => {
                 <FaWhatsapp />
               </a>
             </div>
-            <div className={styles.footerContact}>
-              <p>
-                <FaMapMarkerAlt /> ул. Весенняя, 15, г.Москва
-              </p>
-              <p>
-                <FaPhoneAlt /> +7 (495) 666-33-99
-              </p>
-              <p>
-                <FaEnvelope /> hello@znaika.ru
-              </p>
-            </div>
+            <p className="mt-4 text-white-50">
+              © 2026 Знайка. Все права защищены.
+            </p>
           </Col>
         </Row>
         <hr className={styles.footerHr} />
         <div className={styles.footerBottom}>
-          <span>© 2026 Знайка. Все права защищены.</span>
-          <span className={styles.footerLicense}>
-            Лицензия № 123456 от 01.01.2024
+          <span>
+            <FaMapMarkerAlt /> ул. Весенняя, 15, г. Москва
+          </span>
+          <span>
+            <FaPhoneAlt /> +7 (495) 666-33-99
+          </span>
+          <span>
+            <FaEnvelope /> hello@znaika.ru
           </span>
         </div>
       </Container>

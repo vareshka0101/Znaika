@@ -436,7 +436,10 @@ const HomePage = () => {
               <ul className={styles.listCheck}>
                 <li>Английский с носителем</li>
                 <li>LEGO-конструирование</li>
-                <li>Песочная терапия</li>
+                <li>Робототехника</li>
+                <li>Каллиграфия</li>
+                <li>Класс танцев</li>
+                <li>Театральная студия</li>
               </ul>
             </Col>
             <Col md={6} data-aos="fade-left" data-aos-delay="200">

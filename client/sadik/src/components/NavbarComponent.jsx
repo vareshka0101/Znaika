@@ -27,13 +27,17 @@ const NavbarComponent = () => {
             </div>
           </div>
           <div className={styles.socialLinks}>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://vk.com/" target="_blank" rel="noopener noreferrer">
               <FaVk />
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://ok.ru/" target="_blank" rel="noopener noreferrer">
               <FaOdnoklassniki />
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://web.telegram.org/k/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaTelegramPlane />
             </a>
           </div>
@@ -49,7 +53,7 @@ const NavbarComponent = () => {
           <Navbar.Brand as={Link} to="/" className={styles.brand}>
             Знайка
             <img
-              src="/images/Без имени-1.png"
+              src="/public/images/Без имени-1.png"
               style={{ width: "45px", marginBottom: "10px" }}
               alt="logo"
             />
@@ -68,7 +72,9 @@ const NavbarComponent = () => {
               <NavDropdown
                 title="Страницы"
                 id="pages-dropdown"
-                className={styles.dropdown}
+                className={`${styles.dropdown} ${
+                  location.pathname.includes("/about") ? styles.active : ""
+                }`}
               >
                 <NavDropdown.Item as={Link} to="/about">
                   О нас
@@ -84,9 +90,6 @@ const NavbarComponent = () => {
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/gallery">
                   Галерея
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/reviews">
-                  Отзывы
                 </NavDropdown.Item>
               </NavDropdown>
 

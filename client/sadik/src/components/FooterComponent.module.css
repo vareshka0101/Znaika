@@ -92,3 +92,26 @@
 .footerLicense {
     color: rgba(255, 255, 255, 0.5);
 }
+
+.footerBottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    color: #b0c0d0;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.footerBottom svg {
+    color: #ff8a5c;
+    margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+    .footerBottom {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
