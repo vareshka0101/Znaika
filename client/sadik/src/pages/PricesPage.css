@@ -1,0 +1,310 @@
+
+.prices-page {
+    background-color: #fff9f2;
+}
+
+
+.pricing-card {
+    background: white;
+    border-radius: 48px 48px 32px 32px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+    border: 2px solid rgba(88, 180, 174, 0.2);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 30px -8px rgba(255, 138, 92, 0.3);
+    border-color: #ff8a5c;
+}
+
+.pricing-card.popular {
+    border-color: #ff8a5c;
+    transform: scale(1.02);
+}
+
+.popular-badge {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: #ff8a5c;
+    color: white;
+    padding: 0.5rem 3rem;
+    transform: rotate(45deg);
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.pricing-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+.pricing-price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ff8a5c;
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+
+.pricing-price small {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.pricing-desc {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.pricing-features li {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #e9ecef;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li svg {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.pricing-features li .text-success {
+    color: #58b4ae !important;
+}
+
+.pricing-features li .text-muted {
+    color: #ced4da !important;
+}
+
+/* CTA блок */
+.cta-block {
+    background: #fee9dd;
+    border-radius: 70px;
+}
+
+.cta-block h2 {
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+
+.faq-section {
+    background: white;
+    border-radius: 50px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.faq-category {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #2d4059;
+    position: relative;
+    padding-bottom: 0.5rem;
+    font-family: 'Comic Neue', cursive;
+}
+
+.faq-category:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: #ff8a5c;
+}
+
+
+.faq-section .accordion-item {
+    border: none;
+    background: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.faq-section .accordion-header {
+    margin-bottom: 0;
+}
+
+.faq-section .accordion-button {
+    background: white;
+    border-radius: 20px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02) !important;
+    font-weight: 600;
+    color: #2d4059;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid rgba(88, 180, 174, 0.1);
+}
+
+.faq-section .accordion-button:not(.collapsed) {
+    background: #fff5e9;
+    color: #ff8a5c;
+}
+
+.faq-section .accordion-button:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.faq-section .accordion-button::after {
+    background-size: 1rem;
+}
+
+.faq-section .accordion-body {
+    padding: 1.2rem 1.5rem;
+    color: #6c757d;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    border: 1px solid rgba(88, 180, 174, 0.1);
+    border-top: none;
+}
+
+
+.contact-card {
+    background: #f8f9fa;
+    border: 2px solid rgba(88, 180, 174, 0.1);
+}
+
+.contact-card h4 {
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+.contact-card .btn-primary {
+    background-color: #ff8a5c !important;
+    border-color: #ff8a5c !important;
+    border-radius: 40px !important;
+    padding: 0.7rem 1.5rem !important;
+    font-weight: 600 !important;
+}
+
+.contact-card .btn-primary:hover {
+    background-color: #e56f4a !important;
+    border-color: #e56f4a !important;
+}
+
+.contact-card .btn-outline-dark {
+    border-radius: 40px !important;
+    padding: 0.7rem 1.5rem !important;
+    font-weight: 600 !important;
+}
+
+
+.pricing-card .btn-outline-warning {
+    border-color: #ff8a5c !important;
+    color: #ff8a5c !important;
+    border-radius: 40px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+}
+
+.pricing-card .btn-outline-warning:hover {
+    background-color: #ff8a5c !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.3);
+}
+
+.pricing-card .btn-primary {
+    background-color: #ff8a5c !important;
+    border-color: #ff8a5c !important;
+    border-radius: 40px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+}
+
+.pricing-card .btn-primary:hover {
+    background-color: #e56f4a !important;
+    border-color: #e56f4a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.3);
+}
+
+
+@media (max-width: 992px) {
+    .pricing-card.popular {
+        transform: scale(1);
+    }
+
+    .popular-badge {
+        right: -35px;
+        padding: 0.5rem 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-title {
+        font-size: 1.5rem;
+    }
+
+    .pricing-price {
+        font-size: 2.5rem;
+    }
+
+    .faq-section {
+        padding: 1.5rem;
+        border-radius: 30px;
+    }
+
+    .cta-block {
+        padding: 2rem !important;
+    }
+
+    .cta-block h2 {
+        font-size: 1.8rem;
+    }
+
+    .popular-badge {
+        right: -40px;
+        padding: 0.4rem 3rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .pricing-card {
+        padding: 1.5rem;
+    }
+
+    .pricing-features li {
+        font-size: 0.9rem;
+    }
+
+    .faq-category {
+        font-size: 1.3rem;
+    }
+
+    .faq-section .accordion-button {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .faq-section .accordion-body {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .contact-card .d-flex {
+        flex-direction: column;
+    }
+
+    .contact-card .btn {
+        width: 100%;
+    }
+}
