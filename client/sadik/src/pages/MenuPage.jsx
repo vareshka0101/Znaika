@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import {
-  FaSun,
-  FaUtensils,
-  FaPhoneAlt,
-  FaBirthdayCake, // Вместо FaCake используем FaBirthdayCake
-  FaCookieBite, // Альтернатива для десертов
-  FaIceCream, // Еще одна альтернатива
-} from "react-icons/fa";
+import { FaSun, FaUtensils, FaPhoneAlt, FaBirthdayCake } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
@@ -52,13 +45,12 @@ const MenuPage = () => {
   const fetchMenuData = async (day = "monday") => {
     setLoading(true);
     try {
-      // Запрос к Laravel API
       const response = await fetch(`/api/menu/${day}`);
       const data = await response.json();
       setMenuData(data);
     } catch (error) {
       console.error("Error fetching menu data:", error);
-      // Используем тестовые данные если API недоступен
+
       setMenuData(getMockData(day));
     } finally {
       setLoading(false);
@@ -66,7 +58,6 @@ const MenuPage = () => {
   };
 
   const getMockData = (day) => {
-    // Тестовые данные для разработки
     return {
       breakfast: [
         {
@@ -175,18 +166,12 @@ const MenuPage = () => {
     <>
       <NavbarComponent />
 
-      {/* Декоративное изображение */}
       <div className={styles.heroImage}>
-        <img
-          src="https://i.pinimg.com/1200x/0c/da/fe/0cdafefdb7133f1a46fb3c741f8783bd.jpg"
-          alt="Декоративная картинка"
-        />
+        <img src="/public/images/меню.jpg" alt="Декоративная картинка" />
       </div>
 
-      {/* Страница меню */}
       <section className="py-5">
         <Container>
-          {/* Заголовок */}
           <h1
             className={`display-4 text-center mb-2 ${styles.pageTitle}`}
             data-aos="fade-down"
@@ -201,7 +186,6 @@ const MenuPage = () => {
             Ознакомьтесь с нашим разнообразным меню на неделю
           </p>
 
-          {/* Дни недели (табы) */}
           <Row className="g-2 mb-5" data-aos="fade-up">
             {days.map((day) => (
               <Col key={day.id}>
@@ -210,8 +194,9 @@ const MenuPage = () => {
                   onClick={() => handleDayClick(day.id)}
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) => {
+                  onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
                       handleDayClick(day.id);
                     }
                   }}
@@ -222,7 +207,6 @@ const MenuPage = () => {
             ))}
           </Row>
 
-          {/* Меню по категориям */}
           {menuData &&
             categories.map((category) => (
               <div
@@ -258,7 +242,6 @@ const MenuPage = () => {
               </div>
             ))}
 
-          {/* Форма записи */}
           <Row className="justify-content-center mt-5">
             <Col lg={8}>
               <div className={styles.contactForm} data-aos="zoom-in">

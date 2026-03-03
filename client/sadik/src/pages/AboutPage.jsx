@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { FaMapMarkerAlt, FaPhoneAlt, FaArrowRight } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
@@ -40,27 +40,27 @@ const AboutPage = () => {
   const galleryImages = [
     {
       id: 1,
-      src: "/главная/images/осенний.jpg",
+      src: "/public/images/осенний.jpg",
       alt: "Осеннее занятие",
       delay: 100,
     },
-    { id: 2, src: "/главная/images/лепка.jpg", alt: "Лепка", delay: 150 },
-    { id: 3, src: "/главная/images/физра.jpg", alt: "Физкультура", delay: 200 },
+    { id: 2, src: "/public/images/лепка.jpg", alt: "Лепка", delay: 150 },
+    { id: 3, src: "/public/images/физра.jpg", alt: "Физкультура", delay: 200 },
     {
       id: 4,
-      src: "/главная/images/рисование.jpg",
+      src: "/public/images/рисование.jpg",
       alt: "Рисование",
       delay: 250,
     },
     {
       id: 5,
-      src: "/главная/images/по математике.jpg",
+      src: "/public/images/по математике.jpg",
       alt: "Математика",
       delay: 300,
     },
     {
       id: 6,
-      src: "/главная/images/новый год.jpg",
+      src: "/public/images/новый год.jpg",
       alt: "Новый год",
       delay: 350,
     },
@@ -80,7 +80,7 @@ const AboutPage = () => {
       title: "🐼 Вдохновение мультфильмами",
       text: "Дети проживают истории любимых героев. Доброта и дружба побеждают.",
       image:
-        "https://nastavnik-gezalov.ru/wp-content/uploads/2023/05/ENUMgXOUHfM.jpg",
+        "https://avatars.mds.yandex.net/i?id=46399b53ffffa28255aa891550f70ddb_l-4113749-images-thumbs&n=13",
       alt: "Вдохновение мультфильмами",
     },
     {
@@ -93,10 +93,11 @@ const AboutPage = () => {
     },
     {
       id: 4,
-      title: "🎋 Семья — это бамбуковый лес",
+      title: "🎋 Семья — основа жизни человека",
       text: "Бабушки и дедушки рассказывают сказки. Празднуем традиционные праздники.",
-      image: "/главная/images/i.webp",
-      alt: "Семья — это бамбуковый лес",
+      image:
+        "https://solncesvet.ru/blog/wp-content/uploads/2024/10/novyj-god-v-detskom-sadu.jpg",
+      alt: "Семья — основа жизни человека",
     },
   ];
 

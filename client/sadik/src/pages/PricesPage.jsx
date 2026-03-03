@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Accordion } from "react-bootstrap";
 import {
-  FaMapMarkerAlt,
   FaPhoneAlt,
   FaCheckCircle,
   FaTimesCircle,
-  FaStar,
   FaEnvelope,
 } from "react-icons/fa";
 import AOS from "aos";

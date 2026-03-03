@@ -466,7 +466,7 @@ const HomePage = () => {
               data-aos-delay="100"
             >
               <img
-                src="/главная/images/4.jpg"
+                src="/public/images/4.jpg"
                 className={`rounded-circle mb-3 ${styles.teacherImg}`}
                 alt="teacher"
               />
@@ -480,7 +480,7 @@ const HomePage = () => {
               data-aos-delay="200"
             >
               <img
-                src="/главная/images/3.jpg"
+                src="/public/images/3.jpg"
                 className={`rounded-circle mb-3 ${styles.teacherImg}`}
                 alt="teacher"
               />
@@ -494,7 +494,7 @@ const HomePage = () => {
               data-aos-delay="300"
             >
               <img
-                src="/главная/images/1.jpg"
+                src="/public/images/1.jpg"
                 className={`rounded-circle mb-3 ${styles.teacherImg}`}
                 alt="teacher"
               />
@@ -508,7 +508,7 @@ const HomePage = () => {
               data-aos-delay="400"
             >
               <img
-                src="/главная/images/2.jpg"
+                src="/public/images/2.jpg"
                 className={`rounded-circle mb-3 ${styles.teacherImg}`}
                 alt="teacher"
               />
@@ -797,11 +797,11 @@ const HomePage = () => {
                   <video
                     controls
                     className="rounded-5 shadow position-absolute top-0 start-0 w-100 h-100"
-                    poster="/главная/images/11.jpg"
+                    poster="/public/images/11.jpg"
                     style={{ objectFit: "cover" }}
                   >
                     <source
-                      src="/главная/Веселый детский танец _Нано техно_. Легкий танец (1).mp4"
+                      src="/public/Веселый детский танец _Нано техно_. Легкий танец (1).mp4"
                       type="video/mp4"
                     />
                     Ваш браузер не поддерживает видео.

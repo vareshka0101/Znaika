@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+:root {
+    --primary: #ff8a5c;
+    --primary-dark: #e56f4a;
+    --secondary: #58b4ae;
+    --accent-green: #a3d8c5;
+    --text-dark: #2d4059;
+}
+
+
+.eventsHero {
+    background: linear-gradient(135deg, #fee9dd 0%, #fff5e9 100%);
+    padding: 60px 0 40px;
+    margin-bottom: 40px;
+    border-radius: 0 0 70px 70px;
+    text-align: center;
+}
+
+.eventsHero h1 {
+    font-size: 3.5rem;
+    color: var(--text-dark);
+    font-family: 'Comic Neue', cursive;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.eventsHero p {
+    font-size: 1.25rem;
+    color: #2c3e4e;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+
+.sectionTitle {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+    font-family: 'Comic Neue', cursive;
+    color: var(--text-dark);
+}
+
+.sectionTitle:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+.archiveTitle:after {
+    background: #95a5a6;
+}
+
+.eventCard {
+    background: white;
+    border-radius: 48px;
+    padding: 1.8rem 1.5rem;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(88, 180, 174, 0.2);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.eventCard:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 30px -8px rgba(255, 138, 92, 0.3);
+}
+
+.eventBadge {
+    background-color: var(--secondary);
+    color: white;
+    padding: 0.4rem 1.2rem;
+    border-radius: 40px;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+.archiveBadge {
+    background-color: #95a5a6;
+}
+
+.eventTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    font-family: 'Comic Neue', cursive;
+    color: var(--text-dark);
+}
+
+.eventDatetime {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #5f6c7a;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.eventDatetime svg {
+    color: var(--primary);
+    width: 24px;
+}
+
+.eventDuration {
+    background: var(--accent-green);
+    color: #2d4059;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 0.5rem;
+    align-self: flex-start;
+}
+
+
+.backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 10px 30px rgba(88, 180, 174, 0.4);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: 3px solid white;
+    cursor: pointer;
+    outline: none;
+}
+
+.backToTop:hover {
+    transform: scale(1.1) rotate(360deg);
+    color: white;
+    background: var(--primary);
+    box-shadow: 0 15px 40px rgba(255, 138, 92, 0.6);
+}
+
+
+@media (max-width: 992px) {
+    .eventsHero h1 {
+        font-size: 3rem;
+    }
+
+    .sectionTitle {
+        font-size: 2.2rem;
+    }
+
+    .eventTitle {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .eventsHero {
+        padding: 40px 0 30px;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .eventsHero h1 {
+        font-size: 2.5rem;
+    }
+
+    .eventsHero p {
+        font-size: 1.1rem;
+    }
+
+    .sectionTitle {
+        font-size: 2rem;
+    }
+
+    .eventCard {
+        padding: 1.5rem;
+        border-radius: 40px;
+    }
+
+    .backToTop {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .eventsHero h1 {
+        font-size: 2rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.8rem;
+    }
+
+    .sectionTitle:after {
+        width: 60px;
+    }
+
+    .eventTitle {
+        font-size: 1.3rem;
+    }
+
+    .eventDatetime {
+        font-size: 0.9rem;
+    }
+}

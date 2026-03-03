@@ -5,7 +5,6 @@ import {
   FaQuoteLeft,
   FaQuoteRight,
   FaLanguage,
-  FaStar,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -36,7 +35,7 @@ const TeachersPage = () => {
       role: "Преподаватель каллиграфии",
       description:
         "Художник-график с 15-летним стажем. Обучает детей искусству красивого письма по методикам китайской и европейской каллиграфии.",
-      image: "/главная/images/1.jpg",
+      image: "/public/images/1.jpg",
       subjects: ["Каллиграфия", "ИЗО"],
       languages: [],
     },
@@ -46,7 +45,7 @@ const TeachersPage = () => {
       role: "Педагог раннего развития",
       description:
         "Специалист по раннему развитию, автор игровых методик. Занятия проходят на английском языке в игровой форме.",
-      image: "/главная/images/4.jpg",
+      image: "/public/images/4.jpg",
       subjects: ["Раннее развитие"],
       languages: ["English"],
     },
@@ -56,7 +55,7 @@ const TeachersPage = () => {
       role: "Педагог раннего развития",
       description:
         "Психолог дошкольного образования, специалист по билингвальному развитию. Ведёт группы на английском и русском языках.",
-      image: "/главная/images/5.jpg",
+      image: "/public/images/5.jpg",
       subjects: ["Раннее развитие"],
       languages: ["English"],
     },
@@ -66,7 +65,7 @@ const TeachersPage = () => {
       role: "Музыкальный руководитель",
       description:
         "Выпускник консерватории, лауреат международных конкурсов. Развивает музыкальный слух и чувство ритма через игру.",
-      image: "/главная/images/3.jpg",
+      image: "/public/images/3.jpg",
       subjects: ["Музыка", "Вокал"],
       languages: [],
     },
@@ -76,7 +75,7 @@ const TeachersPage = () => {
       role: "Художник-педагог",
       description:
         "Художник-иллюстратор, преподаватель ИЗО и ДПИ. Владеет техниками правополушарного рисования и арт-терапии.",
-      image: "/главная/images/8.jpg",
+      image: "/public/images/8.jpg",
       subjects: ["Рисование", "Лепка"],
       languages: [],
     },
@@ -86,7 +85,7 @@ const TeachersPage = () => {
       role: "Детский психолог",
       description:
         "Кандидат психологических наук, специалист по эмоциональному интеллекту. Помогает детям адаптироваться и разрешать конфликты.",
-      image: "/главная/images/2.jpg",
+      image: "/public/images/2.jpg",
       subjects: ["Психология", "Адаптация"],
       languages: [],
     },
@@ -96,7 +95,7 @@ const TeachersPage = () => {
       role: "Преподаватель физкультуры",
       description:
         "Мастер спорта по гимнастике, инструктор ЛФК. Проводит весёлые разминки, обучает основам здорового образа жизни.",
-      image: "/главная/images/7.jpg",
+      image: "/public/images/7.jpg",
       subjects: ["Физкультура", "ЛФК"],
       languages: [],
     },
@@ -106,7 +105,7 @@ const TeachersPage = () => {
       role: "Логопед-дефектолог",
       description:
         "Специалист высшей категории. Занимается постановкой звуков, развитием речи и профилактикой нарушений письма.",
-      image: "/главная/images/6.jpg",
+      image: "/public/images/6.jpg",
       subjects: ["Логопедия", "Развитие речи"],
       languages: [],
     },
@@ -134,7 +133,7 @@ const TeachersPage = () => {
 
       <div className={styles.heroImage}>
         <img
-          src="/главная/images/14.jpg"
+          src="/public/images/14.jpg"
           alt="Декоративная картинка"
           className="animate__animated animate__fadeIn"
         />
@@ -142,7 +141,6 @@ const TeachersPage = () => {
 
       <section className="py-5">
         <Container>
-          {/* Заголовок */}
           <h1
             className={`display-4 text-center mb-2 ${styles.pageTitle}`}
             data-aos="fade-down"
