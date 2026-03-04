@@ -388,6 +388,20 @@
 }
 
 
+
+.testimonialRating {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.starFilled {
+    color: #ffc107;
+}
+
+.starEmpty {
+    color: #ddd;
+}
+
 .contactForm :global(.form-control) {
     border-radius: 40px;
     border: 1px solid #e0d6cc;

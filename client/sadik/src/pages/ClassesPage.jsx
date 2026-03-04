@@ -11,7 +11,7 @@ import {
   FaPenFancy,
   FaLeaf,
   FaCouch,
-  FaPhoneAlt as FaPhone,
+  FaChild,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -21,10 +21,14 @@ import styles from "./ClassesPage.module.css";
 
 const ClassesPage = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showExcursionModal, setShowExcursionModal] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState({ src: "", title: "" });
-  const [formData, setFormData] = useState({
+
+  const [excursionForm, setExcursionForm] = useState({
+    parentName: "",
     phone: "",
-    name: "",
+    email: "",
+    preferredDate: "",
     message: "",
   });
 
@@ -154,39 +158,60 @@ const ClassesPage = () => {
     setShowModal(true);
   };
 
-  const handleInputChange = (e) => {
+  const handleExcursionClick = () => {
+    setShowExcursionModal(true);
+  };
+
+  const handleExcursionInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setExcursionForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleExcursionSubmit = (e) => {
     e.preventDefault();
-
-    console.log("Form submitted:", formData);
-    alert("Форма отправлена! Мы свяжемся с вами в ближайшее время.");
-    setFormData({ phone: "", name: "", message: "" });
+    console.log("Excursion form submitted:", excursionForm);
+    alert(
+      "Спасибо за запись на экскурсию! Мы свяжемся с вами для подтверждения даты и времени.",
+    );
+    setExcursionForm({
+      parentName: "",
+      phone: "",
+      email: "",
+      preferredDate: "",
+      message: "",
+    });
+    setShowExcursionModal(false);
   };
 
   return (
     <>
       <NavbarComponent />
 
-      <section className="py-5">
+      <section className={styles.classesSection}>
         <Container>
-          <h1
-            className={`display-4 text-center mb-3 ${styles.pageTitle}`}
-            data-aos="fade-down"
-          >
-            Наши классы и игровые пространства
-          </h1>
-          <p className="text-center text-muted mb-5" data-aos="fade-up">
-            Уютные, безопасные и вдохновляющие помещения для ваших детей
-          </p>
-
           <Row className="g-4">
+            <Col xs={12}>
+              <div className={styles.headerBlock} data-aos="zoom-in">
+                <h1
+                  className={`display-4 text-center  ${styles.pageTitle}`}
+                  data-aos="fade-down"
+                >
+                  Наши классы и игровые пространства
+                </h1>
+                <p className={`fs-5 text-center ${styles.headerDescription}`}>
+                  Каждое помещение в нашем саду продумано до мелочей: безопасные
+                  материалы, эргономичная мебель, много света и воздуха. Мы
+                  создали среду, которая вдохновляет детей на игру, творчество и
+                  познание. Приходите посмотреть лично — мы всегда рады гостям!
+                </p>
+              </div>
+            </Col>
+          </Row>
+
+          <Row className={`g-4  mt-4${styles.roomsGrid}`}>
             {rooms.map((room) => (
               <Col
                 key={room.id}
@@ -226,22 +251,6 @@ const ClassesPage = () => {
             ))}
           </Row>
 
-          <Row className="my-5">
-            <Col xs={12}>
-              <div className={styles.inspireBlock} data-aos="zoom-in">
-                <h2 className="display-5 mb-4">
-                  Пространство, где хочется расти
-                </h2>
-                <p className="fs-5">
-                  Каждое помещение в нашем саду продумано до мелочей: безопасные
-                  материалы, эргономичная мебель, много света и воздуха. Мы
-                  создали среду, которая вдохновляет детей на игру, творчество и
-                  познание. Приходите посмотреть лично — мы всегда рады гостям!
-                </p>
-              </div>
-            </Col>
-          </Row>
-
           <div className={styles.ctaBlock} data-aos="zoom-in">
             <h2 className="display-5 mb-3">
               Хотите увидеть наши классы лично?
@@ -249,73 +258,16 @@ const ClassesPage = () => {
             <p className="fs-5 mb-4">
               Запишитесь на экскурсию и познакомьтесь с садом поближе
             </p>
-            <a href="#" className={styles.ctaButton}>
+
+            <Button
+              variant="primary"
+              size="lg"
+              className={styles.excursionButton}
+              onClick={handleExcursionClick}
+            >
               Записаться на экскурсию
-            </a>
+            </Button>
           </div>
-
-          <Row className="justify-content-center mt-5">
-            <Col lg={8}>
-              <div className={styles.contactForm} data-aos="fade-up">
-                <h2
-                  className={`display-5 text-center mb-4 ${styles.formTitle}`}
-                >
-                  Как записать ребенка на занятия?
-                </h2>
-                <p className="text-center fs-5 mb-4">
-                  <FaPhone className="me-2 text-primary" />
-                  <strong>+7 (495) 666-33-99</strong> или заполните форму ниже
-                </p>
-                <p className="text-center text-muted mb-4">
-                  Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет.
-                </p>
-
-                <Form onSubmit={handleSubmit}>
-                  <Row className="g-3">
-                    <Col md={6}>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Контактный телефон"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={3}
-                        placeholder="Ваше сообщение"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col xs={12} className="text-center">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className="px-5 py-3"
-                      >
-                        ОТПРАВИТЬ
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Col>
-          </Row>
         </Container>
       </section>
 
@@ -355,6 +307,106 @@ const ClassesPage = () => {
             Закрыть
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showExcursionModal}
+        onHide={() => setShowExcursionModal(false)}
+        size="lg"
+        centered
+        dialogClassName={styles.excursionModal}
+      >
+        <Modal.Header closeButton className={styles.excursionModalHeader}>
+          <Modal.Title as="h3" className={styles.excursionModalTitle}>
+            <FaChild className="me-2" style={{ color: "#58b4ae" }} />
+            Запись на экскурсию
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-center text-muted mb-4">
+            Заполните форму, и мы свяжемся с вами для выбора удобного времени
+            экскурсии
+          </p>
+          <Form onSubmit={handleExcursionSubmit}>
+            <Row className="g-3">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Ваше имя *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="parentName"
+                    placeholder="Иванов Иван"
+                    value={excursionForm.parentName}
+                    onChange={handleExcursionInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Телефон *</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    placeholder="+7 (999) 123-45-67"
+                    value={excursionForm.phone}
+                    onChange={handleExcursionInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="ivan@example.com"
+                    value={excursionForm.email}
+                    onChange={handleExcursionInputChange}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label>Дополнительная информация</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    name="message"
+                    rows={3}
+                    placeholder="Ваши пожелания или вопросы"
+                    value={excursionForm.message}
+                    onChange={handleExcursionInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Check
+                    type="checkbox"
+                    label="Я согласен на обработку персональных данных"
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} className="text-center mt-4">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="px-5 py-3"
+                  style={{
+                    borderRadius: "40px",
+                    backgroundColor: "#58b4ae",
+                    borderColor: "#58b4ae",
+                  }}
+                >
+                  Отправить заявку
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
       </Modal>
 
       <FooterComponent />

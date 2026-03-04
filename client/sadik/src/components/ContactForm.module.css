@@ -1,0 +1,51 @@
+.contactForm {
+    background: white;
+    border-radius: 48px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.formTitle {
+    font-family: 'Comic Neue', cursive;
+    color: #2d4059;
+}
+
+.contactForm :global(.form-control) {
+    border-radius: 40px;
+    border: 1px solid #e0d6cc;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    background: white;
+    transition: 0.2s;
+}
+
+.contactForm :global(.form-control:focus) {
+    border-color: #ff8a5c;
+    box-shadow: 0 0 0 4px rgba(255, 138, 92, 0.2);
+    outline: none;
+}
+
+.contactForm :global(textarea.form-control) {
+    border-radius: 24px;
+}
+
+.contactForm :global(.btn-primary) {
+    background-color: #ff8a5c !important;
+    border-color: #ff8a5c !important;
+    border-radius: 40px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.contactForm :global(.btn-primary:hover) {
+    background-color: #e56f4a !important;
+    border-color: #e56f4a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.3);
+}
+
+@media (max-width: 576px) {
+    .contactForm {
+        padding: 1.5rem;
+    }
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import {
   FaCubes,
   FaBookOpen,
@@ -10,6 +10,7 @@ import {
   FaHeart,
   FaChild,
   FaCheckCircle,
+  FaArrowRight,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -18,6 +19,12 @@ import FooterComponent from "../components/FooterComponent";
 import styles from "./ProgramsPage.module.css";
 
 const ProgramsPage = () => {
+  const [formData, setFormData] = useState({
+    phone: "",
+    name: "",
+    message: "",
+  });
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -25,6 +32,22 @@ const ProgramsPage = () => {
       mirror: true,
     });
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Form submitted:", formData);
+    alert("Форма отправлена! Мы свяжемся с вами в ближайшее время.");
+    setFormData({ phone: "", name: "", message: "" });
+  };
 
   const programs = [
     {
@@ -111,25 +134,25 @@ const ProgramsPage = () => {
   const licenses = [
     {
       id: 1,
-      image: "/главная/images/лиц1.jpg",
+      image: "/public/images/лиц1.jpg",
       title: "Лицензия на образовательную деятельность",
       delay: 100,
     },
     {
       id: 2,
-      image: "/главная/images/лиц2.jpg",
+      image: "/public/images/лиц2.jpg",
       title: "Свидетельство о государственной аккредитации",
       delay: 200,
     },
     {
       id: 3,
-      image: "/главная/images/лиц 3.jpg",
+      image: "/public/images/лиц 3.jpg",
       title: "Рекомендация Министерства образования РФ",
       delay: 300,
     },
     {
       id: 4,
-      image: "/главная/images/наград.jpg",
+      image: "/public/images/наград.jpg",
       title: 'Награда "Лучший центр развития 2025"',
       delay: 400,
     },
@@ -195,7 +218,6 @@ const ProgramsPage = () => {
             ))}
           </Row>
 
-          {/* Программы по возрастам */}
           <h2
             className={`display-5 text-center mb-4 ${styles.sectionTitle}`}
             data-aos="fade-up"
@@ -267,17 +289,81 @@ const ProgramsPage = () => {
             </Col>
           </Row>
 
-          <div className={styles.contactBlock} data-aos="zoom-in">
-            <h2 className="display-7 mb-3">Узнать стоимость и расписание</h2>
-            <p className={styles.contactPhone}>+7 (495) 666-33-99</p>
-            <a href="#" className={styles.contactButton}>
-              Позвонить сейчас
-            </a>
+          {/* Новый блок формы как на AboutPage */}
+          <div className={styles.formSection}>
+            <Row className="justify-content-center">
+              <Col md={8} className="text-center">
+                <h2
+                  className={`display-5 mb-4 ${styles.formTitle}`}
+                  data-aos="fade-up"
+                >
+                  Как записать ребенка на занятия?
+                </h2>
+                <p className="fs-5" data-aos="fade-up" data-aos-delay="50">
+                  Позвоните по номеру: <strong>+7 (495) 666-33-99</strong> или
+                  заполните форму ниже.
+                </p>
+                <p className="mb-4" data-aos="fade-up" data-aos-delay="100">
+                  Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет.
+                  Мы поможем вам с подготовкой к школе и развитием личности.
+                </p>
+
+                <Form
+                  className={styles.contactForm}
+                  onSubmit={handleSubmit}
+                  data-aos="fade-up"
+                  data-aos-delay="150"
+                >
+                  <Row className="g-3">
+                    <Col md={6}>
+                      <Form.Control
+                        type="tel"
+                        name="phone"
+                        placeholder="Контактный телефон"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Form.Control
+                        type="text"
+                        name="name"
+                        placeholder="Ваше имя"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </Col>
+                    <Col xs={12}>
+                      <Form.Control
+                        as="textarea"
+                        name="message"
+                        rows={3}
+                        placeholder="Ваше сообщение"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                      />
+                    </Col>
+                    <Col xs={12}>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className="px-5 py-2"
+                      >
+                        ОТПРАВИТЬ
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </Col>
+            </Row>
           </div>
 
           <h2
             className={`display-6 text-center mb-4 ${styles.sectionTitle}`}
             data-aos="fade-up"
+            style={{ marginTop: "3rem" }}
           >
             Наши лицензии и сертификаты
           </h2>

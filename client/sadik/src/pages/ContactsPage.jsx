@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -8,28 +8,16 @@ import {
   FaUsers,
   FaUserTie,
   FaClock,
-  FaStar,
-  FaVk,
-  FaOdnoklassniki,
   FaTelegramPlane,
-  FaWhatsapp,
-  FaRegBuilding,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import ContactForm from "../components/ContactForm";
 import styles from "./ContactsPage.module.css";
 
 const ContactsPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -37,28 +25,6 @@ const ContactsPage = () => {
       mirror: false,
     });
   }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log("Form submitted:", formData);
-    alert("Спасибо за обращение! Мы свяжемся с вами в ближайшее время.");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    });
-  };
 
   return (
     <>
@@ -155,80 +121,7 @@ const ContactsPage = () => {
 
           <Row className="justify-content-center">
             <Col lg={8}>
-              <div className={styles.contactForm} data-aos="fade-up">
-                <h2
-                  className={`display-5 text-center mb-4 ${styles.formTitle}`}
-                >
-                  Свяжитесь с нами
-                </h2>
-                <p className="text-center text-muted mb-4">
-                  Воспользуйтесь формой ниже, чтобы связаться с нами. Мы ответим
-                  в ближайшее время!
-                </p>
-
-                <Form onSubmit={handleSubmit}>
-                  <Row className="g-3">
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        placeholder="Ваш email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Номер телефона"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="subject"
-                        placeholder="Тема сообщения"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={4}
-                        placeholder="Ваше сообщение"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col xs={12} className="text-center">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className={`px-5 py-3 ${styles.submitButton}`}
-                      >
-                        ОТПРАВИТЬ
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
+              <ContactForm title="Свяжитесь с нами" />
             </Col>
           </Row>
 
@@ -247,6 +140,16 @@ const ContactsPage = () => {
                     style={{ color: "var(--primary)" }}
                   />
                   Пишите: <strong>hello@znaika.ru</strong>
+                  <span className="mx-3">|</span>
+                  <a
+                    href="https://t.me/znaika_bot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.telegramLink}
+                  >
+                    <FaTelegramPlane className="me-2" />
+                    <strong>Написать в Telegram</strong>
+                  </a>
                 </p>
               </div>
             </Col>

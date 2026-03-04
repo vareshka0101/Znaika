@@ -1,25 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import {
-  FaPhoneAlt,
-  FaQuoteLeft,
-  FaQuoteRight,
-  FaLanguage,
-} from "react-icons/fa";
+import React, { useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { FaQuoteLeft, FaQuoteRight, FaLanguage } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "animate.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import ContactForm from "../components/ContactForm";
 import styles from "./TeachersPage.module.css";
 
 const TeachersPage = () => {
-  const [formData, setFormData] = useState({
-    phone: "",
-    name: "",
-    message: "",
-  });
-
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -110,22 +100,6 @@ const TeachersPage = () => {
       languages: [],
     },
   ];
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log("Form submitted:", formData);
-    alert("Форма отправлена! Мы свяжемся с вами в ближайшее время.");
-    setFormData({ phone: "", name: "", message: "" });
-  };
 
   return (
     <>
@@ -228,65 +202,7 @@ const TeachersPage = () => {
 
           <Row className="justify-content-center mt-5">
             <Col lg={8}>
-              <div className={styles.contactForm} data-aos="zoom-in">
-                <h2
-                  className={`display-5 text-center mb-4 ${styles.formTitle}`}
-                >
-                  Как записать ребенка на занятия?
-                </h2>
-                <p className="text-center fs-5 mb-4">
-                  <FaPhoneAlt className={`me-2 ${styles.pulseIcon}`} />
-                  <strong>+7 (495) 666-33-99</strong> или заполните форму ниже
-                </p>
-                <p className="text-center text-muted mb-4">
-                  Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет.
-                  Мы поможем вам с подготовкой к школе и развитием личности.
-                </p>
-
-                <Form onSubmit={handleSubmit}>
-                  <Row className="g-3">
-                    <Col md={6}>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Контактный телефон"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={3}
-                        placeholder="Ваше сообщение"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col xs={12} className="text-center">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className={`px-5 py-3 ${styles.floatButton}`}
-                      >
-                        ОТПРАВИТЬ
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
+              <ContactForm />
             </Col>
           </Row>
         </Container>

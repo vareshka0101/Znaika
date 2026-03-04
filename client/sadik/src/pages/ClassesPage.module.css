@@ -1,11 +1,9 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
 
 .pageTitle {
     font-family: 'Comic Neue', cursive;
     color: #2d4059;
 }
-
 
 .roomCard {
     background: white;
@@ -24,7 +22,6 @@
     box-shadow: 0 20px 40px rgba(255, 138, 92, 0.2);
     border-color: #ff8a5c;
 }
-
 
 .mt20 {
     margin-top: 20px;
@@ -123,23 +120,9 @@
     transform: rotate(360deg) scale(1.2);
 }
 
-
-.inspireBlock {
-    background: linear-gradient(135deg, #fff9f2 0%, #fff 100%);
-    border-radius: 48px;
-    padding: 3rem;
-    text-align: center;
-}
-
-.inspireBlock h2 {
-    font-family: 'Comic Neue', cursive;
-    color: #2d4059;
-}
-
-
 .ctaBlock {
     text-align: center;
-    background: #fee9dd;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f2f1 100%);
     border-radius: 70px;
     padding: 3rem;
     margin: 3rem 0;
@@ -149,78 +132,6 @@
     font-family: 'Comic Neue', cursive;
     color: #2d4059;
 }
-
-.ctaButton {
-    background-color: #ff8a5c;
-    border-color: #ff8a5c;
-    color: white;
-    border-radius: 40px;
-    padding: 0.7rem 2rem;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1.25rem;
-    border: none;
-    cursor: pointer;
-}
-
-.ctaButton:hover {
-    background-color: #e56f4a;
-    border-color: #e56f4a;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.4);
-    text-decoration: none;
-}
-
-
-.contactForm {
-    background: white;
-    border-radius: 48px;
-    padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-.formTitle {
-    font-family: 'Comic Neue', cursive;
-    color: #2d4059;
-}
-
-.contactForm :global(.form-control) {
-    border-radius: 40px;
-    border: 1px solid #e0d6cc;
-    padding: 0.8rem 1.5rem;
-    width: 100%;
-    background: white;
-    transition: 0.2s;
-}
-
-.contactForm :global(.form-control:focus) {
-    border-color: #ff8a5c;
-    box-shadow: 0 0 0 4px rgba(255, 138, 92, 0.2);
-    outline: none;
-}
-
-.contactForm :global(textarea.form-control) {
-    border-radius: 24px;
-}
-
-.contactForm :global(.btn-primary) {
-    background-color: #ff8a5c !important;
-    border-color: #ff8a5c !important;
-    border-radius: 40px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-}
-
-.contactForm :global(.btn-primary:hover) {
-    background-color: #e56f4a !important;
-    border-color: #e56f4a !important;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.3);
-}
-
 
 .photoModal :global(.modal-content) {
     border-radius: 48px;
@@ -276,6 +187,81 @@
     padding: 1rem;
 }
 
+.excursionButton {
+    background-color: #58b4ae !important;
+    border-color: #58b4ae !important;
+    color: white !important;
+    padding: 0.75rem 3rem !important;
+    border-radius: 50px !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    margin: 0 auto;
+    display: inline-block;
+}
+
+.excursionButton:hover {
+    background-color: #469b95 !important;
+    border-color: #469b95 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(88, 180, 174, 0.3);
+}
+
+.classesSection {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+.headerBlock {
+    margin-bottom: 3rem;
+    margin-top: 2rem;
+}
+
+.pageTitle {
+    font-weight: 600;
+    color: #494949;
+    margin-bottom: 1.5rem !important;
+}
+
+.headerDescription {
+    max-width: 900px;
+    margin: 0 auto;
+    color: #666;
+    line-height: 1.8;
+}
+
+.roomsGrid {
+    margin-top: 2rem !important;
+    margin-bottom: 3rem;
+}
+
+.excursionModal :global(.modal-content) {
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+}
+
+.excursionModalHeader {
+    background: linear-gradient(135deg, #58b4ae 0%, #469b95 100%);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.excursionModalHeader button {
+    color: white;
+    opacity: 0.8;
+}
+
+.excursionModalHeader button:hover {
+    opacity: 1;
+}
+
+.excursionModalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
 
 @media (max-width: 768px) {
     .roomImg {
@@ -288,14 +274,6 @@
 
     .roomDesc {
         font-size: 0.8rem;
-    }
-
-    .inspireBlock {
-        padding: 2rem;
-    }
-
-    .inspireBlock h2 {
-        font-size: 1.8rem;
     }
 
     .ctaBlock {
@@ -322,10 +300,6 @@
 @media (max-width: 576px) {
     .roomImg {
         height: 180px;
-    }
-
-    .contactForm {
-        padding: 1.5rem;
     }
 
     .modalTitle {

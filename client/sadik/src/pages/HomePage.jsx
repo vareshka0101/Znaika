@@ -24,25 +24,24 @@ import {
   FaShareAlt,
   FaUsers,
   FaStar,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaUser,
   FaChild,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import AddReviewModal from "../components/AddReviewModal";
+import BookingButtons from "../components/BookingButtons";
 import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const classesScrollRef = useRef(null);
 
-  // Состояние для формы регистрации
   const [registrationForm, setRegistrationForm] = useState({
     parentName: "",
     childName: "",
@@ -53,14 +52,52 @@ const HomePage = () => {
     message: "",
   });
 
-  // Состояние для простой формы внизу
   const [simpleForm, setSimpleForm] = useState({
     phone: "",
     name: "",
     message: "",
   });
 
-  // Данные для новостей
+  const testimonials = [
+    {
+      id: 1,
+      text: "Ребёнок бежит в сад каждое утро! Очень довольны программой и чуткими воспитателями. Знайка — наша вторая семья.",
+      author: "Анна, мама Тимофея",
+      years: "3 года в саду",
+      rating: 5,
+    },
+    {
+      id: 2,
+      text: "После года в Знайке сын научился читать и считать, а главное — появилась тяга к знаниям. Спасибо команде!",
+      author: "Игорь, папа Миши",
+      years: "1 год в саду",
+      rating: 5,
+    },
+    {
+      id: 3,
+      text: "Очень уютная атмосфера, ребёнок всегда с радостью рассказывает, как прошёл день. Отдельное спасибо за вкусное питание!",
+      author: "Елена, мама Киры",
+      years: "2 года в саду",
+      rating: 4,
+    },
+    {
+      id: 4,
+      text: "Воспитатели настоящие профессионалы! Ребёнок с удовольствием ходит в сад, участвует во всех мероприятиях. Рекомендую!",
+      author: "Дмитрий, папа Сони",
+      years: "полгода в саду",
+      rating: 5,
+    },
+    {
+      id: 5,
+      text: "Отличный сад! Ребёнок всегда сыт, доволен, занятия интересные. Особенно нравится подход к развитию речи.",
+      author: "Светлана, мама Артёма",
+      years: "1,5 года в саду",
+      rating: 5,
+    },
+  ];
+
+  const [allTestimonials, setAllTestimonials] = useState(testimonials);
+
   const newsData = [
     {
       id: 1,
@@ -73,8 +110,8 @@ const HomePage = () => {
       content: `
         <img src="https://placecats.com/800/400?random=101" class="${styles.modalNewsImage}" alt="Игровое обучение">
         <div class="${styles.modalNewsMeta}">
-          <span><i class="far fa-calendar-alt"></i> 10 февраля 2024</span>
-          <span><i class="far fa-eye"></i> 245 просмотров</span>
+          <span> 10 февраля 2024</span>
+          <span> 245 просмотров</span>
         </div>
         <div class="${styles.modalNewsContent}">
           <h4>Почему игра — это важно?</h4>
@@ -101,8 +138,8 @@ const HomePage = () => {
       content: `
         <img src="https://placecats.com/801/401?random=102" class="${styles.modalNewsImage}" alt="Безопасная среда">
         <div class="${styles.modalNewsMeta}">
-          <span><i class="far fa-calendar-alt"></i> 15 марта 2024</span>
-          <span><i class="far fa-eye"></i> 189 просмотров</span>
+          <span> 15 марта 2024</span>
+          <span> 189 просмотров</span>
         </div>
         <div class="${styles.modalNewsContent}">
           <h4>Что такое инклюзивная среда?</h4>
@@ -128,8 +165,8 @@ const HomePage = () => {
       content: `
         <img src="https://placecats.com/802/402?random=103" class="${styles.modalNewsImage}" alt="Здоровое питание">
         <div class="${styles.modalNewsMeta}">
-          <span><i class="far fa-calendar-alt"></i> 22 февраля 2024</span>
-          <span><i class="far fa-eye"></i> 312 просмотров</span>
+          <span> 22 февраля 2024</span>
+          <span> 312 просмотров</span>
         </div>
         <div class="${styles.modalNewsContent}">
           <h4>Топ-5 полезных перекусов</h4>
@@ -155,8 +192,8 @@ const HomePage = () => {
       content: `
         <img src="https://placecats.com/803/403?random=104" class="${styles.modalNewsImage}" alt="Творчество">
         <div class="${styles.modalNewsMeta}">
-          <span><i class="far fa-calendar-alt"></i> 26 марта 2024</span>
-          <span><i class="far fa-eye"></i> 156 просмотров</span>
+          <span> 26 марта 2024</span>
+          <span> 156 просмотров</span>
         </div>
         <div class="${styles.modalNewsContent}">
           <h4>Сезонные проекты</h4>
@@ -172,7 +209,6 @@ const HomePage = () => {
     },
   ];
 
-  // Данные для классов
   const classesData = [
     {
       id: 1,
@@ -230,41 +266,6 @@ const HomePage = () => {
     },
   ];
 
-  // Данные для отзывов
-  const testimonials = [
-    {
-      id: 1,
-      text: "Ребёнок бежит в сад каждое утро! Очень довольны программой и чуткими воспитателями. Знайка — наша вторая семья.",
-      author: "Анна, мама Тимофея",
-      years: "3 года в саду",
-    },
-    {
-      id: 2,
-      text: "После года в Знайке сын научился читать и считать, а главное — появилась тяга к знаниям. Спасибо команде!",
-      author: "Игорь, папа Миши",
-      years: "1 год в саду",
-    },
-    {
-      id: 3,
-      text: "Очень уютная атмосфера, ребёнок всегда с радостью рассказывает, как прошёл день. Отдельное спасибо за вкусное питание!",
-      author: "Елена, мама Киры",
-      years: "2 года в саду",
-    },
-    {
-      id: 4,
-      text: "Воспитатели настоящие профессионалы! Ребёнок с удовольствием ходит в сад, участвует во всех мероприятиях. Рекомендую!",
-      author: "Дмитрий, папа Сони",
-      years: "полгода в саду",
-    },
-    {
-      id: 5,
-      text: "Отличный сад! Ребёнок всегда сыт, доволен, занятия интересные. Особенно нравится подход к развитию речи.",
-      author: "Светлана, мама Артёма",
-      years: "1,5 года в саду",
-    },
-  ];
-
-  // Данные для мероприятий
   const upcomingEvents = [
     {
       id: 1,
@@ -312,29 +313,20 @@ const HomePage = () => {
   ];
 
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: false,
-      mirror: true,
-    });
+    AOS.init({ duration: 800, once: false, mirror: true });
   }, []);
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "long", year: "numeric" };
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ru-RU", options);
+    return new Date(dateString).toLocaleDateString("ru-RU", options);
   };
 
   const scrollLeft = () => {
-    if (classesScrollRef.current) {
-      classesScrollRef.current.scrollBy({ left: -320, behavior: "smooth" });
-    }
+    classesScrollRef.current?.scrollBy({ left: -320, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    if (classesScrollRef.current) {
-      classesScrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
-    }
+    classesScrollRef.current?.scrollBy({ left: 320, behavior: "smooth" });
   };
 
   const openNewsModal = (news) => {
@@ -350,28 +342,20 @@ const HomePage = () => {
         url: window.location.href,
       });
     } else {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        alert("Ссылка скопирована в буфер обмена!");
-      });
+      navigator.clipboard.writeText(window.location.href);
+      alert("Ссылка скопирована в буфер обмена!");
     }
   };
 
-  // Обработчики для формы регистрации
   const handleRegistrationInputChange = (e) => {
     const { name, value } = e.target;
-    setRegistrationForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setRegistrationForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRegistrationSubmit = (e) => {
     e.preventDefault();
-    // Здесь будет логика отправки формы на сервер
     console.log("Registration form submitted:", registrationForm);
-    alert(
-      "Спасибо за заявку! Мы свяжемся с вами в ближайшее время для уточнения деталей.",
-    );
+    alert("Спасибо за заявку! Мы свяжемся с вами в ближайшее время.");
     setRegistrationForm({
       parentName: "",
       childName: "",
@@ -384,47 +368,44 @@ const HomePage = () => {
     setShowRegistrationModal(false);
   };
 
-  // Обработчики для простой формы внизу
   const handleSimpleFormChange = (e) => {
     const { name, value } = e.target;
-    setSimpleForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setSimpleForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSimpleFormSubmit = (e) => {
     e.preventDefault();
-    // Переносим данные из простой формы в форму регистрации
     setRegistrationForm({
       ...registrationForm,
       parentName: simpleForm.name,
       phone: simpleForm.phone,
       message: simpleForm.message,
     });
-    // Открываем модальное окно регистрации
     setShowRegistrationModal(true);
-    // Очищаем простую форму
-    setSimpleForm({
-      phone: "",
-      name: "",
-      message: "",
-    });
+    setSimpleForm({ phone: "", name: "", message: "" });
   };
 
-  const openRegistrationModal = () => {
-    setShowRegistrationModal(true);
+  const handleAddReview = (newReview) => {
+    const formattedReview = {
+      id: newReview.id,
+      text: newReview.text,
+      author: newReview.author,
+      years: newReview.yearsInGarden,
+      rating: newReview.rating,
+      childName: newReview.childName,
+      date: newReview.date,
+    };
+    setAllTestimonials((prev) => [formattedReview, ...prev]);
+    alert("Спасибо за ваш отзыв! Он появится на сайте.");
   };
 
-  const handleExcursionClick = () => {
-    navigate("/classes");
-  };
+  const openRegistrationModal = () => setShowRegistrationModal(true);
+  const handleExcursionClick = () => navigate("/classes");
 
   return (
     <>
       <NavbarComponent />
 
-      {/* Hero секция */}
       <section className={styles.heroSection} data-aos="fade-down">
         <Container>
           <Row className="align-items-center g-5">
@@ -444,28 +425,12 @@ const HomePage = () => {
                 <FaSmile className="text-primary me-2" />
                 Философия Знайки — радость и развитие каждый день
               </p>
-              <div
-                className="d-flex gap-3"
+              <BookingButtons
+                onBookingClick={openRegistrationModal}
+                onExcursionClick={handleExcursionClick}
                 data-aos="fade-right"
                 data-aos-delay="600"
-              >
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="px-5"
-                  onClick={openRegistrationModal}
-                >
-                  Записаться
-                </Button>
-                <Button
-                  variant="excursion"
-                  size="lg"
-                  className={`px-4 ${styles.excursionButton}`}
-                  onClick={handleExcursionClick}
-                >
-                  Экскурсия
-                </Button>
-              </div>
+              />
             </Col>
             <Col lg={6} data-aos="fade-left" data-aos-delay="400">
               <img
@@ -478,51 +443,54 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* 4 ярких кружка-ссылки */}
       <section className="py-5">
         <Container>
           <Row className="text-center g-4">
-            <Col md={3} data-aos="zoom-in" data-aos-delay="100">
-              <Link
-                to="#"
-                className={`${styles.categoryCircle} ${styles.bgCoral} mx-auto`}
+            {[
+              {
+                icon: <FaPuzzlePiece />,
+                title: "Игровая среда",
+                color: styles.bgCoral,
+                delay: 100,
+              },
+              {
+                icon: <FaSeedling />,
+                title: "Философия Знайки",
+                color: styles.bgTurq,
+                delay: 200,
+              },
+              {
+                icon: <FaBookOpen />,
+                title: "Учебная программа",
+                color: styles.bgGold,
+                delay: 300,
+              },
+              {
+                icon: <FaUtensils />,
+                title: "Кухня шеф-повара",
+                color: styles.bgRose,
+                delay: 400,
+              },
+            ].map((item, idx) => (
+              <Col
+                md={3}
+                key={idx}
+                data-aos="zoom-in"
+                data-aos-delay={item.delay}
               >
-                <FaPuzzlePiece />
-              </Link>
-              <h4>Игровая среда</h4>
-            </Col>
-            <Col md={3} data-aos="zoom-in" data-aos-delay="200">
-              <Link
-                to="#"
-                className={`${styles.categoryCircle} ${styles.bgTurq} mx-auto`}
-              >
-                <FaSeedling />
-              </Link>
-              <h4>Философия Знайки</h4>
-            </Col>
-            <Col md={3} data-aos="zoom-in" data-aos-delay="300">
-              <Link
-                to="#"
-                className={`${styles.categoryCircle} ${styles.bgGold} mx-auto`}
-              >
-                <FaBookOpen />
-              </Link>
-              <h4>Учебная программа</h4>
-            </Col>
-            <Col md={3} data-aos="zoom-in" data-aos-delay="400">
-              <Link
-                to="#"
-                className={`${styles.categoryCircle} ${styles.bgRose} mx-auto`}
-              >
-                <FaUtensils />
-              </Link>
-              <h4>Кухня шеф-повара</h4>
-            </Col>
+                <Link
+                  to="#"
+                  className={`${styles.categoryCircle} ${item.color} mx-auto`}
+                >
+                  {item.icon}
+                </Link>
+                <h4>{item.title}</h4>
+              </Col>
+            ))}
           </Row>
         </Container>
       </section>
 
-      {/* Учебная программа */}
       <section className={`py-5 ${styles.bgSoftGreen}`}>
         <Container>
           <Row className="align-items-center">
@@ -535,12 +503,16 @@ const HomePage = () => {
                 наполнен открытиями.
               </p>
               <ul className={styles.listCheck}>
-                <li>Английский с носителем</li>
-                <li>LEGO-конструирование</li>
-                <li>Робототехника</li>
-                <li>Каллиграфия</li>
-                <li>Класс танцев</li>
-                <li>Театральная студия</li>
+                {[
+                  "Английский с носителем",
+                  "LEGO-конструирование",
+                  "Робототехника",
+                  "Каллиграфия",
+                  "Класс танцев",
+                  "Театральная студия",
+                ].map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
               </ul>
             </Col>
             <Col md={6} data-aos="fade-left" data-aos-delay="200">
@@ -554,166 +526,130 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* Сердце сада (воспитатели) */}
       <section className="py-5">
         <Container>
           <h2 className="display-4 text-center mb-5" data-aos="fade-up">
             Сердце нашего детского сада
           </h2>
           <Row className="g-4">
-            <Col
-              md={3}
-              className="text-center"
-              data-aos="flip-left"
-              data-aos-delay="100"
-            >
-              <img
-                src="/public/images/4.jpg"
-                className={`rounded-circle mb-3 ${styles.teacherImg}`}
-                alt="teacher"
-              />
-              <h4>Елена Петрова</h4>
-              <p className="text-secondary">педагог раннего развития</p>
-            </Col>
-            <Col
-              md={3}
-              className="text-center"
-              data-aos="flip-left"
-              data-aos-delay="200"
-            >
-              <img
-                src="/public/images/3.jpg"
-                className={`rounded-circle mb-3 ${styles.teacherImg}`}
-                alt="teacher"
-              />
-              <h4>Наталия Соколова</h4>
-              <p className="text-secondary">музыкальный руководитель</p>
-            </Col>
-            <Col
-              md={3}
-              className="text-center"
-              data-aos="flip-left"
-              data-aos-delay="300"
-            >
-              <img
-                src="/public/images/1.jpg"
-                className={`rounded-circle mb-3 ${styles.teacherImg}`}
-                alt="teacher"
-              />
-              <h4>Анна Васильева</h4>
-              <p className="text-secondary">художник-педагог</p>
-            </Col>
-            <Col
-              md={3}
-              className="text-center"
-              data-aos="flip-left"
-              data-aos-delay="400"
-            >
-              <img
-                src="/public/images/2.jpg"
-                className={`rounded-circle mb-3 ${styles.teacherImg}`}
-                alt="teacher"
-              />
-              <h4>Ольга Миронова</h4>
-              <p className="text-secondary">психолог</p>
-            </Col>
+            {[
+              {
+                img: "/public/images/4.jpg",
+                name: "Елена Петрова",
+                role: "педагог раннего развития",
+                delay: 100,
+              },
+              {
+                img: "/public/images/3.jpg",
+                name: "Наталия Соколова",
+                role: "музыкальный руководитель",
+                delay: 200,
+              },
+              {
+                img: "/public/images/1.jpg",
+                name: "Анна Васильева",
+                role: "художник-педагог",
+                delay: 300,
+              },
+              {
+                img: "/public/images/2.jpg",
+                name: "Ольга Миронова",
+                role: "психолог",
+                delay: 400,
+              },
+            ].map((teacher, idx) => (
+              <Col
+                md={3}
+                className="text-center"
+                key={idx}
+                data-aos="flip-left"
+                data-aos-delay={teacher.delay}
+              >
+                <img
+                  src={teacher.img}
+                  className={`rounded-circle mb-3 ${styles.teacherImg}`}
+                  alt="teacher"
+                />
+                <h4>{teacher.name}</h4>
+                <p className="text-secondary">{teacher.role}</p>
+              </Col>
+            ))}
           </Row>
         </Container>
       </section>
 
-      {/* Отзывы: карусель */}
       <section className={`py-5 ${styles.bgLight}`}>
         <Container>
-          <h2 className="display-4 text-center mb-5" data-aos="fade-up">
-            Истории успеха родителей
-          </h2>
-          <div data-aos="fade-up" data-aos-delay="200">
-            <Carousel
-              indicators
-              prevIcon={<span className="carousel-control-prev-icon" />}
-              nextIcon={<span className="carousel-control-next-icon" />}
-              className={styles.testimonialCarousel}
+          <div className="d-flex justify-content-between align-items-center mb-5">
+            <h2 className="display-4" data-aos="fade-up">
+              Истории успеха родителей
+            </h2>
+            <Button
+              variant="excursion"
+              size="lg"
+              className="mt-3 px-3"
+              style={{ background: "#58b4ae", color: "black" }}
+              onClick={() => setShowReviewModal(true)}
+              data-aos="fade-left"
             >
-              <Carousel.Item>
-                <Row className="g-4">
-                  <Col md={6}>
-                    <div className={styles.testimonialCard}>
-                      <FaQuoteLeft
-                        className={`fa-3x mb-3 ${styles.quoteIcon}`}
-                      />
-                      <p className="fs-5">"{testimonials[0].text}"</p>
-                      <p className="fw-bold mb-0">— {testimonials[0].author}</p>
-                      <small className="text-secondary">
-                        {testimonials[0].years}
-                      </small>
-                    </div>
-                  </Col>
-                  <Col md={6}>
-                    <div className={styles.testimonialCard}>
-                      <FaQuoteLeft
-                        className={`fa-3x mb-3 ${styles.quoteIcon}`}
-                      />
-                      <p className="fs-5">"{testimonials[1].text}"</p>
-                      <p className="fw-bold mb-0">— {testimonials[1].author}</p>
-                      <small className="text-secondary">
-                        {testimonials[1].years}
-                      </small>
-                    </div>
-                  </Col>
-                </Row>
-              </Carousel.Item>
+              <FaStar className="me-2" /> Оставить отзыв
+            </Button>
+          </div>
 
-              <Carousel.Item>
-                <Row className="g-4">
-                  <Col md={6}>
-                    <div className={styles.testimonialCard}>
-                      <FaQuoteLeft
-                        className={`fa-3x mb-3 ${styles.quoteIcon}`}
-                      />
-                      <p className="fs-5">"{testimonials[2].text}"</p>
-                      <p className="fw-bold mb-0">— {testimonials[2].author}</p>
-                      <small className="text-secondary">
-                        {testimonials[2].years}
-                      </small>
-                    </div>
-                  </Col>
-                  <Col md={6}>
-                    <div className={styles.testimonialCard}>
-                      <FaQuoteLeft
-                        className={`fa-3x mb-3 ${styles.quoteIcon}`}
-                      />
-                      <p className="fs-5">"{testimonials[3].text}"</p>
-                      <p className="fw-bold mb-0">— {testimonials[3].author}</p>
-                      <small className="text-secondary">
-                        {testimonials[3].years}
-                      </small>
-                    </div>
-                  </Col>
-                </Row>
-              </Carousel.Item>
-
-              <Carousel.Item>
-                <Row className="g-4 justify-content-center">
-                  <Col md={6}>
-                    <div className={styles.testimonialCard}>
-                      <FaQuoteLeft
-                        className={`fa-3x mb-3 ${styles.quoteIcon}`}
-                      />
-                      <p className="fs-5">"{testimonials[4].text}"</p>
-                      <p className="fw-bold mb-0">— {testimonials[4].author}</p>
-                      <small className="text-secondary">
-                        {testimonials[4].years}
-                      </small>
-                    </div>
-                  </Col>
-                </Row>
-              </Carousel.Item>
+          <div data-aos="fade-up" data-aos-delay="200">
+            <Carousel indicators className={styles.testimonialCarousel}>
+              {Array.from({
+                length: Math.ceil(allTestimonials.length / 2),
+              }).map((_, index) => (
+                <Carousel.Item key={index}>
+                  <Row className="g-4">
+                    {allTestimonials
+                      .slice(index * 2, index * 2 + 2)
+                      .map((testimonial) => (
+                        <Col md={6} key={testimonial.id}>
+                          <div className={styles.testimonialCard}>
+                            <div className="d-flex justify-content-between mb-3">
+                              <FaQuoteLeft
+                                className={`fa-3x ${styles.quoteIcon}`}
+                              />
+                              {testimonial.rating && (
+                                <div className={styles.testimonialRating}>
+                                  {[...Array(5)].map((_, i) => (
+                                    <FaStar
+                                      key={i}
+                                      className={
+                                        i < testimonial.rating
+                                          ? styles.starFilled
+                                          : styles.starEmpty
+                                      }
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <p className="fs-5">"{testimonial.text}"</p>
+                            <p className="fw-bold mb-0">
+                              — {testimonial.author}
+                            </p>
+                            {testimonial.childName && (
+                              <small className="text-secondary">
+                                мама/папа {testimonial.childName}
+                              </small>
+                            )}
+                            <small className="text-secondary d-block">
+                              {testimonial.years}
+                            </small>
+                          </div>
+                        </Col>
+                      ))}
+                  </Row>
+                </Carousel.Item>
+              ))}
             </Carousel>
           </div>
         </Container>
       </section>
 
-      {/* Блок CTA в центре */}
       <Container>
         <div
           className={`text-center my-5 p-5 ${styles.ctaBlock}`}
@@ -733,7 +669,6 @@ const HomePage = () => {
         </div>
       </Container>
 
-      {/* Наши классы — слайдер */}
       <section className={styles.classesSliderSection}>
         <Container>
           <div className={styles.sliderHeader} data-aos="fade-right">
@@ -742,11 +677,6 @@ const HomePage = () => {
               <div
                 className={styles.sliderArrow}
                 onClick={scrollLeft}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    scrollLeft();
-                  }
-                }}
                 role="button"
                 tabIndex={0}
               >
@@ -755,11 +685,6 @@ const HomePage = () => {
               <div
                 className={styles.sliderArrow}
                 onClick={scrollRight}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    scrollRight();
-                  }
-                }}
                 role="button"
                 tabIndex={0}
               >
@@ -782,7 +707,8 @@ const HomePage = () => {
                   ></i>
                   <h3>{classItem.title}</h3>
                   <p>
-                    <strong>{classItem.age}</strong> <br />
+                    <strong>{classItem.age}</strong>
+                    <br />
                     <FaUsers /> {classItem.students} учеников
                   </p>
                   <div className={styles.classPrice}>
@@ -795,7 +721,6 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* Мероприятия */}
       <section className={`py-5 ${styles.bgLight}`}>
         <Container>
           <h2 className="display-5 text-center mb-5" data-aos="fade-up">
@@ -832,7 +757,8 @@ const HomePage = () => {
                     <span className="fw-semibold">{event.month}</span>
                   </div>
                   <div className="flex-grow-1 mx-3">
-                    <span className="fw-bold">{event.title}</span> <br />{" "}
+                    <span className="fw-bold">{event.title}</span>
+                    <br />
                     {event.time}
                   </div>
                 </div>
@@ -842,7 +768,6 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* Новости и статьи с формой внизу */}
       <section className={`py-5 ${styles.bgSoftGreen}`}>
         <Container>
           <h2 className="display-5 text-center mb-5" data-aos="fade-up">
@@ -860,11 +785,6 @@ const HomePage = () => {
                 <div
                   className={styles.newsCard}
                   onClick={() => openNewsModal(news)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      openNewsModal(news);
-                    }
-                  }}
                   role="button"
                   tabIndex={0}
                 >
@@ -901,6 +821,7 @@ const HomePage = () => {
               </Col>
             ))}
           </Row>
+
           <div className="text-center mt-5" data-aos="fade-up">
             <Button variant="outline-dark" size="lg" className="rounded-pill">
               ЧИТАЙТЕ ВСЕ НОВОСТИ
@@ -909,7 +830,6 @@ const HomePage = () => {
 
           <hr className="my-5" />
 
-          {/* Форма внизу страницы */}
           <Row className="justify-content-center">
             <Col
               md={8}
@@ -924,6 +844,7 @@ const HomePage = () => {
                 Позвоните: <strong>+7 (495) 666-33-99</strong> или заполните
                 форму ниже.
               </p>
+
               <div
                 className="mb-4"
                 style={{ maxWidth: "600px", margin: "0 auto" }}
@@ -942,7 +863,7 @@ const HomePage = () => {
                     style={{ objectFit: "cover" }}
                   >
                     <source
-                      src="/public/Веселый детский танец _Нано техно_. Легкий танец (1).mp4"
+                      src="/public/images/inner-kids-party-rock_D6jtutis.mp4"
                       type="video/mp4"
                     />
                     Ваш браузер не поддерживает видео.
@@ -950,7 +871,6 @@ const HomePage = () => {
                 </div>
               </div>
 
-              {/* Форма с обработчиком */}
               <Form
                 className={styles.contactForm}
                 onSubmit={handleSimpleFormSubmit}
@@ -1005,7 +925,6 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* Модальное окно для регистрации */}
       <Modal
         show={showRegistrationModal}
         onHide={() => setShowRegistrationModal(false)}
@@ -1015,14 +934,13 @@ const HomePage = () => {
       >
         <Modal.Header closeButton className={styles.registrationModalHeader}>
           <Modal.Title as="h3" className={styles.registrationModalTitle}>
-            <FaChild className="me-2" style={{ color: "#ff8a5c" }} />
-            Запись в детский сад
+            <FaChild className="me-2" style={{ color: "#ff8a5c" }} /> Запись в
+            детский сад
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p className="text-center text-muted mb-4">
-            Заполните форму ниже, и мы свяжемся с вами для уточнения деталей и
-            приглашения на экскурсию
+            Заполните форму ниже, и мы свяжемся с вами
           </p>
           <Form onSubmit={handleRegistrationSubmit}>
             <Row className="g-3">
@@ -1032,7 +950,6 @@ const HomePage = () => {
                   <Form.Control
                     type="text"
                     name="parentName"
-                    placeholder="Иванов Иван"
                     value={registrationForm.parentName}
                     onChange={handleRegistrationInputChange}
                     required
@@ -1045,7 +962,6 @@ const HomePage = () => {
                   <Form.Control
                     type="text"
                     name="childName"
-                    placeholder="Петров Петя"
                     value={registrationForm.childName}
                     onChange={handleRegistrationInputChange}
                     required
@@ -1088,7 +1004,6 @@ const HomePage = () => {
                   <Form.Control
                     type="email"
                     name="email"
-                    placeholder="ivan@example.com"
                     value={registrationForm.email}
                     onChange={handleRegistrationInputChange}
                   />
@@ -1123,7 +1038,6 @@ const HomePage = () => {
                     as="textarea"
                     name="message"
                     rows={3}
-                    placeholder="Ваши пожелания или вопросы"
                     value={registrationForm.message}
                     onChange={handleRegistrationInputChange}
                   />
@@ -1153,7 +1067,6 @@ const HomePage = () => {
         </Modal.Body>
       </Modal>
 
-      {/* Модальное окно для новостей */}
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
@@ -1200,6 +1113,11 @@ const HomePage = () => {
         </Modal.Footer>
       </Modal>
 
+      <AddReviewModal
+        show={showReviewModal}
+        onHide={() => setShowReviewModal(false)}
+        onAddReview={handleAddReview}
+      />
       <FooterComponent />
     </>
   );

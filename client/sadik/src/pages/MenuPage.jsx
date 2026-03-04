@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { FaSun, FaUtensils, FaPhoneAlt, FaBirthdayCake } from "react-icons/fa";
+import React, { useEffect, useState, useCallback } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { FaSun, FaUtensils, FaBirthdayCake } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import ContactForm from "../components/ContactForm";
 import styles from "./MenuPage.module.css";
 
 const MenuPage = () => {
   const [activeDay, setActiveDay] = useState("monday");
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    phone: "",
-    name: "",
-    message: "",
-  });
 
   const days = [
     { id: "monday", label: "Понедельник" },
@@ -31,33 +27,7 @@ const MenuPage = () => {
     { id: "dessert", label: "Десерт", icon: FaBirthdayCake },
   ];
 
-  useEffect(() => {
-    AOS.init({ duration: 800, once: false, mirror: true });
-    fetchMenuData();
-  }, []);
-
-  useEffect(() => {
-    if (activeDay) {
-      fetchMenuData(activeDay);
-    }
-  }, [activeDay]);
-
-  const fetchMenuData = async (day = "monday") => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/menu/${day}`);
-      const data = await response.json();
-      setMenuData(data);
-    } catch (error) {
-      console.error("Error fetching menu data:", error);
-
-      setMenuData(getMockData(day));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getMockData = (day) => {
+  const getMockData = useCallback(() => {
     return {
       breakfast: [
         {
@@ -107,39 +77,36 @@ const MenuPage = () => {
         },
       ],
     };
-  };
+  }, []);
+
+  const fetchMenuData = useCallback(
+    async (day = "monday") => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/menu/${day}`);
+        const data = await response.json();
+        setMenuData(data);
+      } catch (error) {
+        console.error("Error fetching menu data:", error);
+        setMenuData(getMockData());
+      } finally {
+        setLoading(false);
+      }
+    },
+    [getMockData],
+  );
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: false, mirror: true });
+    fetchMenuData();
+  }, [fetchMenuData]);
+
+  useEffect(() => {
+    fetchMenuData(activeDay);
+  }, [activeDay, fetchMenuData]);
 
   const handleDayClick = (dayId) => {
     setActiveDay(dayId);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("Форма отправлена! Мы свяжемся с вами в ближайшее время.");
-        setFormData({ phone: "", name: "", message: "" });
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Произошла ошибка при отправке. Пожалуйста, попробуйте позже.");
-    }
   };
 
   if (loading) {
@@ -238,65 +205,7 @@ const MenuPage = () => {
 
           <Row className="justify-content-center mt-5">
             <Col lg={8}>
-              <div className={styles.contactForm} data-aos="zoom-in">
-                <h2
-                  className={`display-5 text-center mb-4 ${styles.formTitle}`}
-                >
-                  Как записать ребенка на занятия?
-                </h2>
-                <p className="text-center fs-5 mb-4">
-                  <FaPhoneAlt className="me-2 text-primary" />
-                  <strong>+7 (495) 666-33-99</strong> или заполните форму ниже
-                </p>
-                <p className="text-center text-muted mb-4">
-                  Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет.
-                  Мы поможем вам с подготовкой к школе и развитием личности.
-                </p>
-
-                <Form onSubmit={handleSubmit}>
-                  <Row className="g-3">
-                    <Col md={6}>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Контактный телефон"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={3}
-                        placeholder="Ваше сообщение"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col xs={12} className="text-center">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className="px-5 py-3"
-                      >
-                        ОТПРАВИТЬ
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
+              <ContactForm />
             </Col>
           </Row>
         </Container>

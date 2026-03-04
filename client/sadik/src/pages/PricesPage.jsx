@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Accordion } from "react-bootstrap";
 import {
-  FaPhoneAlt,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaEnvelope,
-} from "react-icons/fa";
+  Container,
+  Row,
+  Col,
+  Button,
+  Accordion,
+  Modal,
+  Form,
+} from "react-bootstrap";
+import { FaCheckCircle, FaTimesCircle, FaChild } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
@@ -13,6 +16,17 @@ import FooterComponent from "../components/FooterComponent";
 import "./PricesPage.css";
 
 const PricesPage = () => {
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [registrationForm, setRegistrationForm] = useState({
+    parentName: "",
+    childName: "",
+    childAge: "",
+    phone: "",
+    email: "",
+    preferredClass: "",
+    message: "",
+  });
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -142,6 +156,36 @@ const PricesPage = () => {
     },
   ];
 
+  const openRegistrationModal = () => {
+    setShowRegistrationModal(true);
+  };
+
+  const handleRegistrationInputChange = (e) => {
+    const { name, value } = e.target;
+    setRegistrationForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRegistrationSubmit = (e) => {
+    e.preventDefault();
+    console.log("Registration form submitted:", registrationForm);
+    alert(
+      "Спасибо за заявку! Мы свяжемся с вами в ближайшее время для уточнения деталей.",
+    );
+    setRegistrationForm({
+      parentName: "",
+      childName: "",
+      childAge: "",
+      phone: "",
+      email: "",
+      preferredClass: "",
+      message: "",
+    });
+    setShowRegistrationModal(false);
+  };
+
   return (
     <>
       <NavbarComponent />
@@ -186,12 +230,6 @@ const PricesPage = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    variant={plan.buttonVariant}
-                    className="w-100 rounded-pill py-3"
-                  >
-                    {plan.buttonText}
-                  </Button>
                 </div>
               </Col>
             ))}
@@ -201,7 +239,12 @@ const PricesPage = () => {
             <h2 className="display-5 mb-3">
               Собираетесь ли Вы записать своего ребенка в детский сад?
             </h2>
-            <Button variant="primary" size="lg" className="mt-3 px-5">
+            <Button
+              variant="primary"
+              size="lg"
+              className="mt-3 px-5"
+              onClick={openRegistrationModal}
+            >
               Записаться
             </Button>
           </div>
@@ -232,29 +275,158 @@ const PricesPage = () => {
                     </Accordion.Item>
                   ))}
                 </Accordion>
-
-                <div className="contact-card p-4 rounded-4 mt-4">
-                  <h4 className="mb-3">Остались вопросы?</h4>
-                  <p className="mb-3">
-                    Свяжитесь с нами любым удобным способом — мы с радостью
-                    проконсультируем вас!
-                  </p>
-                  <div className="d-flex gap-3">
-                    <Button variant="primary" className="rounded-pill">
-                      <FaPhoneAlt className="me-2" />
-                      Позвонить
-                    </Button>
-                    <Button variant="outline-dark" className="rounded-pill">
-                      <FaEnvelope className="me-2" />
-                      Написать
-                    </Button>
-                  </div>
-                </div>
               </Col>
             </Row>
           </div>
         </Container>
       </section>
+
+      <Modal
+        show={showRegistrationModal}
+        onHide={() => setShowRegistrationModal(false)}
+        size="lg"
+        centered
+        dialogClassName="registration-modal"
+      >
+        <Modal.Header closeButton className="registration-modal-header">
+          <Modal.Title as="h3" className="registration-modal-title">
+            <FaChild className="me-2" style={{ color: "#ff8a5c" }} />
+            Запись в детский сад
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-center text-muted mb-4">
+            Заполните форму ниже, и мы свяжемся с вами для уточнения деталей и
+            приглашения на экскурсию
+          </p>
+          <Form onSubmit={handleRegistrationSubmit}>
+            <Row className="g-3">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Ваше имя *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="parentName"
+                    placeholder="Иванов Иван"
+                    value={registrationForm.parentName}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Имя ребенка *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="childName"
+                    placeholder="Петров Петя"
+                    value={registrationForm.childName}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Возраст ребенка *</Form.Label>
+                  <Form.Select
+                    name="childAge"
+                    value={registrationForm.childAge}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  >
+                    <option value="">Выберите возраст</option>
+                    <option value="3-4">3-4 года</option>
+                    <option value="4-5">4-5 лет</option>
+                    <option value="5-6">5-6 лет</option>
+                    <option value="6-7">6-7 лет</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Телефон *</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    placeholder="+7 (999) 123-45-67"
+                    value={registrationForm.phone}
+                    onChange={handleRegistrationInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="ivan@example.com"
+                    value={registrationForm.email}
+                    onChange={handleRegistrationInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Предпочитаемое направление</Form.Label>
+                  <Form.Select
+                    name="preferredClass"
+                    value={registrationForm.preferredClass}
+                    onChange={handleRegistrationInputChange}
+                  >
+                    <option value="">Выберите направление</option>
+                    <option value="Каллиграфия">Каллиграфия</option>
+                    <option value="Художественный класс">
+                      Художественный класс
+                    </option>
+                    <option value="Английский язык">Английский язык</option>
+                    <option value="Класс танцев">Класс танцев</option>
+                    <option value="Театральная студия">
+                      Театральная студия
+                    </option>
+                    <option value="Робототехника">Робототехника</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label>Дополнительная информация</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    name="message"
+                    rows={3}
+                    placeholder="Ваши пожелания или вопросы"
+                    value={registrationForm.message}
+                    onChange={handleRegistrationInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Check
+                    type="checkbox"
+                    label="Я согласен на обработку персональных данных"
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} className="text-center mt-4">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="px-5 py-3"
+                  style={{ borderRadius: "40px" }}
+                >
+                  Отправить заявку
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
       <FooterComponent />
     </>

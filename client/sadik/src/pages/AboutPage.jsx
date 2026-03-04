@@ -72,7 +72,7 @@ const AboutPage = () => {
       title: "🌸 Философия гармонии",
       text: "Счастье — это когда тебя понимают. Учим видеть красоту в простых вещах.",
       image:
-        "https://png.pngtree.com/thumb_back/fw800/background/20241210/pngtree-children-planting-trees-environmental-conservation-and-teamwork-concept-image_16681784.jpg",
+        "/public/images/pngtree-children-planting-trees-environmental-conservation-and-teamwork-concept-image_16681784.jpg",
       alt: "Философия гармонии",
     },
     {
