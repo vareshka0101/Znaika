@@ -110,6 +110,7 @@ const TeachersPage = () => {
           src="/public/images/14.jpg"
           alt="Декоративная картинка"
           className="animate__animated animate__fadeIn"
+          style={{ height: "350px" }}
         />
       </div>
 

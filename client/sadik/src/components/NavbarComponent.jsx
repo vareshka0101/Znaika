@@ -67,7 +67,7 @@ const NavbarComponent = () => {
               <FaOdnoklassniki />
             </a>
             <a
-              href="https://web.telegram.org/k/"
+              href="https://t.me/znaika_bot"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -183,7 +183,6 @@ const NavbarComponent = () => {
         </Container>
       </Navbar>
 
-      {/* Модальное окно входа/регистрации */}
       <Modal
         show={showModal}
         onHide={handleClose}

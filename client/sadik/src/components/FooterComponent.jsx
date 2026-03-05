@@ -67,17 +67,26 @@ const FooterComponent = () => {
           <Col md={3}>
             <h5 className={styles.footerTitle}>Мы в сети</h5>
             <div className={styles.footerSocial}>
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://vk.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FaVk />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://ok.ru/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FaOdnoklassniki />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://t.me/znaika_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FaTelegramPlane />
-              </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                <FaWhatsapp />
               </a>
             </div>
             <p className="mt-4 text-white-50">
