@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
 
 :root {
@@ -20,7 +19,6 @@
     text-align: justify;
     line-height: 1.7;
 }
-
 
 .clubCard {
     background: white;
@@ -102,7 +100,6 @@
     color: white;
     transform: scale(1.05);
 }
-
 
 .forumContainer {
     background: white;
@@ -188,28 +185,32 @@
     margin: 1rem 0;
 }
 
-.ctaButton {
-    background-color: var(--primary);
-    color: white;
-    border-radius: 40px;
-    padding: 0.7rem 2rem;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-decoration: none;
+.telegramButton {
     display: inline-block;
-    font-size: 1.25rem;
+    background-color: #58b4ae;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
 }
 
-.ctaButton:hover {
-    background-color: var(--primary-dark);
-    color: white;
+.telegramButton:hover {
+    background-color: #469b95;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 138, 92, 0.4);
+    box-shadow: 0 5px 15px rgba(88, 180, 174, 0.3);
+    color: white;
     text-decoration: none;
 }
 
+.telegramButton svg {
+    font-size: 1.2rem;
+}
 
 .benefitsSection {
     background-color: #f8f9fa;
@@ -223,7 +224,6 @@
 .clubCard:hover .benefitIcon {
     transform: scale(1.1) rotate(360deg);
 }
-
 
 @media (max-width: 992px) {
     .clubCard {
@@ -280,10 +280,5 @@
 
     .secretCodeInput {
         max-width: 100%;
-    }
-
-    .ctaButton {
-        padding: 0.6rem 1.5rem;
-        font-size: 1rem;
     }
 }

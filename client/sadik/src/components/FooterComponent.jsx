@@ -28,9 +28,6 @@ const FooterComponent = () => {
                 <Link to="/about">О нас</Link>
               </li>
               <li>
-                <Link to="/enrollment">Зачисление</Link>
-              </li>
-              <li>
                 <Link to="/events">Мероприятия</Link>
               </li>
               <li>
@@ -41,9 +38,6 @@ const FooterComponent = () => {
           <Col md={3}>
             <h5 className={styles.footerTitle}>Страницы</h5>
             <ul className={styles.footerLinks}>
-              <li>
-                <Link to="/schedule">Расписание</Link>
-              </li>
               <li>
                 <Link to="/menu">Меню</Link>
               </li>
@@ -62,13 +56,11 @@ const FooterComponent = () => {
             <h5 className={styles.footerTitle}>Документы</h5>
             <ul className={styles.footerLinks}>
               <li>
-                <Link to="/license">Лицензия</Link>
+                <Link to="/programs">Лицензия</Link>
               </li>
+
               <li>
-                <Link to="/program">Программа</Link>
-              </li>
-              <li>
-                <Link to="/faq">Частые вопросы</Link>
+                <Link to="/prices">Частые вопросы</Link>
               </li>
             </ul>
           </Col>

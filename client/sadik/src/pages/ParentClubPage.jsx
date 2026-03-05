@@ -14,6 +14,7 @@ import {
   FaUsers,
   FaCalendarCheck,
   FaLockOpen,
+  FaTelegramPlane,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -350,8 +351,14 @@ const ParentClubPage = () => {
             </h2>
             <p className="fs-4">Запишитесь на ближайшую встречу по телефону</p>
             <p className={styles.ctaPhone}>+7 (495) 666-33-99</p>
-            <a href="#" className={styles.ctaButton}>
-              Позвонить сейчас
+            <a
+              href="https://t.me/znaika_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.telegramButton}
+            >
+              <FaTelegramPlane className="me-2" />
+              Написать в Telegram
             </a>
           </div>
         </Container>
