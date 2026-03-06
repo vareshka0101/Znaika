@@ -10,6 +10,7 @@ import ProgramsPage from "./pages/ProgramsPage";
 import EventsPage from "./pages/EventsPage";
 import ParentClubPage from "./pages/ParentClubPage";
 import ContactsPage from "./pages/ContactsPage";
+import TopicPage from "./pages/TopicPage";
 import "./index.css";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Route path="/programs" element={<ProgramsPage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/parent-club" element={<ParentClubPage />} />
+      <Route path="/parent-club/topic/:id" element={<TopicPage />} />
       <Route path="/contacts" element={<ContactsPage />} />
     </Routes>
   );

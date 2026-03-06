@@ -423,7 +423,7 @@ const HomePage = () => {
                 data-aos-delay="400"
               >
                 <FaSmile className="text-primary me-2" />
-                Философия Знайки — радость и развитие каждый день
+                Философия "Знайки" — радость и развитие каждый день
               </p>
               <BookingButtons
                 onBookingClick={openRegistrationModal}
@@ -718,53 +718,6 @@ const HomePage = () => {
               </div>
             ))}
           </div>
-        </Container>
-      </section>
-
-      <section className={`py-5 ${styles.bgLight}`}>
-        <Container>
-          <h2 className="display-5 text-center mb-5" data-aos="fade-up">
-            Наши мероприятия
-          </h2>
-          <Row className="g-5">
-            <Col lg={6} data-aos="fade-right">
-              <h3 className="mb-4">
-                <FaCalendarAlt className="me-2" style={{ color: "#ff8a5c" }} />В
-                Планировании
-              </h3>
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className={styles.eventTile}>
-                  <span className={styles.eventDate}>{event.date}</span>
-                  <div className={styles.eventTitle}>{event.title}</div>
-                  <div className={styles.eventTime}>{event.time}</div>
-                </div>
-              ))}
-            </Col>
-            <Col lg={6} data-aos="fade-left" data-aos-delay="200">
-              <h3 className="mb-4">
-                <FaStar className="me-2" style={{ color: "#58b4ae" }} />
-                Архивные события
-              </h3>
-              {archiveEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className={`${styles.eventTile} d-flex align-items-center justify-content-between`}
-                >
-                  <div>
-                    <span className="fw-bold fs-3 text-primary">
-                      {event.day}
-                    </span>{" "}
-                    <span className="fw-semibold">{event.month}</span>
-                  </div>
-                  <div className="flex-grow-1 mx-3">
-                    <span className="fw-bold">{event.title}</span>
-                    <br />
-                    {event.time}
-                  </div>
-                </div>
-              ))}
-            </Col>
-          </Row>
         </Container>
       </section>
 

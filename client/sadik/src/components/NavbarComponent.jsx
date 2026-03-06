@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Navbar,
@@ -10,6 +10,7 @@ import {
   Form,
   Tabs,
   Tab,
+  Alert,
 } from "react-bootstrap";
 import {
   FaStar,
@@ -22,29 +23,144 @@ import {
   FaLock,
   FaUser,
   FaChild,
+  FaUserCircle,
 } from "react-icons/fa";
+import { api } from "../services/api";
 import styles from "./NavbarComponent.module.css";
 
 const NavbarComponent = () => {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Здесь будет логика входа
-    console.log("Вход в систему");
-    handleClose();
+  const [registerForm, setRegisterForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    childName: "",
+    childAge: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUser();
+    }
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const userData = await api.getCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      localStorage.removeItem("token");
+    }
   };
 
-  const handleRegister = (e) => {
+  const handleClose = () => {
+    setShowModal(false);
+    setErrors({});
+    setLoginForm({ email: "", password: "" });
+    setRegisterForm({
+      name: "",
+      email: "",
+      phone: "",
+      childName: "",
+      childAge: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
+
+  const handleShow = () => setShowModal(true);
+
+  const handleLoginChange = (e) => {
+    const { name, value } = e.target;
+    setLoginForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegisterChange = (e) => {
+    const { name, value } = e.target;
+    setRegisterForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Здесь будет логика регистрации
-    console.log("Регистрация");
-    handleClose();
+    setLoading(true);
+    setErrors({});
+
+    try {
+      const response = await api.login(loginForm);
+      localStorage.setItem("token", response.token);
+      setUser(response.user);
+      handleClose();
+      alert(`Добро пожаловать, ${response.user.name}!`);
+    } catch (error) {
+      setErrors({ login: "Неверный email или пароль" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+
+    if (registerForm.password !== registerForm.confirmPassword) {
+      setErrors({ register: "Пароли не совпадают" });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await api.register({
+        name: registerForm.name,
+        email: registerForm.email,
+        phone: registerForm.phone,
+        childName: registerForm.childName,
+        childAge: registerForm.childAge,
+        password: registerForm.password,
+        password_confirmation: registerForm.confirmPassword,
+      });
+
+      localStorage.setItem("token", response.token);
+      setUser(response.user);
+      handleClose();
+      alert(`Регистрация успешна! Добро пожаловать, ${response.user.name}!`);
+    } catch (error) {
+      if (error.errors) {
+        setErrors({ register: Object.values(error.errors).flat()[0] });
+      } else {
+        setErrors({ register: "Ошибка при регистрации" });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("token");
+      setUser(null);
+      alert("Вы вышли из системы");
+    }
   };
 
   return (
@@ -87,7 +203,11 @@ const NavbarComponent = () => {
             Знайка
             <img
               src="/public/images/Без имени-1.png"
-              style={{ width: "45px", marginBottom: "10px" }}
+              style={{
+                width: "45px",
+                marginBottom: "10px",
+                marginLeft: "10px",
+              }}
               alt="logo"
             />
           </Navbar.Brand>
@@ -170,13 +290,33 @@ const NavbarComponent = () => {
               </Nav.Link>
 
               <Nav.Link className="ms-lg-3">
-                <Button
-                  variant="primary"
-                  onClick={handleShow}
-                  className={`rounded-pill px-4 py-2 ${styles.loginButton}`}
-                >
-                  <FaStar className="me-1" /> Войти
-                </Button>
+                {user ? (
+                  <NavDropdown
+                    title={
+                      <span className={styles.userMenu}>
+                        <FaUserCircle className="me-1" />
+                        {user.name}
+                      </span>
+                    }
+                    id="user-dropdown"
+                    className={styles.userDropdown}
+                  >
+                    <NavDropdown.Item>
+                      <FaUser className="me-2" /> Личный кабинет
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleLogout}>
+                      <FaLock className="me-2" /> Выйти
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <Button
+                    variant="primary"
+                    onClick={handleShow}
+                    className={`rounded-pill px-4 py-2 ${styles.loginButton}`}
+                  >
+                    <FaStar className="me-1" /> Войти
+                  </Button>
+                )}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -203,12 +343,20 @@ const NavbarComponent = () => {
           >
             <Tab eventKey="login" title="Вход">
               <Form onSubmit={handleLogin} className={styles.authForm}>
+                {errors.login && (
+                  <Alert variant="danger" className="text-center">
+                    {errors.login}
+                  </Alert>
+                )}
                 <Form.Group className="mb-4" controlId="formEmail">
                   <Form.Label>Email</Form.Label>
                   <div className={styles.inputGroup}>
                     <FaEnvelope className={styles.inputIcon} />
                     <Form.Control
                       type="email"
+                      name="email"
+                      value={loginForm.email}
+                      onChange={handleLoginChange}
                       placeholder="Введите ваш email"
                       required
                     />
@@ -221,37 +369,42 @@ const NavbarComponent = () => {
                     <FaLock className={styles.inputIcon} />
                     <Form.Control
                       type="password"
+                      name="password"
+                      value={loginForm.password}
+                      onChange={handleLoginChange}
                       placeholder="Введите пароль"
                       required
                     />
                   </div>
                 </Form.Group>
 
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <Form.Check type="checkbox" label="Запомнить меня" />
-                  <Link to="/forgot-password" className={styles.forgotLink}>
-                    Забыли пароль?
-                  </Link>
-                </div>
-
                 <Button
                   variant="primary"
                   type="submit"
                   className={`w-100 rounded-pill py-2 ${styles.submitButton}`}
+                  disabled={loading}
                 >
-                  Войти
+                  {loading ? "Вход..." : "Войти"}
                 </Button>
               </Form>
             </Tab>
 
             <Tab eventKey="register" title="Регистрация">
               <Form onSubmit={handleRegister} className={styles.authForm}>
+                {errors.register && (
+                  <Alert variant="danger" className="text-center">
+                    {errors.register}
+                  </Alert>
+                )}
                 <Form.Group className="mb-3" controlId="formName">
                   <Form.Label>Имя</Form.Label>
                   <div className={styles.inputGroup}>
                     <FaUser className={styles.inputIcon} />
                     <Form.Control
                       type="text"
+                      name="name"
+                      value={registerForm.name}
+                      onChange={handleRegisterChange}
                       placeholder="Введите ваше имя"
                       required
                     />
@@ -264,6 +417,9 @@ const NavbarComponent = () => {
                     <FaEnvelope className={styles.inputIcon} />
                     <Form.Control
                       type="email"
+                      name="email"
+                      value={registerForm.email}
+                      onChange={handleRegisterChange}
                       placeholder="Введите ваш email"
                       required
                     />
@@ -276,6 +432,9 @@ const NavbarComponent = () => {
                     <FaPhoneAlt className={styles.inputIcon} />
                     <Form.Control
                       type="tel"
+                      name="phone"
+                      value={registerForm.phone}
+                      onChange={handleRegisterChange}
                       placeholder="+7 (999) 999-99-99"
                       required
                     />
@@ -288,6 +447,9 @@ const NavbarComponent = () => {
                     <FaChild className={styles.inputIcon} />
                     <Form.Control
                       type="text"
+                      name="childName"
+                      value={registerForm.childName}
+                      onChange={handleRegisterChange}
                       placeholder="Введите имя ребенка"
                       required
                     />
@@ -296,13 +458,19 @@ const NavbarComponent = () => {
 
                 <Form.Group className="mb-3" controlId="formChildAge">
                   <Form.Label>Возраст ребенка</Form.Label>
-                  <Form.Select className={styles.selectInput}>
-                    <option>Выберите возраст</option>
-                    <option>3 года</option>
-                    <option>4 года</option>
-                    <option>5 лет</option>
-                    <option>6 лет</option>
-                    <option>7 лет</option>
+                  <Form.Select
+                    name="childAge"
+                    value={registerForm.childAge}
+                    onChange={handleRegisterChange}
+                    className={styles.selectInput}
+                    required
+                  >
+                    <option value="">Выберите возраст</option>
+                    <option value="3 года">3 года</option>
+                    <option value="4 года">4 года</option>
+                    <option value="5 лет">5 лет</option>
+                    <option value="6 лет">6 лет</option>
+                    <option value="7 лет">7 лет</option>
                   </Form.Select>
                 </Form.Group>
 
@@ -312,7 +480,10 @@ const NavbarComponent = () => {
                     <FaLock className={styles.inputIcon} />
                     <Form.Control
                       type="password"
-                      placeholder="Создайте пароль"
+                      name="password"
+                      value={registerForm.password}
+                      onChange={handleRegisterChange}
+                      placeholder="Создайте пароль (минимум 8 символов)"
                       required
                     />
                   </div>
@@ -324,51 +495,26 @@ const NavbarComponent = () => {
                     <FaLock className={styles.inputIcon} />
                     <Form.Control
                       type="password"
+                      name="confirmPassword"
+                      value={registerForm.confirmPassword}
+                      onChange={handleRegisterChange}
                       placeholder="Подтвердите пароль"
                       required
                     />
                   </div>
                 </Form.Group>
 
-                <Form.Group className="mb-4">
-                  <Form.Check
-                    type="checkbox"
-                    label={
-                      <>
-                        Я согласен с{" "}
-                        <Link to="/terms">условиями использования</Link> и{" "}
-                        <Link to="/privacy">политикой конфиденциальности</Link>
-                      </>
-                    }
-                    required
-                  />
-                </Form.Group>
-
                 <Button
                   variant="primary"
                   type="submit"
                   className={`w-100 rounded-pill py-2 ${styles.submitButton}`}
+                  disabled={loading}
                 >
-                  Зарегистрироваться
+                  {loading ? "Регистрация..." : "Зарегистрироваться"}
                 </Button>
               </Form>
             </Tab>
           </Tabs>
-
-          <div className={styles.socialAuth}>
-            <p className={styles.socialAuthText}>или войдите через</p>
-            <div className={styles.socialButtons}>
-              <Button variant="outline-primary" className={styles.socialButton}>
-                <FaVk /> ВКонтакте
-              </Button>
-              <Button variant="outline-primary" className={styles.socialButton}>
-                <FaOdnoklassniki /> Одноклассники
-              </Button>
-              <Button variant="outline-primary" className={styles.socialButton}>
-                <FaTelegramPlane /> Telegram
-              </Button>
-            </div>
-          </div>
         </Modal.Body>
       </Modal>
     </>

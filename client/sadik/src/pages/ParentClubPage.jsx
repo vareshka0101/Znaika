@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import React, { useEffect, useState, useCallback } from "react";
+import { Container, Row, Col, Button, Alert, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
   FaPhoneAlt,
   FaHeart,
@@ -15,19 +16,52 @@ import {
   FaCalendarCheck,
   FaLockOpen,
   FaTelegramPlane,
+  FaPlus,
+  FaComment,
+  FaEye,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import CreateTopicModal from "../components/CreateTopicModal";
+import { api } from "../services/api";
 import styles from "./ParentClubPage.module.css";
 
 const ParentClubPage = () => {
+  const navigate = useNavigate();
   const [secretCode, setSecretCode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
-  const [forumPosts, setForumPosts] = useState([]);
+  const [forumTopics, setForumTopics] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const fetchForumTopics = useCallback(async () => {
+    if (!isAuthenticated) return;
+
+    setLoading(true);
+    try {
+      const topics = await api.getForumTopics();
+      setForumTopics(topics);
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  const checkUserAccess = useCallback(async () => {
+    try {
+      const response = await api.hasParentClubAccess();
+      if (response.has_access) {
+        setIsAuthenticated(true);
+        fetchForumTopics();
+      }
+    } catch (error) {
+      console.error("Error checking access:", error);
+    }
+  }, [fetchForumTopics]);
 
   useEffect(() => {
     AOS.init({
@@ -36,72 +70,53 @@ const ParentClubPage = () => {
       mirror: true,
     });
 
+    const token = localStorage.getItem("token");
     const savedCode = localStorage.getItem("parentClubCode");
-    if (savedCode === "SECRET2026") {
-      setIsAuthenticated(true);
-      fetchForumPosts();
-    }
-  }, []);
 
-  const fetchForumPosts = async () => {
-    setLoading(true);
-    try {
-      const mockPosts = [
-        {
-          id: 1,
-          author: "Екатерина М.",
-          avatar: "E",
-          time: "вчера, 19:34",
-          title: "Кризис 3 лет: как договариваться?",
-          content:
-            "Сын постоянно говорит «нет», истерит, если что-то не по его. Пробовали и ласку, и строгость — ничего не помогает. Буду благодарна за советы...",
-          replies: 7,
-          lastActivity: "Последний от психолога 2 часа назад",
-          color: "#ff8a5c",
-        },
-        {
-          id: 2,
-          author: "Анна В.",
-          avatar: "А",
-          time: "3 дня назад",
-          title: "Детская агрессия на площадке",
-          content:
-            "Дочка (4 года) толкает других детей, отбирает игрушки. Дома ласковая, а на улице — маленький тиран. Как скорректировать поведение?",
-          replies: 12,
-          lastActivity: "Комментарий педагога",
-          color: "#58b4ae",
-        },
-        {
-          id: 3,
-          author: "Марина П.",
-          avatar: "М",
-          time: "1 неделя назад",
-          title: "Раннее развитие: не перегружаем ли?",
-          content:
-            "Ходим на английский, математику, творчество. Ребёнок стал капризным, может, слишком много? Поделитесь опытом.",
-          replies: 23,
-          lastActivity: "Модератор: психолог «Знайка»",
-          color: "#ffd665",
-        },
-        {
-          id: 4,
-          author: "Ольга Н.",
-          avatar: "О",
-          time: "2 недели назад",
-          title: "Детские страхи: темноты, монстров",
-          content:
-            "Сыну 5 лет, боится спать один. Пробовали ночник, но всё равно просыпается. Скоро в школу, переживаю.",
-          replies: 9,
-          lastActivity: "",
-          color: "#ff8a5c",
-        },
-      ];
-      setForumPosts(mockPosts);
-    } catch (error) {
-      console.error("Error fetching forum posts:", error);
-    } finally {
-      setLoading(false);
+    if (token) {
+      checkUserAccess();
     }
+
+    if ((savedCode === "SECRET2026" || savedCode === "DEMO2026") && token) {
+      setIsAuthenticated(true);
+      fetchForumTopics();
+    }
+  }, [checkUserAccess, fetchForumTopics]);
+
+  const handleCodeSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (secretCode === "SECRET2026" || secretCode === "DEMO2026") {
+      setIsAuthenticated(true);
+      localStorage.setItem("parentClubCode", secretCode);
+
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          await api.checkParentClubAccess(secretCode);
+        } catch (error) {
+          console.error("Error saving access to DB:", error);
+        }
+      }
+
+      await fetchForumTopics();
+    } else {
+      setError(
+        "Неверный секретный код. Попробуйте снова или получите код на встрече клуба.",
+      );
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setSecretCode("");
+    localStorage.removeItem("parentClubCode");
+    setForumTopics([]);
+  };
+
+  const handleTopicCreated = (newTopic) => {
+    setForumTopics((prev) => [newTopic, ...prev]);
   };
 
   const topics = [
@@ -133,29 +148,14 @@ const ParentClubPage = () => {
     "И многое другое",
   ];
 
-  const handleCodeSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (secretCode === "SECRET2026" || secretCode === "DEMO2026") {
-      setIsAuthenticated(true);
-      localStorage.setItem("parentClubCode", secretCode);
-      fetchForumPosts();
-    } else {
-      setError(
-        "Неверный секретный код. Попробуйте снова или получите код на встрече клуба.",
-      );
-    }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setSecretCode("");
-    localStorage.removeItem("parentClubCode");
-  };
-
-  const handleLoadMore = () => {
-    alert("Полный форум доступен после входа с секретным кодом.");
+  const formatDate = (dateString) => {
+    if (!dateString) return "Неизвестно";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
   return (
@@ -268,19 +268,25 @@ const ParentClubPage = () => {
               <div className={styles.forumContent}>
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <h4>
-                    <FaComments
-                      className="me-2"
-                      style={{ color: "var(--secondary)" }}
-                    />
-                    Актуальные обсуждения (участники клуба)
+                    <FaComments className="me-2" style={{ color: "#58b4ae" }} />
+                    Актуальные обсуждения
                   </h4>
-                  <Button
-                    variant="outline-secondary"
-                    onClick={handleLogout}
-                    size="sm"
-                  >
-                    <FaLockOpen className="me-2" /> Выйти
-                  </Button>
+                  <div>
+                    <Button
+                      variant="primary"
+                      onClick={() => setShowCreateModal(true)}
+                      className="me-2"
+                    >
+                      <FaPlus className="me-2" /> Новая тема
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={handleLogout}
+                      size="sm"
+                    >
+                      <FaLockOpen className="me-2" /> Выйти
+                    </Button>
+                  </div>
                 </div>
 
                 {loading ? (
@@ -291,54 +297,77 @@ const ParentClubPage = () => {
                   </div>
                 ) : (
                   <>
-                    {forumPosts.map((post) => (
-                      <div key={post.id} className={styles.forumThread}>
-                        <div className="d-flex align-items-center mb-2">
-                          <div
-                            className={styles.userAvatar}
-                            style={{ backgroundColor: post.color }}
-                          >
-                            {post.avatar}
-                          </div>
-                          <div>
-                            <strong>{post.author}</strong>
-                            <span className="text-secondary ms-3">
-                              <FaClock className="me-1" /> {post.time}
-                            </span>
-                          </div>
-                        </div>
-                        <h5>{post.title}</h5>
-                        <p>{post.content}</p>
-                        <div className={styles.postMeta}>
-                          <FaCommentDots className="me-2" />
-                          {post.replies} ответов
-                          {post.lastActivity && (
-                            <>
-                              <span className="mx-2">·</span>
-                              <span className="text-primary">
-                                {post.lastActivity}
+                    {forumTopics.length > 0 ? (
+                      forumTopics.map((topic) => (
+                        <div
+                          key={topic.id}
+                          className={styles.forumThread}
+                          onClick={() =>
+                            navigate(`/parent-club/topic/${topic.id}`)
+                          }
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              navigate(`/parent-club/topic/${topic.id}`);
+                            }
+                          }}
+                        >
+                          <div className="d-flex align-items-center mb-2">
+                            <div
+                              className={styles.userAvatar}
+                              style={{ backgroundColor: "#58b4ae" }}
+                            >
+                              {topic.user?.name?.charAt(0) || "U"}
+                            </div>
+                            <div>
+                              <strong>
+                                {topic.user?.name || "Пользователь"}
+                              </strong>
+                              <span className="text-secondary ms-3">
+                                <FaClock className="me-1" />{" "}
+                                {formatDate(topic.created_at)}
                               </span>
-                            </>
-                          )}
+                            </div>
+                          </div>
+                          <h5>{topic.title}</h5>
+                          <p>{topic.content?.substring(0, 150)}...</p>
+                          <div className={styles.postMeta}>
+                            <FaComment className="me-2" />
+                            {topic.posts_count || 0} ответов
+                            <span className="mx-2">·</span>
+                            <FaEye className="me-1" />
+                            {topic.views || 0} просмотров
+                            {topic.posts && topic.posts.length > 0 && (
+                              <>
+                                <span className="mx-2">·</span>
+                                <span className="text-primary">
+                                  Последний ответ:{" "}
+                                  {formatDate(topic.posts[0].created_at)}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-4">
+                        <p className="text-muted">
+                          Пока нет тем для обсуждения. Создайте первую тему!
+                        </p>
                       </div>
-                    ))}
+                    )}
 
                     <div className="text-center mt-4">
                       <Button
                         variant="outline-dark"
                         size="lg"
                         className="rounded-pill px-5"
-                        onClick={handleLoadMore}
+                        onClick={() => setShowCreateModal(true)}
                       >
-                        Загрузить ещё темы
+                        Создать новую тему
                       </Button>
                     </div>
-                    <p className="text-muted text-center mt-3 small">
-                      <FaInfoCircle className="me-1" />
-                      Участвовать в обсуждениях могут только зарегистрированные
-                      пользователи с кодом доступа.
-                    </p>
                   </>
                 )}
               </div>
@@ -400,6 +429,12 @@ const ParentClubPage = () => {
           </Row>
         </Container>
       </section>
+
+      <CreateTopicModal
+        show={showCreateModal}
+        onHide={() => setShowCreateModal(false)}
+        onTopicCreated={handleTopicCreated}
+      />
 
       <FooterComponent />
     </>
