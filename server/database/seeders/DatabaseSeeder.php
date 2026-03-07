@@ -104,7 +104,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Час Чтения',
                 'type' => 'upcoming',
-                'event_date' => '2024-02-22',
+                'event_date' => '2026-02-22',
                 'time' => '14:00–15:30',
                 'duration' => '90 минут',
                 'description' => 'Приглашаем малышей послушать сказки и обсудить героев.',
@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Музыкальная и Танцевальная Вечеринка',
                 'type' => 'upcoming',
-                'event_date' => '2024-02-22',
+                'event_date' => '2026-02-22',
                 'time' => '14:00–15:30',
                 'duration' => '90 минут',
                 'description' => 'Танцы, хороводы, музыкальные игры.',
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Прогулка На Природе',
                 'type' => 'upcoming',
-                'event_date' => '2024-03-15',
+                'event_date' => '2026-03-15',
                 'time' => '14:30–15:30',
                 'duration' => '60 минут',
                 'description' => 'Наблюдаем за птицами, собираем листья.',
@@ -146,7 +146,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Час Чтения',
                 'type' => 'archive',
-                'event_date' => '2024-02-22',
+                'event_date' => '2026-02-22',
                 'time' => '16:00–17:30',
                 'icon' => 'FaArchive',
                 'sort_order' => 1
@@ -162,7 +162,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Праздник Культур',
                 'type' => 'archive',
-                'event_date' => '2024-10-26',
+                'event_date' => '2026-10-26',
                 'time' => '16:00–17:30',
                 'icon' => 'FaArchive',
                 'sort_order' => 3
@@ -177,7 +177,7 @@ class DatabaseSeeder extends Seeder
         $news = [
             [
                 'title' => 'Преимущества игрового обучения для детей дошкольного возраста',
-                'date' => '2024-02-10',
+                'date' => '2026-02-10',
                 'image' => '/public/images/новость1.jpg',
                 'views' => 245,
                 'excerpt' => 'Исследования показывают, что дети лучше усваивают материал через игру. В нашей статье рассказываем о методиках игрового обучения...',
@@ -186,7 +186,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Создание безопасной и инклюзивной среды в детском саду',
-                'date' => '2024-03-15',
+                'date' => '2026-03-15',
                 'image' => '/public/images/новость2.jpg',
                 'views' => 189,
                 'excerpt' => 'Как сделать детский сад комфортным для каждого ребенка, включая детей с особенностями развития...',
@@ -195,7 +195,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Советы по питанию для здоровых перекусов',
-                'date' => '2024-02-22',
+                'date' => '2026-02-22',
 
                 'views' => 312,
                 'excerpt' => 'Простые и полезные рецепты перекусов, которые понравятся детям и сэкономят время родителям...',
@@ -204,7 +204,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Идеи для творческих проектов в детском саду',
-                'date' => '2024-03-26',
+                'date' => '2026-03-26',
                 'image' => '/public/images/новость4.jpg',
                 'views' => 156,
                 'excerpt' => 'Вдохновляющие идеи для поделок и творческих занятий с детьми от 3 до 6 лет...',

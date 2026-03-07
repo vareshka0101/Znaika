@@ -93,7 +93,7 @@ const HomePage = () => {
     {
       id: 1,
       title: "Преимущества игрового обучения для детей дошкольного возраста",
-      date: "2024-02-10",
+      date: "2026-02-10",
       image: "/public/images/новость1.jpg",
       views: 245,
       excerpt:
@@ -102,7 +102,7 @@ const HomePage = () => {
     {
       id: 2,
       title: "Создание безопасной и инклюзивной среды в детском саду",
-      date: "2024-03-15",
+      date: "2026-03-15",
       image: "/public/images/новость2.jpg",
       views: 189,
       excerpt:
@@ -111,7 +111,7 @@ const HomePage = () => {
     {
       id: 3,
       title: "Советы по питанию для здоровых перекусов",
-      date: "2024-02-22",
+      date: "2026-02-22",
       image: "/public/images/новость 3.jpg",
       views: 312,
       excerpt:
@@ -120,7 +120,7 @@ const HomePage = () => {
     {
       id: 4,
       title: "Идеи для творческих проектов в детском саду",
-      date: "2024-03-26",
+      date: "2026-03-26",
       image: "/public/images/новость4.jpg",
       views: 156,
       excerpt:
