@@ -47,14 +47,12 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Валидация
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Проверка авторизации
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Пожалуйста, войдите в систему, чтобы оставить отзыв");
@@ -62,12 +60,10 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
     }
 
     try {
-      // Формируем полное имя с указанием родителя
       const fullAuthor = reviewData.parentType
         ? `${reviewData.author}, ${reviewData.parentType}`
         : reviewData.author;
 
-      // Подготовка данных для отправки
       const reviewToSend = {
         author: fullAuthor,
         child_name: reviewData.childName,
@@ -92,7 +88,6 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
       console.log("Ответ сервера:", data);
 
       if (response.ok) {
-        // Передаем отзыв в родительский компонент
         onAddReview({
           id: Date.now(),
           text: reviewData.text,
@@ -103,7 +98,6 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
           date: new Date().toISOString(),
         });
 
-        // Очищаем форму
         setReviewData({
           author: "",
           parentType: "",
@@ -113,10 +107,8 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
         });
         setErrors({});
 
-        // Закрываем модалку
         onHide();
       } else {
-        // Показываем сообщение об ошибке от сервера
         const errorMessage = data.errors
           ? Object.values(data.errors).flat().join("\n")
           : data.message || "Не удалось отправить отзыв";

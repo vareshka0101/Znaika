@@ -8,18 +8,19 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('forum_posts', function (Blueprint $table) {
-            if (!Schema::hasColumn('forum_posts', 'forum_topic_id')) {
-                $table->foreignId('forum_topic_id')->after('id')->constrained()->onDelete('cascade');
-            }
-            if (!Schema::hasColumn('forum_posts', 'user_id')) {
-                $table->foreignId('user_id')->after('forum_topic_id')->constrained()->onDelete('cascade');
-            }
-            if (!Schema::hasColumn('forum_posts', 'content')) {
-                $table->text('content')->after('user_id');
-            }
-        });
+        if (!Schema::hasTable('forum_posts')) {
+            Schema::create('forum_posts', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('forum_topic_id')->constrained()->onDelete('cascade');
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->text('content');
+                $table->timestamps();
+            });
+        }
     }
 
-    public function down() {}
+    public function down()
+    {
+        Schema::dropIfExists('forum_posts');
+    }
 };

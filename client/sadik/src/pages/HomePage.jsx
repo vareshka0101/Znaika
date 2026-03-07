@@ -20,7 +20,6 @@ import {
   FaChevronRight,
   FaCalendarAlt,
   FaEye,
-  FaArrowRight,
   FaUsers,
   FaStar,
   FaChild,
@@ -90,7 +89,6 @@ const HomePage = () => {
 
   const [allTestimonials, setAllTestimonials] = useState(testimonials);
 
-  // Упрощенные данные для главной страницы (без полного контента)
   const newsData = [
     {
       id: 1,
@@ -196,6 +194,50 @@ const HomePage = () => {
     return new Date(dateString).toLocaleDateString("ru-RU", options);
   };
 
+  const [formErrors, setFormErrors] = useState({
+    parentName: "",
+    childName: "",
+    childAge: "",
+    phone: "",
+    email: "",
+  });
+
+  const [touchedFields, setTouchedFields] = useState({});
+
+  const handleFieldBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields((prev) => ({ ...prev, [name]: true }));
+    validateField(name, registrationForm[name]);
+  };
+
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "parentName":
+        if (!value.trim()) error = "Введите ваше имя";
+        break;
+      case "childName":
+        if (!value.trim()) error = "Введите имя ребенка";
+        break;
+      case "childAge":
+        if (!value) error = "Выберите возраст ребенка";
+        break;
+      case "phone":
+        if (!value.trim()) error = "Введите номер телефона";
+        else if (!/^[+]?[0-9\s-()]{10,}$/.test(value))
+          error = "Введите корректный номер телефона";
+        break;
+      case "email":
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          error = "Введите корректный email";
+        break;
+      default:
+        break;
+    }
+    setFormErrors((prev) => ({ ...prev, [name]: error }));
+    return error;
+  };
+
   const scrollLeft = () => {
     classesScrollRef.current?.scrollBy({ left: -320, behavior: "smooth" });
   };
@@ -204,15 +246,39 @@ const HomePage = () => {
     classesScrollRef.current?.scrollBy({ left: 320, behavior: "smooth" });
   };
 
-  // Удалена функция openNewsModal - теперь переход на страницу новостей
-
   const handleRegistrationInputChange = (e) => {
     const { name, value } = e.target;
     setRegistrationForm((prev) => ({ ...prev, [name]: value }));
+    if (touchedFields[name]) {
+      validateField(name, value);
+    }
   };
 
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = {};
+    Object.keys(registrationForm).forEach((key) => {
+      if (
+        key === "parentName" ||
+        key === "childName" ||
+        key === "childAge" ||
+        key === "phone"
+      ) {
+        const error = validateField(key, registrationForm[key]);
+        if (error) errors[key] = error;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setTouchedFields({
+        parentName: true,
+        childName: true,
+        childAge: true,
+        phone: true,
+      });
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -240,6 +306,8 @@ const HomePage = () => {
           preferredClass: "",
           message: "",
         });
+        setTouchedFields({});
+        setFormErrors({});
         setShowRegistrationModal(false);
       } else {
         alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
@@ -269,13 +337,12 @@ const HomePage = () => {
 
   const handleAddReview = (newReview) => {
     setAllTestimonials((prev) => [newReview, ...prev]);
-    alert("Спасибо за ваш отзыв! После модерации он появится на сайте.");
+    alert("Спасибо за ваш отзыв! Cкоро он появится на сайте.");
   };
 
   const openRegistrationModal = () => setShowRegistrationModal(true);
   const handleExcursionClick = () => navigate("/classes");
 
-  // Функция для перехода на страницу новостей
   const goToNewsPage = () => {
     navigate("/news");
   };
@@ -520,7 +587,6 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* В HomePage.jsx найдите этот блок и замените на: */}
       <Container>
         <div
           className={`text-center my-5 p-5 ${styles.ctaBlock}`}
@@ -546,6 +612,7 @@ const HomePage = () => {
           </Button>
         </div>
       </Container>
+
       <section className={styles.classesSliderSection}>
         <Container>
           <div className={styles.sliderHeader} data-aos="fade-right">
@@ -682,7 +749,7 @@ const HomePage = () => {
                     style={{ objectFit: "cover" }}
                   >
                     <source
-                      src="/public/images/inner-kids-party-rock_D6jtutis.mp4"
+                      src="/public/images/inner-kids-party-rock-d6jtutis_UvBev9Us.mp4"
                       type="video/mp4"
                     />
                     Ваш браузер не поддерживает видео.
@@ -693,40 +760,47 @@ const HomePage = () => {
               <Form
                 className={styles.contactForm}
                 onSubmit={handleSimpleFormSubmit}
+                noValidate
               >
                 <Row className="g-3">
                   <Col md={6}>
-                    <Form.Control
-                      type="tel"
-                      name="phone"
-                      placeholder="Контактный телефон"
-                      className="rounded-pill"
-                      value={simpleForm.phone}
-                      onChange={handleSimpleFormChange}
-                      required
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        type="tel"
+                        name="phone"
+                        placeholder="Контактный телефон *"
+                        className="rounded-pill"
+                        value={simpleForm.phone}
+                        onChange={handleSimpleFormChange}
+                        required
+                      />
+                    </Form.Group>
                   </Col>
                   <Col md={6}>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      placeholder="Ваше имя"
-                      className="rounded-pill"
-                      value={simpleForm.name}
-                      onChange={handleSimpleFormChange}
-                      required
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        type="text"
+                        name="name"
+                        placeholder="Ваше имя *"
+                        className="rounded-pill"
+                        value={simpleForm.name}
+                        onChange={handleSimpleFormChange}
+                        required
+                      />
+                    </Form.Group>
                   </Col>
                   <Col xs={12}>
-                    <Form.Control
-                      as="textarea"
-                      name="message"
-                      rows={3}
-                      placeholder="Ваше сообщение"
-                      className="rounded-4"
-                      value={simpleForm.message}
-                      onChange={handleSimpleFormChange}
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        as="textarea"
+                        name="message"
+                        rows={3}
+                        placeholder="Ваше сообщение"
+                        className="rounded-4"
+                        value={simpleForm.message}
+                        onChange={handleSimpleFormChange}
+                      />
+                    </Form.Group>
                   </Col>
                   <Col xs={12}>
                     <Button
@@ -771,8 +845,15 @@ const HomePage = () => {
                     name="parentName"
                     value={registrationForm.parentName}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={
+                      touchedFields.parentName && !!formErrors.parentName
+                    }
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.parentName}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -783,8 +864,15 @@ const HomePage = () => {
                     name="childName"
                     value={registrationForm.childName}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={
+                      touchedFields.childName && !!formErrors.childName
+                    }
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.childName}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -794,6 +882,8 @@ const HomePage = () => {
                     name="childAge"
                     value={registrationForm.childAge}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.childAge && !!formErrors.childAge}
                     required
                   >
                     <option value="">Выберите возраст</option>
@@ -802,6 +892,9 @@ const HomePage = () => {
                     <option value="5-6">5-6 лет</option>
                     <option value="6-7">6-7 лет</option>
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.childAge}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -813,8 +906,13 @@ const HomePage = () => {
                     placeholder="+7 (999) 123-45-67"
                     value={registrationForm.phone}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.phone && !!formErrors.phone}
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.phone}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -825,7 +923,12 @@ const HomePage = () => {
                     name="email"
                     value={registrationForm.email}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.email && !!formErrors.email}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.email}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -885,8 +988,6 @@ const HomePage = () => {
           </Form>
         </Modal.Body>
       </Modal>
-
-      {/* УДАЛЕН Modal для новостей */}
 
       <AddReviewModal
         show={showReviewModal}

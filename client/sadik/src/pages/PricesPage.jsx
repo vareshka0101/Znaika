@@ -27,6 +27,16 @@ const PricesPage = () => {
     message: "",
   });
 
+  const [formErrors, setFormErrors] = useState({
+    parentName: "",
+    childName: "",
+    childAge: "",
+    phone: "",
+    email: "",
+  });
+
+  const [touchedFields, setTouchedFields] = useState({});
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -34,6 +44,187 @@ const PricesPage = () => {
       mirror: true,
     });
   }, []);
+
+  const validateName = (name) => {
+    if (!name || name.trim() === "") return "Это поле обязательно";
+
+    const allowedChars =
+      "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyz -";
+    const lowerName = name.toLowerCase();
+
+    for (let i = 0; i < lowerName.length; i++) {
+      if (!allowedChars.includes(lowerName[i])) {
+        return "Имя может содержать только буквы, пробелы и дефисы";
+      }
+    }
+
+    return "";
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone || phone.trim() === "") return "Телефон обязателен";
+
+    const allowedChars = "0123456789+ ()-";
+
+    for (let i = 0; i < phone.length; i++) {
+      if (!allowedChars.includes(phone[i])) {
+        return "Телефон может содержать только цифры, +, пробелы, скобки и дефисы";
+      }
+    }
+
+    let digitCount = 0;
+    for (let i = 0; i < phone.length; i++) {
+      if (phone[i] >= "0" && phone[i] <= "9") {
+        digitCount++;
+      }
+    }
+
+    if (digitCount < 10) {
+      return "Телефон должен содержать минимум 10 цифр";
+    }
+
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    if (!email || email.trim() === "") return "";
+
+    const hasAt = email.includes("@");
+    const hasDot = email.includes(".");
+    const atPosition = email.indexOf("@");
+    const lastDotPosition = email.lastIndexOf(".");
+
+    if (!hasAt || !hasDot) {
+      return "Email должен содержать @";
+    }
+
+    if (atPosition === 0) {
+      return "Email должен содержать символы до @";
+    }
+
+    if (lastDotPosition < atPosition) {
+      return "Email должен содержать точку после @";
+    }
+
+    if (lastDotPosition === email.length - 1) {
+      return "Email должен содержать символы после последней точки";
+    }
+
+    return "";
+  };
+
+  const validateAge = (age) => {
+    if (!age) return "Выберите возраст ребенка";
+    return "";
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case "parentName":
+      case "childName":
+        return validateName(value);
+      case "phone":
+        return validatePhone(value);
+      case "email":
+        return validateEmail(value);
+      case "childAge":
+        return validateAge(value);
+      default:
+        return "";
+    }
+  };
+
+  const handleRegistrationInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setRegistrationForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    const error = validateField(name, value);
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  const handleFieldBlur = (e) => {
+    const { name, value } = e.target;
+
+    setTouchedFields((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+
+    const error = validateField(name, value);
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+
+    const fieldsToValidate = ["parentName", "childName", "childAge", "phone"];
+
+    fieldsToValidate.forEach((field) => {
+      const error = validateField(field, registrationForm[field]);
+      errors[field] = error;
+      if (error) {
+        isValid = false;
+      }
+    });
+
+    if (registrationForm.email) {
+      const emailError = validateEmail(registrationForm.email);
+      errors.email = emailError;
+      if (emailError) {
+        isValid = false;
+      }
+    }
+
+    setFormErrors(errors);
+
+    const touched = {};
+    Object.keys(registrationForm).forEach((key) => {
+      touched[key] = true;
+    });
+    setTouchedFields(touched);
+
+    return isValid;
+  };
+
+  const handleRegistrationSubmit = (e) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      console.log("Registration form submitted:", registrationForm);
+      alert(
+        "Спасибо за заявку! Мы свяжемся с вами в ближайшее время для уточнения деталей.",
+      );
+      setRegistrationForm({
+        parentName: "",
+        childName: "",
+        childAge: "",
+        phone: "",
+        email: "",
+        preferredClass: "",
+        message: "",
+      });
+      setFormErrors({});
+      setTouchedFields({});
+      setShowRegistrationModal(false);
+    } else {
+      alert("Пожалуйста, исправьте ошибки в форме перед отправкой");
+    }
+  };
+
+  const openRegistrationModal = () => {
+    setShowRegistrationModal(true);
+  };
 
   const pricingPlans = [
     {
@@ -156,36 +347,6 @@ const PricesPage = () => {
     },
   ];
 
-  const openRegistrationModal = () => {
-    setShowRegistrationModal(true);
-  };
-
-  const handleRegistrationInputChange = (e) => {
-    const { name, value } = e.target;
-    setRegistrationForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleRegistrationSubmit = (e) => {
-    e.preventDefault();
-    console.log("Registration form submitted:", registrationForm);
-    alert(
-      "Спасибо за заявку! Мы свяжемся с вами в ближайшее время для уточнения деталей.",
-    );
-    setRegistrationForm({
-      parentName: "",
-      childName: "",
-      childAge: "",
-      phone: "",
-      email: "",
-      preferredClass: "",
-      message: "",
-    });
-    setShowRegistrationModal(false);
-  };
-
   return (
     <>
       <NavbarComponent />
@@ -236,7 +397,7 @@ const PricesPage = () => {
           </Row>
 
           <div className="text-center my-5 p-5 cta-block" data-aos="zoom-in">
-            <h2 className="display-5 mb-3">
+            <h2 className="display-7 mb-3">
               Собираетесь ли Вы записать своего ребенка в детский сад?
             </h2>
             <Button
@@ -310,8 +471,15 @@ const PricesPage = () => {
                     placeholder="Иванов Иван"
                     value={registrationForm.parentName}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={
+                      touchedFields.parentName && !!formErrors.parentName
+                    }
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.parentName}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -323,8 +491,15 @@ const PricesPage = () => {
                     placeholder="Петров Петя"
                     value={registrationForm.childName}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={
+                      touchedFields.childName && !!formErrors.childName
+                    }
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.childName}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -334,6 +509,8 @@ const PricesPage = () => {
                     name="childAge"
                     value={registrationForm.childAge}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.childAge && !!formErrors.childAge}
                     required
                   >
                     <option value="">Выберите возраст</option>
@@ -342,6 +519,9 @@ const PricesPage = () => {
                     <option value="5-6">5-6 лет</option>
                     <option value="6-7">6-7 лет</option>
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.childAge}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -353,8 +533,13 @@ const PricesPage = () => {
                     placeholder="+7 (999) 123-45-67"
                     value={registrationForm.phone}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.phone && !!formErrors.phone}
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.phone}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -366,7 +551,12 @@ const PricesPage = () => {
                     placeholder="ivan@example.com"
                     value={registrationForm.email}
                     onChange={handleRegistrationInputChange}
+                    onBlur={handleFieldBlur}
+                    isInvalid={touchedFields.email && !!formErrors.email}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.email}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>

@@ -67,7 +67,6 @@ export const api = {
       );
 
       if (!response.ok) {
-        // Вариант 2: Если отдельного эндпоинта нет, пробуем получить новость (бэкенд сам увеличит просмотры)
         console.log("Trying fallback: fetching news with auto-increment");
         const newsResponse = await fetch(
           `http://localhost:8000/api/v1/news/${id}`,
@@ -82,7 +81,7 @@ export const api = {
       return data;
     } catch (error) {
       console.error("Error incrementing views:", error);
-      // В случае ошибки возвращаем null
+
       return null;
     }
   },

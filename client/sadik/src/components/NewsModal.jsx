@@ -1,7 +1,6 @@
-// src/components/NewsModal.jsx
 import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { FaShareAlt } from "react-icons/fa";
+
 import { api } from "../services/api";
 import styles from "./NewsModal.module.css";
 
@@ -15,12 +14,10 @@ const NewsModal = ({ show, onHide, news, onViewsUpdated }) => {
     }
   }, [news]);
 
-  // Увеличиваем просмотры при открытии модального окна
   useEffect(() => {
     const incrementViews = async () => {
       if (show && currentNews?.id) {
         try {
-          // Проверяем, не увеличивали ли просмотры для этой новости в текущей сессии
           const viewedNews = JSON.parse(
             sessionStorage.getItem("viewedNews") || "{}",
           );
@@ -30,19 +27,15 @@ const NewsModal = ({ show, onHide, news, onViewsUpdated }) => {
               `Увеличиваем просмотры для новости ID: ${currentNews.id}`,
             );
 
-            // Вызов API для увеличения просмотров
             const updatedNews = await api.incrementNewsViews(currentNews.id);
 
             if (updatedNews) {
-              // Обновляем локальное состояние
               setCurrentNews(updatedNews);
 
-              // Уведомляем родительский компонент об обновлении
               if (onViewsUpdated) {
                 onViewsUpdated(updatedNews);
               }
 
-              // Сохраняем в sessionStorage, что новость уже просмотрена
               viewedNews[currentNews.id] = true;
               sessionStorage.setItem("viewedNews", JSON.stringify(viewedNews));
 

@@ -16,31 +16,31 @@ use App\Http\Controllers\Api\PricingController;
 use App\Http\Controllers\Api\SettingController;
 
 Route::prefix('v1')->group(function () {
-    // Auth routes
+
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
-    // Protected routes
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/parent-club/check-access', [AuthController::class, 'checkParentClubAccess']);
         Route::get('/parent-club/has-access', [AuthController::class, 'hasParentClubAccess']);
 
-        // Forum routes
+
         Route::get('/forum/topics', [ForumController::class, 'getTopics']);
         Route::post('/forum/topics', [ForumController::class, 'createTopic']);
         Route::get('/forum/topics/{id}', [ForumController::class, 'getTopic']);
         Route::post('/forum/topics/{id}/posts', [ForumController::class, 'addPost']);
         Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
 
-        // Admin routes for news
+
         Route::post('/news', [NewsController::class, 'store']);
         Route::put('/news/{id}', [NewsController::class, 'update']);
         Route::delete('/news/{id}', [NewsController::class, 'destroy']);
     });
 
-    // Public routes
+
     Route::get('/teachers', [TeacherController::class, 'index']);
     Route::get('/teachers/{id}', [TeacherController::class, 'show']);
     Route::get('/events', [EventController::class, 'index']);

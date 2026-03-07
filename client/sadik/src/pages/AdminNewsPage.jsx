@@ -16,7 +16,6 @@ const AdminNewsPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Проверка авторизации и роли админа
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 

@@ -17,6 +17,7 @@ import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
 import styles from "./ProgramsPage.module.css";
+import ContactForm from "../components/ContactForm";
 
 const ProgramsPage = () => {
   const [formData, setFormData] = useState({
@@ -289,73 +290,10 @@ const ProgramsPage = () => {
             </Col>
           </Row>
 
-          {/* Новый блок формы как на AboutPage */}
           <div className={styles.formSection}>
             <Row className="justify-content-center">
-              <Col md={8} className="text-center">
-                <h2
-                  className={`display-5 mb-4 ${styles.formTitle}`}
-                  data-aos="fade-up"
-                >
-                  Как записать ребенка на занятия?
-                </h2>
-                <p className="fs-5" data-aos="fade-up" data-aos-delay="50">
-                  Позвоните по номеру: <strong>+7 (495) 666-33-99</strong> или
-                  заполните форму ниже.
-                </p>
-                <p className="mb-4" data-aos="fade-up" data-aos-delay="100">
-                  Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет.
-                  Мы поможем вам с подготовкой к школе и развитием личности.
-                </p>
-
-                <Form
-                  className={styles.contactForm}
-                  onSubmit={handleSubmit}
-                  data-aos="fade-up"
-                  data-aos-delay="150"
-                >
-                  <Row className="g-3">
-                    <Col md={6}>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Контактный телефон"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={3}
-                        placeholder="Ваше сообщение"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col xs={12}>
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className="px-5 py-2"
-                      >
-                        ОТПРАВИТЬ
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
+              <Col md={10} lg={8}>
+                <ContactForm />
               </Col>
             </Row>
           </div>

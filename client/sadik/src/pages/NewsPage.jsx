@@ -1,4 +1,3 @@
-// src/pages/NewsPage.jsx
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { FaCalendarAlt, FaEye, FaArrowRight } from "react-icons/fa";
@@ -41,14 +40,11 @@ const NewsPage = () => {
     setShowModal(true);
   };
 
-  // Обработчик обновления просмотров
   const handleViewsUpdated = (updatedNews) => {
-    // Обновляем список новостей с новым значением просмотров
     setNews((prevNews) =>
       prevNews.map((item) => (item.id === updatedNews.id ? updatedNews : item)),
     );
 
-    // Обновляем выбранную новость
     setSelectedNews(updatedNews);
   };
 

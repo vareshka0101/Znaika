@@ -200,12 +200,6 @@ const TeachersPage = () => {
               </Col>
             ))}
           </Row>
-
-          <Row className="justify-content-center mt-5">
-            <Col lg={8}>
-              <ContactForm />
-            </Col>
-          </Row>
         </Container>
       </section>
 

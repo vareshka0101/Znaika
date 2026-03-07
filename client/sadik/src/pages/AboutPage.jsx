@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
 import { FaArrowRight } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -14,6 +14,9 @@ const AboutPage = () => {
     message: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -22,19 +25,131 @@ const AboutPage = () => {
     });
   }, []);
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case "name":
+        if (!value.trim()) {
+          return "Имя обязательно для заполнения";
+        }
+        if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
+          return "Имя может содержать только буквы, пробелы и дефисы";
+        }
+        if (value.trim().length < 2) {
+          return "Имя должно содержать минимум 2 символа";
+        }
+        return "";
+
+      case "phone":
+        if (!value.trim()) {
+          return "Телефон обязателен для заполнения";
+        }
+        // Проверка формата: +7 (999) 123-45-67 или +79991234567 или 89991234567
+        const phoneRegex =
+          /^(\+7|8)?[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}$/;
+        if (!phoneRegex.test(value.replace(/\s+/g, " ").trim())) {
+          return "Введите корректный номер телефона (например: +7 (999) 123-45-67)";
+        }
+        return "";
+
+      case "message":
+        if (value && value.length > 500) {
+          return "Сообщение не может быть длиннее 500 символов";
+        }
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Валидация при изменении
+    const error = validateField(name, value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+
+    // Валидация при потере фокуса
+    const error = validateField(name, value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const fieldsToValidate = ["name", "phone", "message"];
+
+    fieldsToValidate.forEach((field) => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        newErrors[field] = error;
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form submitted:", formData);
-    alert("Форма отправлена! Мы свяжемся с вами в ближайшее время.");
+    // Отмечаем все поля как "тронутые"
+    setTouched({
+      name: true,
+      phone: true,
+      message: true,
+    });
+
+    if (!validateForm()) {
+      // Показываем первую ошибку
+      const firstError = Object.values(errors)[0];
+      if (firstError) {
+        alert(firstError);
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Спасибо за заявку! Мы свяжемся с вами в ближайшее время.");
+        setFormData({ phone: "", name: "", message: "" });
+        setErrors({});
+        setTouched({});
+      } else {
+        alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
+      }
+    } catch (error) {
+      console.error("Ошибка отправки:", error);
+      alert("Ошибка соединения с сервером");
+    }
   };
 
   const galleryImages = [
@@ -211,17 +326,6 @@ const AboutPage = () => {
         </div>
       </Container>
 
-      <Container>
-        <div className={styles.ctaBlock} data-aos="zoom-in">
-          <h2 className="display-5 mb-3">
-            Собираетесь ли Вы записать своего ребенка в детский сад?
-          </h2>
-          <Button variant="primary" size="lg" className="mt-3 px-5">
-            Записаться
-          </Button>
-        </div>
-      </Container>
-
       <section className={styles.gallerySection}>
         <Container>
           <h2
@@ -272,47 +376,76 @@ const AboutPage = () => {
                 Позвоните по номеру: <strong>+7 (495) 666-33-99</strong> или
                 заполните форму ниже.
               </p>
-              <p className="mb-4" data-aos="fade-up" data-aos-delay="100">
-                Приглашаем вас на занятия для детей в возрасте от 3 до 6 лет. Мы
-                поможем вам с подготовкой к школе и развитием личности.
-              </p>
+
+              {Object.keys(errors).length > 0 && (
+                <Alert variant="danger" className="mb-3">
+                  Пожалуйста, исправьте ошибки в форме
+                </Alert>
+              )}
 
               <Form
                 className={styles.contactForm}
                 onSubmit={handleSubmit}
                 data-aos="fade-up"
                 data-aos-delay="150"
+                noValidate
               >
                 <Row className="g-3">
                   <Col md={6}>
-                    <Form.Control
-                      type="tel"
-                      name="phone"
-                      placeholder="Контактный телефон"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        type="text"
+                        name="name"
+                        placeholder="Ваше имя *"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.name && !!errors.name}
+                        required
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.name}
+                      </Form.Control.Feedback>
+                    </Form.Group>
                   </Col>
                   <Col md={6}>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      placeholder="Ваше имя"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        type="tel"
+                        name="phone"
+                        placeholder="Контактный телефон *"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.phone && !!errors.phone}
+                        required
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.phone}
+                      </Form.Control.Feedback>
+                    </Form.Group>
                   </Col>
                   <Col xs={12}>
-                    <Form.Control
-                      as="textarea"
-                      name="message"
-                      rows={3}
-                      placeholder="Ваше сообщение"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Group>
+                      <Form.Control
+                        as="textarea"
+                        name="message"
+                        rows={3}
+                        placeholder="Ваше сообщение"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.message && !!errors.message}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.message}
+                      </Form.Control.Feedback>
+                      {formData.message && (
+                        <Form.Text className="text-muted">
+                          {formData.message.length}/500 символов
+                        </Form.Text>
+                      )}
+                    </Form.Group>
                   </Col>
                   <Col xs={12}>
                     <Button
