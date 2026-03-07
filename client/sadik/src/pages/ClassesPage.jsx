@@ -17,6 +17,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
+import SimpleContactForm from "../components/SimpleContactForm";
 import styles from "./ClassesPage.module.css";
 
 const ClassesPage = () => {
@@ -170,20 +171,45 @@ const ClassesPage = () => {
     }));
   };
 
-  const handleExcursionSubmit = (e) => {
+  const handleExcursionSubmit = async (e) => {
     e.preventDefault();
-    console.log("Excursion form submitted:", excursionForm);
-    alert(
-      "Спасибо за запись на экскурсию! Мы свяжемся с вами для подтверждения даты и времени.",
-    );
-    setExcursionForm({
-      parentName: "",
-      phone: "",
-      email: "",
-      preferredDate: "",
-      message: "",
-    });
-    setShowExcursionModal(false);
+
+    console.log("Отправка данных на экскурсию:", excursionForm);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/excursion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(excursionForm),
+      });
+
+      const data = await response.json();
+      console.log("Ответ от сервера:", data);
+
+      if (response.ok) {
+        alert(
+          "Спасибо за запись на экскурсию! Мы свяжемся с вами для подтверждения даты и времени.",
+        );
+        setExcursionForm({
+          parentName: "",
+          phone: "",
+          email: "",
+          preferredDate: "",
+          message: "",
+        });
+        setShowExcursionModal(false);
+      } else {
+        alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
+      }
+    } catch (error) {
+      console.error("Ошибка отправки:", error);
+      alert(
+        "Ошибка соединения с сервером. Проверьте, запущен ли Laravel (php artisan serve)",
+      );
+    }
   };
 
   return (

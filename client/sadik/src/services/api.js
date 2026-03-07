@@ -26,15 +26,65 @@ export const api = {
   },
 
   async getNews() {
-    const response = await fetch(`${API_URL}/news`);
-    if (!response.ok) throw new Error("Failed to fetch news");
-    return response.json();
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/news");
+      if (!response.ok) {
+        throw new Error("Failed to fetch news");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching news:", error);
+      return [];
+    }
   },
 
   async getNewsById(id) {
-    const response = await fetch(`${API_URL}/news/${id}`);
-    if (!response.ok) throw new Error("Failed to fetch news");
-    return response.json();
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/news/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch news");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching news by id:", error);
+      return null;
+    }
+  },
+
+  async incrementNewsViews(id) {
+    try {
+      console.log(`Calling increment views API for news ID: ${id}`);
+
+      // Вариант 1: Отдельный эндпоинт для увеличения просмотров
+      const response = await fetch(
+        `http://localhost:8000/api/v1/news/${id}/views`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        // Вариант 2: Если отдельного эндпоинта нет, пробуем получить новость (бэкенд сам увеличит просмотры)
+        console.log("Trying fallback: fetching news with auto-increment");
+        const newsResponse = await fetch(
+          `http://localhost:8000/api/v1/news/${id}`,
+        );
+        if (newsResponse.ok) {
+          return await newsResponse.json();
+        }
+        throw new Error("Failed to increment views");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error incrementing views:", error);
+      // В случае ошибки возвращаем null
+      return null;
+    }
   },
 
   async getReviews() {

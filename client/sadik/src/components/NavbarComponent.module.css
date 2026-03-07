@@ -249,6 +249,29 @@
     font-size: 1.1rem;
 }
 
+
+
+.adminDropdown :global(.dropdown-toggle) {
+    background-color: #ff8a5c !important;
+    color: white !important;
+    border-radius: 40px;
+    padding: 0.5rem 1.2rem !important;
+    margin-left: 10px;
+    font-weight: 600;
+}
+
+.adminMenu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.adminDropdown :global(.dropdown-menu) {
+    min-width: 200px;
+}
+
+
+
 @media (max-width: 768px) {
     .socialButtons {
         flex-direction: column;

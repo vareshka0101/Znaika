@@ -10,6 +10,8 @@ import ProgramsPage from "./pages/ProgramsPage";
 import EventsPage from "./pages/EventsPage";
 import ParentClubPage from "./pages/ParentClubPage";
 import ContactsPage from "./pages/ContactsPage";
+import AdminNewsPage from "./pages/AdminNewsPage";
+import NewsPage from "./pages/NewsPage";
 import TopicPage from "./pages/TopicPage";
 import "./index.css";
 
@@ -28,6 +30,8 @@ function App() {
       <Route path="/parent-club" element={<ParentClubPage />} />
       <Route path="/parent-club/topic/:id" element={<TopicPage />} />
       <Route path="/contacts" element={<ContactsPage />} />
+      <Route path="/admin/news" element={<AdminNewsPage />} />
+      <Route path="/news" element={<NewsPage />} />
     </Routes>
   );
 }

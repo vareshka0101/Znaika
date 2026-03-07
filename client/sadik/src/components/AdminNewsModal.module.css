@@ -1,0 +1,41 @@
+.modalHeader {
+    border-bottom: 2px solid #58b4ae;
+}
+
+.tagInput {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag {
+    background-color: #58b4ae;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tagRemove {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+.tagRemove:hover {
+    opacity: 0.8;
+}

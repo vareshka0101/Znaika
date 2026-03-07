@@ -6,8 +6,8 @@ import styles from "./AddReviewModal.module.css";
 const AddReviewModal = ({ show, onHide, onAddReview }) => {
   const [reviewData, setReviewData] = useState({
     author: "",
+    parentType: "",
     childName: "",
-    yearsInGarden: "",
     text: "",
     rating: 5,
   });
@@ -35,36 +35,98 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
     if (!reviewData.author.trim()) {
       newErrors.author = "Введите ваше имя";
     }
+    if (!reviewData.parentType) {
+      newErrors.parentType = "Выберите, кем вы приходитесь ребенку";
+    }
     if (!reviewData.text.trim()) {
       newErrors.text = "Напишите отзыв";
-    }
-    if (!reviewData.yearsInGarden.trim()) {
-      newErrors.yearsInGarden = "Укажите сколько лет в саду";
     }
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Валидация
     const newErrors = validateForm();
-
-    if (Object.keys(newErrors).length === 0) {
-      onAddReview({
-        ...reviewData,
-        id: Date.now(),
-        date: new Date().toISOString(),
-      });
-      onHide();
-
-      setReviewData({
-        author: "",
-        childName: "",
-        yearsInGarden: "",
-        text: "",
-        rating: 5,
-      });
-    } else {
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    // Проверка авторизации
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Пожалуйста, войдите в систему, чтобы оставить отзыв");
+      return;
+    }
+
+    try {
+      // Формируем полное имя с указанием родителя
+      const fullAuthor = reviewData.parentType
+        ? `${reviewData.author}, ${reviewData.parentType}`
+        : reviewData.author;
+
+      // Подготовка данных для отправки
+      const reviewToSend = {
+        author: fullAuthor,
+        child_name: reviewData.childName,
+        text: reviewData.text,
+        rating: reviewData.rating,
+        date: new Date().toISOString().split("T")[0],
+      };
+
+      console.log("Отправка отзыва:", reviewToSend);
+
+      const response = await fetch("http://localhost:8000/api/v1/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reviewToSend),
+      });
+
+      const data = await response.json();
+      console.log("Ответ сервера:", data);
+
+      if (response.ok) {
+        // Передаем отзыв в родительский компонент
+        onAddReview({
+          id: Date.now(),
+          text: reviewData.text,
+          author: fullAuthor,
+          rating: reviewData.rating,
+          childName: reviewData.childName,
+          parentType: reviewData.parentType,
+          date: new Date().toISOString(),
+        });
+
+        // Очищаем форму
+        setReviewData({
+          author: "",
+          parentType: "",
+          childName: "",
+          text: "",
+          rating: 5,
+        });
+        setErrors({});
+
+        // Закрываем модалку
+        onHide();
+      } else {
+        // Показываем сообщение об ошибке от сервера
+        const errorMessage = data.errors
+          ? Object.values(data.errors).flat().join("\n")
+          : data.message || "Не удалось отправить отзыв";
+        alert("Ошибка:\n" + errorMessage);
+      }
+    } catch (error) {
+      console.error("Ошибка отправки:", error);
+      alert(
+        "Ошибка соединения с сервером. Проверьте, запущен ли Laravel (php artisan serve)",
+      );
     }
   };
 
@@ -98,6 +160,27 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
 
             <Col md={6}>
               <Form.Group>
+                <Form.Label>Вы *</Form.Label>
+                <Form.Select
+                  name="parentType"
+                  value={reviewData.parentType}
+                  onChange={handleChange}
+                  isInvalid={!!errors.parentType}
+                >
+                  <option value="">Выберите</option>
+                  <option value="мама">Мама</option>
+                  <option value="папа">Папа</option>
+                  <option value="бабушка">Бабушка</option>
+                  <option value="дедушка">Дедушка</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.parentType}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+
+            <Col md={6}>
+              <Form.Group>
                 <Form.Label>Имя ребенка</Form.Label>
                 <Form.Control
                   type="text"
@@ -106,23 +189,6 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
                   onChange={handleChange}
                   placeholder="Петров Миша"
                 />
-              </Form.Group>
-            </Col>
-
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Сколько лет в саду? *</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="yearsInGarden"
-                  value={reviewData.yearsInGarden}
-                  onChange={handleChange}
-                  placeholder="1 год, 2 года и т.д."
-                  isInvalid={!!errors.yearsInGarden}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.yearsInGarden}
-                </Form.Control.Feedback>
               </Form.Group>
             </Col>
 
@@ -166,7 +232,7 @@ const AddReviewModal = ({ show, onHide, onAddReview }) => {
               <Form.Group>
                 <Form.Check
                   type="checkbox"
-                  label="Я согласен на публикацию отзыва на сайте"
+                  label="Я согласен на обработку персональных данных"
                   required
                 />
               </Form.Group>

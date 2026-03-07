@@ -14,8 +14,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
-import ContactForm from "../components/ContactForm";
-import styles from "./ContactsPage.module.css";
+import SimpleContactForm from "../components/SimpleContactForm";
+import styles from "./ContactsPage.module.css"; // ВЕРНУЛИ ИМПОРТ СТИЛЕЙ
 
 const ContactsPage = () => {
   useEffect(() => {
@@ -31,7 +31,7 @@ const ContactsPage = () => {
       <NavbarComponent />
 
       <div className={styles.heroImage}>
-        <img src="/public/images/здание.jpg" alt="Декоративная картинка" />
+        <img src="/public/images/здание.jpg" alt="Детский сад Знайка" />
       </div>
 
       <section className="py-5">
@@ -119,13 +119,13 @@ const ContactsPage = () => {
             </Col>
           </Row>
 
-          <Row className="justify-content-center">
+          <Row className="justify-content-center mb-5">
             <Col lg={8}>
-              <ContactForm title="Свяжитесь с нами" />
+              <SimpleContactForm />
             </Col>
           </Row>
 
-          <Row className="mt-5">
+          <Row>
             <Col xs={12}>
               <div className={styles.infoBlock} data-aos="fade-up">
                 <p className="fs-5 mb-0">

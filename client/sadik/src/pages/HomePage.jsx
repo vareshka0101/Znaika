@@ -21,7 +21,6 @@ import {
   FaCalendarAlt,
   FaEye,
   FaArrowRight,
-  FaShareAlt,
   FaUsers,
   FaStar,
   FaChild,
@@ -36,10 +35,8 @@ import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedNews, setSelectedNews] = useState(null);
   const classesScrollRef = useRef(null);
 
   const [registrationForm, setRegistrationForm] = useState({
@@ -63,41 +60,37 @@ const HomePage = () => {
       id: 1,
       text: "Ребёнок бежит в сад каждое утро! Очень довольны программой и чуткими воспитателями. Знайка — наша вторая семья.",
       author: "Анна, мама Тимофея",
-      years: "3 года в саду",
       rating: 5,
     },
     {
       id: 2,
       text: "После года в Знайке сын научился читать и считать, а главное — появилась тяга к знаниям. Спасибо команде!",
       author: "Игорь, папа Миши",
-      years: "1 год в саду",
       rating: 5,
     },
     {
       id: 3,
       text: "Очень уютная атмосфера, ребёнок всегда с радостью рассказывает, как прошёл день. Отдельное спасибо за вкусное питание!",
       author: "Елена, мама Киры",
-      years: "2 года в саду",
       rating: 4,
     },
     {
       id: 4,
       text: "Воспитатели настоящие профессионалы! Ребёнок с удовольствием ходит в сад, участвует во всех мероприятиях. Рекомендую!",
       author: "Дмитрий, папа Сони",
-      years: "полгода в саду",
       rating: 5,
     },
     {
       id: 5,
       text: "Отличный сад! Ребёнок всегда сыт, доволен, занятия интересные. Особенно нравится подход к развитию речи.",
       author: "Светлана, мама Артёма",
-      years: "1,5 года в саду",
       rating: 5,
     },
   ];
 
   const [allTestimonials, setAllTestimonials] = useState(testimonials);
 
+  // Упрощенные данные для главной страницы (без полного контента)
   const newsData = [
     {
       id: 1,
@@ -107,25 +100,6 @@ const HomePage = () => {
       views: 245,
       excerpt:
         "Исследования показывают, что дети лучше усваивают материал через игру. В нашей статье рассказываем о методиках игрового обучения...",
-      content: `
-        <img src="https://placecats.com/800/400?random=101" class="${styles.modalNewsImage}" alt="Игровое обучение">
-        <div class="${styles.modalNewsMeta}">
-          <span> 10 февраля 2024</span>
-          <span> 245 просмотров</span>
-        </div>
-        <div class="${styles.modalNewsContent}">
-          <h4>Почему игра — это важно?</h4>
-          <p>Игровое обучение — это не просто развлечение, а мощный педагогический инструмент. Когда дети играют, они развивают социальные навыки, тренируют память и внимание, развивают творческое мышление.</p>
-          <h4>Методики игрового обучения в "Знайке"</h4>
-          <ul>
-            <li><strong>Сюжетно-ролевые игры</strong> — дети примеряют на себя разные профессии</li>
-            <li><strong>Дидактические игры</strong> — обучающие игры с четкими правилами</li>
-            <li><strong>Подвижные игры</strong> — развивают координацию</li>
-            <li><strong>Конструирование</strong> — развивает пространственное мышление</li>
-          </ul>
-        </div>
-      `,
-      tags: ["Игровое обучение", "Развитие детей", "Методики"],
     },
     {
       id: 2,
@@ -135,24 +109,6 @@ const HomePage = () => {
       views: 189,
       excerpt:
         "Как сделать детский сад комфортным для каждого ребенка, включая детей с особенностями развития...",
-      content: `
-        <img src="https://placecats.com/801/401?random=102" class="${styles.modalNewsImage}" alt="Безопасная среда">
-        <div class="${styles.modalNewsMeta}">
-          <span> 15 марта 2024</span>
-          <span> 189 просмотров</span>
-        </div>
-        <div class="${styles.modalNewsContent}">
-          <h4>Что такое инклюзивная среда?</h4>
-          <p>Инклюзивная среда — это пространство, где каждый ребенок чувствует себя принятым и защищенным.</p>
-          <h4>Наши принципы безопасности</h4>
-          <ul>
-            <li>Физическая безопасность</li>
-            <li>Эмоциональная безопасность</li>
-            <li>Социальная инклюзия</li>
-          </ul>
-        </div>
-      `,
-      tags: ["Безопасность", "Инклюзия", "Детский сад"],
     },
     {
       id: 3,
@@ -162,24 +118,6 @@ const HomePage = () => {
       views: 312,
       excerpt:
         "Простые и полезные рецепты перекусов, которые понравятся детям и сэкономят время родителям...",
-      content: `
-        <img src="https://placecats.com/802/402?random=103" class="${styles.modalNewsImage}" alt="Здоровое питание">
-        <div class="${styles.modalNewsMeta}">
-          <span> 22 февраля 2024</span>
-          <span> 312 просмотров</span>
-        </div>
-        <div class="${styles.modalNewsContent}">
-          <h4>Топ-5 полезных перекусов</h4>
-          <ol>
-            <li>Фруктовые шашлычки</li>
-            <li>Овощные палочки с хумусом</li>
-            <li>Домашние мюсли-батончики</li>
-            <li>Йогуртовые парфе</li>
-            <li>Смузи-боулы</li>
-          </ol>
-        </div>
-      `,
-      tags: ["Питание", "Рецепты", "Здоровье"],
     },
     {
       id: 4,
@@ -189,23 +127,6 @@ const HomePage = () => {
       views: 156,
       excerpt:
         "Вдохновляющие идеи для поделок и творческих занятий с детьми от 3 до 6 лет...",
-      content: `
-        <img src="https://placecats.com/803/403?random=104" class="${styles.modalNewsImage}" alt="Творчество">
-        <div class="${styles.modalNewsMeta}">
-          <span> 26 марта 2024</span>
-          <span> 156 просмотров</span>
-        </div>
-        <div class="${styles.modalNewsContent}">
-          <h4>Сезонные проекты</h4>
-          <ul>
-            <li>Осень: гербарий, поделки из листьев</li>
-            <li>Зима: снежинки, новогодние игрушки</li>
-            <li>Весна: цветы из бумаги</li>
-            <li>Лето: рисунки на асфальте</li>
-          </ul>
-        </div>
-      `,
-      tags: ["Творчество", "Поделки", "Идеи"],
     },
   ];
 
@@ -266,52 +187,6 @@ const HomePage = () => {
     },
   ];
 
-  const upcomingEvents = [
-    {
-      id: 1,
-      date: "22 февраля, пятница",
-      title: "Час Чтения",
-      time: "14:00–15:30",
-    },
-    {
-      id: 2,
-      date: "22 февраля, пятница",
-      title: "Музыкальная И Танцевальная Вечеринка",
-      time: "14:00–15:30",
-    },
-    { id: 3, date: "90 минут", title: "Праздник Культур", time: "14:30–15:30" },
-    {
-      id: 4,
-      date: "15 марта, вторник",
-      title: "Прогулка На Природе",
-      time: "14:30–15:30",
-    },
-  ];
-
-  const archiveEvents = [
-    {
-      id: 5,
-      day: "22",
-      month: "февраль",
-      title: "Час Чтения",
-      time: "16:00–17:30",
-    },
-    {
-      id: 6,
-      day: "90",
-      month: "мин",
-      title: "Музыкальная и Танцевальная Вечеринка",
-      time: "16:00–17:30",
-    },
-    {
-      id: 7,
-      day: "26",
-      month: "октябрь",
-      title: "Праздник Культур",
-      time: "16:00–17:30",
-    },
-  ];
-
   useEffect(() => {
     AOS.init({ duration: 800, once: false, mirror: true });
   }, []);
@@ -329,43 +204,50 @@ const HomePage = () => {
     classesScrollRef.current?.scrollBy({ left: 320, behavior: "smooth" });
   };
 
-  const openNewsModal = (news) => {
-    setSelectedNews(news);
-    setShowModal(true);
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: selectedNews?.title || "Новость",
-        text: 'Интересная статья на сайте детского сада "Знайка"',
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Ссылка скопирована в буфер обмена!");
-    }
-  };
+  // Удалена функция openNewsModal - теперь переход на страницу новостей
 
   const handleRegistrationInputChange = (e) => {
     const { name, value } = e.target;
     setRegistrationForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRegistrationSubmit = (e) => {
+  const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
-    console.log("Registration form submitted:", registrationForm);
-    alert("Спасибо за заявку! Мы свяжемся с вами в ближайшее время.");
-    setRegistrationForm({
-      parentName: "",
-      childName: "",
-      childAge: "",
-      phone: "",
-      email: "",
-      preferredClass: "",
-      message: "",
-    });
-    setShowRegistrationModal(false);
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/v1/registration",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(registrationForm),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Спасибо за заявку! Мы свяжемся с вами в ближайшее время.");
+        setRegistrationForm({
+          parentName: "",
+          childName: "",
+          childAge: "",
+          phone: "",
+          email: "",
+          preferredClass: "",
+          message: "",
+        });
+        setShowRegistrationModal(false);
+      } else {
+        alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
+      }
+    } catch (error) {
+      console.error("Ошибка:", error);
+      alert("Ошибка соединения с сервером");
+    }
   };
 
   const handleSimpleFormChange = (e) => {
@@ -386,21 +268,17 @@ const HomePage = () => {
   };
 
   const handleAddReview = (newReview) => {
-    const formattedReview = {
-      id: newReview.id,
-      text: newReview.text,
-      author: newReview.author,
-      years: newReview.yearsInGarden,
-      rating: newReview.rating,
-      childName: newReview.childName,
-      date: newReview.date,
-    };
-    setAllTestimonials((prev) => [formattedReview, ...prev]);
-    alert("Спасибо за ваш отзыв! Он появится на сайте.");
+    setAllTestimonials((prev) => [newReview, ...prev]);
+    alert("Спасибо за ваш отзыв! После модерации он появится на сайте.");
   };
 
   const openRegistrationModal = () => setShowRegistrationModal(true);
   const handleExcursionClick = () => navigate("/classes");
+
+  // Функция для перехода на страницу новостей
+  const goToNewsPage = () => {
+    navigate("/news");
+  };
 
   return (
     <>
@@ -588,7 +466,7 @@ const HomePage = () => {
               variant="excursion"
               size="lg"
               className="mt-3 px-3"
-              style={{ background: "#58b4ae", color: "black" }}
+              style={{ background: "#97d6d2", color: "black" }}
               onClick={() => setShowReviewModal(true)}
               data-aos="fade-left"
             >
@@ -628,16 +506,8 @@ const HomePage = () => {
                               )}
                             </div>
                             <p className="fs-5">"{testimonial.text}"</p>
-                            <p className="fw-bold mb-0">
-                              — {testimonial.author}
-                            </p>
-                            {testimonial.childName && (
-                              <small className="text-secondary">
-                                мама/папа {testimonial.childName}
-                              </small>
-                            )}
                             <small className="text-secondary d-block">
-                              {testimonial.years}
+                              {testimonial.author}
                             </small>
                           </div>
                         </Col>
@@ -650,12 +520,13 @@ const HomePage = () => {
         </Container>
       </section>
 
+      {/* В HomePage.jsx найдите этот блок и замените на: */}
       <Container>
         <div
           className={`text-center my-5 p-5 ${styles.ctaBlock}`}
           data-aos="zoom-in"
         >
-          <h2 className="display-8 mb-3">
+          <h2 className="display-8 mb-3" style={{ color: "#4a4a4a" }}>
             Собираетесь ли Вы записать своего ребенка в детский сад?
           </h2>
           <Button
@@ -663,12 +534,18 @@ const HomePage = () => {
             size="lg"
             className="mt-3 px-5"
             onClick={openRegistrationModal}
+            style={{
+              background: "#58b4ae",
+              border: "none",
+              borderRadius: "40px",
+              padding: "12px 40px",
+              fontWeight: "600",
+            }}
           >
             Записаться
           </Button>
         </div>
       </Container>
-
       <section className={styles.classesSliderSection}>
         <Container>
           <div className={styles.sliderHeader} data-aos="fade-right">
@@ -735,12 +612,7 @@ const HomePage = () => {
                 data-aos="flip-up"
                 data-aos-delay={100 + index * 50}
               >
-                <div
-                  className={styles.newsCard}
-                  onClick={() => openNewsModal(news)}
-                  role="button"
-                  tabIndex={0}
-                >
+                <div className={styles.newsCard}>
                   <div className={styles.newsImageContainer}>
                     <img
                       src={news.image}
@@ -756,16 +628,6 @@ const HomePage = () => {
                   <h4>{news.title}</h4>
                   <p className={styles.newsExcerpt}>{news.excerpt}</p>
                   <div className={styles.newsCardFooter}>
-                    <button
-                      className={styles.readMoreBtn}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openNewsModal(news);
-                      }}
-                      type="button"
-                    >
-                      Читать далее <FaArrowRight />
-                    </button>
                     <span className={styles.newsViews}>
                       <FaEye /> {news.views}
                     </span>
@@ -776,11 +638,15 @@ const HomePage = () => {
           </Row>
 
           <div className="text-center mt-5" data-aos="fade-up">
-            <Button variant="outline-dark" size="lg" className="rounded-pill">
+            <Button
+              variant="outline-dark"
+              size="lg"
+              className="rounded-pill"
+              onClick={goToNewsPage}
+            >
               ЧИТАЙТЕ ВСЕ НОВОСТИ
             </Button>
           </div>
-
           <hr className="my-5" />
 
           <Row className="justify-content-center">
@@ -1020,51 +886,7 @@ const HomePage = () => {
         </Modal.Body>
       </Modal>
 
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        size="lg"
-        centered
-        scrollable
-        dialogClassName={styles.newsModal}
-      >
-        <Modal.Header closeButton className={styles.newsModalHeader}>
-          <Modal.Title as="h3" className={styles.modalNewsTitle}>
-            {selectedNews?.title}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedNews && (
-            <div>
-              <div dangerouslySetInnerHTML={{ __html: selectedNews.content }} />
-              <div className={styles.newsTags}>
-                {selectedNews.tags.map((tag, idx) => (
-                  <span key={idx} className={styles.newsTag}>
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer className={styles.newsModalFooter}>
-          <Button
-            variant="secondary"
-            onClick={() => setShowModal(false)}
-            className="rounded-pill"
-          >
-            Закрыть
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleShare}
-            className="rounded-pill"
-          >
-            <FaShareAlt className="me-2" />
-            Поделиться
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* УДАЛЕН Modal для новостей */}
 
       <AddReviewModal
         show={showReviewModal}

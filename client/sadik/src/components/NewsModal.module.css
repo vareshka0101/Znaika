@@ -1,0 +1,91 @@
+/* src/components/NewsModal.module.css */
+.newsModal {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.newsModalHeader {
+    background: linear-gradient(135deg, #58b4ae 0%, #3a9b95 100%);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+.modalNewsTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: white;
+}
+
+.modalNewsMeta {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modalNewsImage {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modalNewsContent {
+    line-height: 1.8;
+    color: #333;
+}
+
+.modalNewsContent h4 {
+    color: #58b4ae;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.modalNewsContent ul,
+.modalNewsContent ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.modalNewsContent li {
+    margin-bottom: 0.5rem;
+}
+
+.modalNewsContent strong {
+    color: #ff8a5c;
+}
+
+.newsTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.newsTag {
+    background: #f0f0f0;
+    color: #666;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.newsTag:hover {
+    background: #58b4ae;
+    color: white;
+}
+
+.newsModalFooter {
+    border-top: 1px solid #eee;
+    padding: 1rem 1.5rem;
+}

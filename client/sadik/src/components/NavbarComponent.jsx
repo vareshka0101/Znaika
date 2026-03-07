@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Navbar,
   Nav,
@@ -24,12 +24,14 @@ import {
   FaUser,
   FaChild,
   FaUserCircle,
+  FaCog,
 } from "react-icons/fa";
 import { api } from "../services/api";
 import styles from "./NavbarComponent.module.css";
 
 const NavbarComponent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [user, setUser] = useState(null);
@@ -63,9 +65,11 @@ const NavbarComponent = () => {
     try {
       const userData = await api.getCurrentUser();
       setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
     } catch (error) {
       console.error("Error fetching user:", error);
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   };
 
@@ -104,6 +108,7 @@ const NavbarComponent = () => {
     try {
       const response = await api.login(loginForm);
       localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       setUser(response.user);
       handleClose();
       alert(`Добро пожаловать, ${response.user.name}!`);
@@ -137,6 +142,7 @@ const NavbarComponent = () => {
       });
 
       localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       setUser(response.user);
       handleClose();
       alert(`Регистрация успешна! Добро пожаловать, ${response.user.name}!`);
@@ -158,6 +164,7 @@ const NavbarComponent = () => {
       console.error("Logout error:", error);
     } finally {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setUser(null);
       alert("Вы вышли из системы");
     }
@@ -291,23 +298,46 @@ const NavbarComponent = () => {
 
               <Nav.Link className="ms-lg-3">
                 {user ? (
-                  <NavDropdown
-                    title={
-                      <span className={styles.userMenu}>
-                        <FaUserCircle className="me-1" />
-                        {user.name}
-                      </span>
-                    }
-                    id="user-dropdown"
-                    className={styles.userDropdown}
-                  >
-                    <NavDropdown.Item>
-                      <FaUser className="me-2" /> Личный кабинет
-                    </NavDropdown.Item>
-                    <NavDropdown.Item onClick={handleLogout}>
-                      <FaLock className="me-2" /> Выйти
-                    </NavDropdown.Item>
-                  </NavDropdown>
+                  <div className="d-flex align-items-center">
+                    <NavDropdown
+                      title={
+                        <span className={styles.userMenu}>
+                          <FaUserCircle className="me-1" />
+                          {user.name}
+                        </span>
+                      }
+                      id="user-dropdown"
+                      className={styles.userDropdown}
+                    >
+                      <NavDropdown.Item onClick={handleLogout}>
+                        <FaLock className="me-2" /> Выйти
+                      </NavDropdown.Item>
+                    </NavDropdown>
+
+                    {user.role === "admin" && (
+                      <NavDropdown
+                        title={
+                          <span className={styles.adminMenu}>
+                            <FaCog className="me-1" />
+                            Админ
+                          </span>
+                        }
+                        id="admin-dropdown"
+                        className={styles.adminDropdown}
+                      >
+                        <NavDropdown.Item
+                          onClick={() => navigate("/admin/news")}
+                        >
+                          <FaStar className="me-2" /> Управление новостями
+                        </NavDropdown.Item>
+                        <NavDropdown.Item
+                          onClick={() => navigate("/admin/events")}
+                        >
+                          <FaStar className="me-2" /> Управление мероприятиями
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                    )}
+                  </div>
                 ) : (
                   <Button
                     variant="primary"
