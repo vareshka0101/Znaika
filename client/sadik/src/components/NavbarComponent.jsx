@@ -25,6 +25,7 @@ import {
   FaChild,
   FaUserCircle,
   FaCog,
+  FaUtensils,
 } from "react-icons/fa";
 import { api } from "../services/api";
 import styles from "./NavbarComponent.module.css";
@@ -334,6 +335,11 @@ const NavbarComponent = () => {
                           onClick={() => navigate("/admin/events")}
                         >
                           <FaStar className="me-2" /> Управление мероприятиями
+                        </NavDropdown.Item>
+                        <NavDropdown.Item
+                          onClick={() => navigate("/admin/menu")}
+                        >
+                          <FaUtensils className="me-2" /> Управление меню
                         </NavDropdown.Item>
                       </NavDropdown>
                     )}
