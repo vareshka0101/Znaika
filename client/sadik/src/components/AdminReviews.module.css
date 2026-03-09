@@ -1,0 +1,108 @@
+.container {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.title {
+    color: #4a4a4a;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+    background-color: #58b4ae;
+    color: white;
+    font-weight: 600;
+    border-bottom: none;
+    padding: 1rem;
+}
+
+.authorCell {
+    font-weight: 500;
+    color: #2d4059;
+}
+
+.reviewText {
+    max-width: 300px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.ratingCell {
+    display: flex;
+    gap: 2px;
+    min-width: 80px;
+}
+
+.starFilled {
+    color: #ffc107;
+}
+
+.starEmpty {
+    color: #ddd;
+}
+
+.dateCell {
+    color: #666;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.modalHeader {
+    border-bottom: 2px solid #58b4ae;
+    padding: 1.5rem;
+}
+
+.ratingStars {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.star {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star:hover,
+.starFilled {
+    color: #ffc107;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+}

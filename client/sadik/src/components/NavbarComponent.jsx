@@ -216,7 +216,6 @@ const NavbarComponent = () => {
               style={{
                 width: "45px",
                 marginBottom: "10px",
-                marginLeft: "10px",
               }}
               alt="logo"
             />
@@ -344,6 +343,16 @@ const NavbarComponent = () => {
                           onClick={() => navigate("/admin/menu")}
                         >
                           <FaUtensils className="me-2" /> Меню
+                        </NavDropdown.Item>
+                        {/* Добавлен пункт Отзывы */}
+                        <NavDropdown.Item
+                          onClick={() => navigate("/admin/reviews")}
+                        >
+                          <FaStar
+                            className="me-2"
+                            style={{ color: "#ffc107" }}
+                          />{" "}
+                          Отзывы
                         </NavDropdown.Item>
                       </NavDropdown>
                     )}

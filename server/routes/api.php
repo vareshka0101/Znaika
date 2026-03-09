@@ -38,6 +38,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/news', [NewsController::class, 'store']);
         Route::put('/news/{id}', [NewsController::class, 'update']);
         Route::delete('/news/{id}', [NewsController::class, 'destroy']);
+
+
+        Route::prefix('admin')->group(function () {
+            Route::get('/reviews', [ReviewController::class, 'adminIndex']);
+            Route::get('/reviews/{id}', [ReviewController::class, 'adminShow']);
+            Route::put('/reviews/{id}', [ReviewController::class, 'adminUpdate']);
+            Route::delete('/reviews/{id}', [ReviewController::class, 'adminDestroy']);
+            Route::patch('/reviews/{id}/approve', [ReviewController::class, 'toggleApproval']);
+        });
     });
 
 

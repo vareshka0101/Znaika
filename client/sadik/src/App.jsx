@@ -14,6 +14,7 @@ import AdminNewsPage from "./pages/AdminNewsPage";
 import NewsPage from "./pages/NewsPage";
 import TopicPage from "./pages/TopicPage";
 import AdminMenu from "./components/AdminMenu";
+import AdminReviewsPage from "./pages/AdminReviewsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./index.css";
 
@@ -33,6 +34,7 @@ function App() {
       <Route path="/parent-club/topic/:id" element={<TopicPage />} />
       <Route path="/contacts" element={<ContactsPage />} />
       <Route path="/news" element={<NewsPage />} />
+      <Route path="/admin/reviews" element={<AdminReviewsPage />} />
 
       <Route path="/admin/news" element={<AdminNewsPage />} />
 

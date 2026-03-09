@@ -8,6 +8,7 @@ import {
   Modal,
   Button,
   Form,
+  Alert,
 } from "react-bootstrap";
 import {
   FaSmile,
@@ -37,6 +38,8 @@ const HomePage = () => {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const classesScrollRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [registrationForm, setRegistrationForm] = useState({
     parentName: "",
@@ -54,7 +57,8 @@ const HomePage = () => {
     message: "",
   });
 
-  const testimonials = [
+  // Запасные отзывы на случай ошибки API
+  const fallbackTestimonials = [
     {
       id: 1,
       text: "Ребёнок бежит в сад каждое утро! Очень довольны программой и чуткими воспитателями. Знайка — наша вторая семья.",
@@ -87,7 +91,7 @@ const HomePage = () => {
     },
   ];
 
-  const [allTestimonials, setAllTestimonials] = useState(testimonials);
+  const [allTestimonials, setAllTestimonials] = useState(fallbackTestimonials);
 
   const newsData = [
     {
@@ -187,7 +191,23 @@ const HomePage = () => {
 
   useEffect(() => {
     AOS.init({ duration: 800, once: false, mirror: true });
+    fetchApprovedReviews();
   }, []);
+
+  const fetchApprovedReviews = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/reviews");
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setAllTestimonials(data);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      // Оставляем запасные отзывы
+    }
+  };
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "long", year: "numeric" };
@@ -335,9 +355,37 @@ const HomePage = () => {
     setSimpleForm({ phone: "", name: "", message: "" });
   };
 
-  const handleAddReview = (newReview) => {
-    setAllTestimonials((prev) => [newReview, ...prev]);
-    alert("Спасибо за ваш отзыв! Cкоро он появится на сайте.");
+  const handleAddReview = async (newReview) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8000/api/v1/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          author: newReview.author,
+          child_name: newReview.childName,
+          text: newReview.text,
+          rating: newReview.rating,
+          date: new Date().toISOString().split("T")[0],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Спасибо за отзыв! После модерации он появится на сайте.");
+        // Не добавляем отзыв сразу, так как он должен пройти модерацию
+      } else {
+        alert("Ошибка: " + (data.message || "Не удалось отправить отзыв"));
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert("Ошибка соединения с сервером");
+    }
   };
 
   const openRegistrationModal = () => setShowRegistrationModal(true);
@@ -350,6 +398,14 @@ const HomePage = () => {
   return (
     <>
       <NavbarComponent />
+
+      {error && (
+        <Container className="mt-3">
+          <Alert variant="danger" onClose={() => setError("")} dismissible>
+            {error}
+          </Alert>
+        </Container>
+      )}
 
       <section className={styles.heroSection} data-aos="fade-down">
         <Container>
@@ -542,47 +598,53 @@ const HomePage = () => {
           </div>
 
           <div data-aos="fade-up" data-aos-delay="200">
-            <Carousel indicators className={styles.testimonialCarousel}>
-              {Array.from({
-                length: Math.ceil(allTestimonials.length / 2),
-              }).map((_, index) => (
-                <Carousel.Item key={index}>
-                  <Row className="g-4">
-                    {allTestimonials
-                      .slice(index * 2, index * 2 + 2)
-                      .map((testimonial) => (
-                        <Col md={6} key={testimonial.id}>
-                          <div className={styles.testimonialCard}>
-                            <div className="d-flex justify-content-between mb-3">
-                              <FaQuoteLeft
-                                className={`fa-3x ${styles.quoteIcon}`}
-                              />
-                              {testimonial.rating && (
-                                <div className={styles.testimonialRating}>
-                                  {[...Array(5)].map((_, i) => (
-                                    <FaStar
-                                      key={i}
-                                      className={
-                                        i < testimonial.rating
-                                          ? styles.starFilled
-                                          : styles.starEmpty
-                                      }
-                                    />
-                                  ))}
-                                </div>
-                              )}
+            {allTestimonials.length > 0 ? (
+              <Carousel indicators className={styles.testimonialCarousel}>
+                {Array.from({
+                  length: Math.ceil(allTestimonials.length / 2),
+                }).map((_, index) => (
+                  <Carousel.Item key={index}>
+                    <Row className="g-4">
+                      {allTestimonials
+                        .slice(index * 2, index * 2 + 2)
+                        .map((testimonial) => (
+                          <Col md={6} key={testimonial.id}>
+                            <div className={styles.testimonialCard}>
+                              <div className="d-flex justify-content-between mb-3">
+                                <FaQuoteLeft
+                                  className={`fa-3x ${styles.quoteIcon}`}
+                                />
+                                {testimonial.rating && (
+                                  <div className={styles.testimonialRating}>
+                                    {[...Array(5)].map((_, i) => (
+                                      <FaStar
+                                        key={i}
+                                        className={
+                                          i < testimonial.rating
+                                            ? styles.starFilled
+                                            : styles.starEmpty
+                                        }
+                                      />
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              <p className="fs-5">"{testimonial.text}"</p>
+                              <small className="text-secondary d-block">
+                                {testimonial.author}
+                              </small>
                             </div>
-                            <p className="fs-5">"{testimonial.text}"</p>
-                            <small className="text-secondary d-block">
-                              {testimonial.author}
-                            </small>
-                          </div>
-                        </Col>
-                      ))}
-                  </Row>
-                </Carousel.Item>
-              ))}
-            </Carousel>
+                          </Col>
+                        ))}
+                    </Row>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            ) : (
+              <p className="text-center text-muted">
+                Пока нет отзывов. Будьте первым!
+              </p>
+            )}
           </div>
         </Container>
       </section>

@@ -12,7 +12,6 @@ class Review extends Model
     protected $fillable = [
         'author',
         'child_name',
-        'years_in_garden',
         'text',
         'rating',
         'date',
@@ -21,7 +20,7 @@ class Review extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'date' => 'datetime',
         'rating' => 'integer',
         'is_approved' => 'boolean',
         'is_active' => 'boolean'
