@@ -447,4 +447,52 @@ export const api = {
 
     return data;
   },
+
+  getMenuItems: async () => {
+    const response = await fetch(`${API_URL}/menu-items`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (!response.ok) throw new Error("Ошибка загрузки меню");
+    return response.json();
+  },
+
+  // Создание нового блюда
+  createMenuItem: async (formData) => {
+    const response = await fetch(`${API_URL}/menu-items`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+    if (!response.ok) throw new Error("Ошибка создания блюда");
+    return response.json();
+  },
+
+  // Обновление блюда
+  updateMenuItem: async (id, formData) => {
+    const response = await fetch(`${API_URL}/menu-items/${id}`, {
+      method: "POST", // или PUT в зависимости от вашего API
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+    if (!response.ok) throw new Error("Ошибка обновления блюда");
+    return response.json();
+  },
+
+  // Удаление блюда
+  deleteMenuItem: async (id) => {
+    const response = await fetch(`${API_URL}/menu-items/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (!response.ok) throw new Error("Ошибка удаления блюда");
+    return response.json();
+  },
 };

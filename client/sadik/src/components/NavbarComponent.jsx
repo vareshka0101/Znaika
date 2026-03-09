@@ -26,6 +26,8 @@ import {
   FaUserCircle,
   FaCog,
   FaUtensils,
+  FaNewspaper,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { api } from "../services/api";
 import styles from "./NavbarComponent.module.css";
@@ -309,6 +311,7 @@ const NavbarComponent = () => {
                       }
                       id="user-dropdown"
                       className={styles.userDropdown}
+                      align="end"
                     >
                       <NavDropdown.Item onClick={handleLogout}>
                         <FaLock className="me-2" /> Выйти
@@ -324,22 +327,23 @@ const NavbarComponent = () => {
                           </span>
                         }
                         id="admin-dropdown"
-                        className={styles.adminDropdown}
+                        className={`${styles.adminDropdown} ms-2`}
+                        align="end"
                       >
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/news")}
                         >
-                          <FaStar className="me-2" /> Управление новостями
+                          <FaNewspaper className="me-2" /> Новости
                         </NavDropdown.Item>
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/events")}
                         >
-                          <FaStar className="me-2" /> Управление мероприятиями
+                          <FaCalendarAlt className="me-2" /> События
                         </NavDropdown.Item>
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/menu")}
                         >
-                          <FaUtensils className="me-2" /> Управление меню
+                          <FaUtensils className="me-2" /> Меню
                         </NavDropdown.Item>
                       </NavDropdown>
                     )}

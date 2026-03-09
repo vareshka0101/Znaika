@@ -13,6 +13,8 @@ import ContactsPage from "./pages/ContactsPage";
 import AdminNewsPage from "./pages/AdminNewsPage";
 import NewsPage from "./pages/NewsPage";
 import TopicPage from "./pages/TopicPage";
+import AdminMenu from "./components/AdminMenu";
+import NotFoundPage from "./pages/NotFoundPage";
 import "./index.css";
 
 function App() {
@@ -30,8 +32,14 @@ function App() {
       <Route path="/parent-club" element={<ParentClubPage />} />
       <Route path="/parent-club/topic/:id" element={<TopicPage />} />
       <Route path="/contacts" element={<ContactsPage />} />
-      <Route path="/admin/news" element={<AdminNewsPage />} />
       <Route path="/news" element={<NewsPage />} />
+
+      <Route path="/admin/news" element={<AdminNewsPage />} />
+
+      <Route path="/admin/menu" element={<AdminMenu />} />
+
+      {/* 404 route */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
