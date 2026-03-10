@@ -76,3 +76,16 @@ Route::prefix('v1')->group(function () {
     Route::get('/settings/contact', [SettingController::class, 'getContactInfo']);
     Route::get('/settings/social', [SettingController::class, 'getSocialLinks']);
 });
+
+
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('Тестовое письмо', function ($message) {
+            $message->to('vareshka0101@mail.ru')
+                ->subject('Тест почты');
+        });
+        return response()->json(['success' => true, 'message' => 'Письмо отправлено']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+});
