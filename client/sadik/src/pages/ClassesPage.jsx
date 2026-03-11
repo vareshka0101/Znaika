@@ -39,7 +39,7 @@ const ClassesPage = () => {
       title: "Игровая комната",
       description:
         "Просторное помещение с развивающими игрушками, конструкторами и зонами для сюжетно-ролевых игр",
-      image: "/public/images/игровая.jpg",
+      image: "/images/игровая.jpg",
       icon: FaCubes,
       delay: 100,
       marginTop: 0,
@@ -50,7 +50,7 @@ const ClassesPage = () => {
       title: "Учебный класс",
       description:
         "Светлая аудитория с современной мебелью, интерактивной доской и учебными материалами",
-      image: "/public/images/учебный.jpg",
+      image: "/images/учебный.jpg",
       icon: FaBookOpen,
       delay: 150,
       marginTop: 20,
@@ -61,7 +61,7 @@ const ClassesPage = () => {
       title: "Спальня",
       description:
         "Уютная комната для дневного сна с удобными кроватками и спокойной атмосферой",
-      image: "/public/images/спальня.jpg",
+      image: "/images/спальня.jpg",
       icon: FaBed,
       delay: 200,
       marginTop: 0,
@@ -72,7 +72,7 @@ const ClassesPage = () => {
       title: "Столовая",
       description:
         "Светлая столовая с удобной мебелью, где дети получают вкусное и полезное питание",
-      image: "/public/images/столовая.jpg",
+      image: "/images/столовая.jpg",
       icon: FaUtensils,
       delay: 250,
       marginTop: 0,
@@ -83,7 +83,7 @@ const ClassesPage = () => {
       title: "Спортивный зал",
       description:
         "Зал для физкультуры с мягким покрытием, шведскими стенками и спортивным инвентарем",
-      image: "/public/images/спортзал.jpg",
+      image: "/images/спортзал.jpg",
       icon: FaFutbol,
       delay: 300,
       marginTop: 30,
@@ -94,7 +94,7 @@ const ClassesPage = () => {
       title: "Музыкальный класс",
       description:
         "Помещение для занятий музыкой с фортепиано, детскими музыкальными инструментами",
-      image: "/public/images/музык.jpg",
+      image: "/images/музык.jpg",
       icon: FaMusic,
       delay: 350,
       marginTop: 0,
@@ -105,7 +105,7 @@ const ClassesPage = () => {
       title: "Художественная мастерская",
       description:
         "Творческое пространство для рисования, лепки и поделок с большим выбором материалов",
-      image: "/public/images/изо.jpg",
+      image: "/images/изо.jpg",
       icon: FaPaintBrush,
       delay: 400,
       marginTop: 0,
@@ -116,7 +116,7 @@ const ClassesPage = () => {
       title: "Каллиграфия",
       description:
         "Специализированный класс для обучения красивому письму с китайской методикой",
-      image: "/public/images/калиграфия.jpg",
+      image: "/images/калиграфия.jpg",
       icon: FaPenFancy,
       delay: 450,
       marginTop: 40,
@@ -127,7 +127,7 @@ const ClassesPage = () => {
       title: "Зимний сад",
       description:
         "Озелененное пространство для отдыха и знакомства с природой, ухода за растениями",
-      image: "/public/images/зимний сад.png",
+      image: "/images/зимний сад.png",
       icon: FaLeaf,
       delay: 500,
       marginTop: 0,
@@ -138,7 +138,7 @@ const ClassesPage = () => {
       title: "Зона ожидания",
       description:
         "Уютное пространство для родителей с информационными стендами и комфортными диванами",
-      image: "/public/images/зал ожидания.jpg",
+      image: "/images/зал ожидания.jpg",
       icon: FaCouch,
       delay: 550,
       marginTop: 0,

@@ -57,7 +57,6 @@ const HomePage = () => {
     message: "",
   });
 
-  // Запасные отзывы на случай ошибки API
   const fallbackTestimonials = [
     {
       id: 1,
@@ -116,7 +115,7 @@ const HomePage = () => {
       id: 3,
       title: "Советы по питанию для здоровых перекусов",
       date: "2026-02-22",
-      image: "/public/images/новость 3.jpg",
+      image: "/images/нов3.jpg",
       views: 312,
       excerpt:
         "Простые и полезные рецепты перекусов, которые понравятся детям и сэкономят время родителям...",
@@ -205,7 +204,6 @@ const HomePage = () => {
       }
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      // Оставляем запасные отзывы
     }
   };
 
@@ -378,7 +376,6 @@ const HomePage = () => {
 
       if (response.ok) {
         alert("Спасибо за отзыв! После модерации он появится на сайте.");
-        // Не добавляем отзыв сразу, так как он должен пройти модерацию
       } else {
         alert("Ошибка: " + (data.message || "Не удалось отправить отзыв"));
       }

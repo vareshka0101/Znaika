@@ -27,11 +27,37 @@ class NewsController extends Controller
     {
         try {
             $news = News::findOrFail($id);
+
+
             $news->increment('views');
+            $news->refresh();
+
+            Log::info('News viewed:', ['id' => $id, 'views' => $news->views]);
+
             return response()->json($news);
         } catch (\Exception $e) {
             Log::error('News show error: ' . $e->getMessage());
             return response()->json(['error' => 'Новость не найдена'], 404);
+        }
+    }
+
+
+    public function incrementViews($id)
+    {
+        try {
+            $news = News::findOrFail($id);
+            $news->increment('views');
+            $news->refresh();
+
+            Log::info('News views incremented:', ['id' => $id, 'views' => $news->views]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $news
+            ]);
+        } catch (\Exception $e) {
+            Log::error('News increment views error: ' . $e->getMessage());
+            return response()->json(['error' => 'Ошибка увеличения просмотров'], 500);
         }
     }
 

@@ -212,7 +212,7 @@ const NavbarComponent = () => {
           <Navbar.Brand as={Link} to="/" className={styles.brand}>
             Знайка
             <img
-              src="/public/images/Без имени-1.png"
+              src="/images/Без имени-1.png"
               style={{
                 width: "45px",
                 marginBottom: "10px",
@@ -337,8 +337,9 @@ const NavbarComponent = () => {
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/events")}
                         >
-                          <FaCalendarAlt className="me-2" /> События
+                          <FaCalendarAlt className="me-2" /> Мероприятия
                         </NavDropdown.Item>
+
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/menu")}
                         >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { FaCalendarAlt, FaEye, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -8,45 +8,166 @@ import NewsModal from "../components/NewsModal";
 import { api } from "../services/api";
 import styles from "./NewsPage.module.css";
 
+// Мемоизированный компонент карточки новости
+const NewsCard = memo(({ item, onOpen }) => {
+  const formatDate = useCallback((dateString) => {
+    try {
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      return new Date(dateString).toLocaleDateString("ru-RU", options);
+    } catch {
+      return dateString;
+    }
+  }, []);
+
+  const handleClick = useCallback(() => {
+    onOpen(item);
+  }, [onOpen, item]);
+
+  return (
+    <div className={styles.newsCard}>
+      <div className={styles.newsImageContainer}>
+        <img
+          src={item.image || "/images/news-placeholder.jpg"}
+          className={styles.newsImage}
+          alt={item.title}
+          loading="lazy"
+          onError={(e) => {
+            e.target.src = "/images/news-placeholder.jpg";
+          }}
+        />
+      </div>
+      <div className={styles.newsContent}>
+        <p className={styles.newsDate}>
+          <FaCalendarAlt className="me-1" />
+          {formatDate(item.date)}
+        </p>
+        <h4>{item.title}</h4>
+        <p className={styles.newsExcerpt}>
+          {item.excerpt || item.content?.substring(0, 100) + "..."}
+        </p>
+        <div className={styles.newsCardFooter}>
+          <button className={styles.readMoreBtn} onClick={handleClick}>
+            Читать далее <FaArrowRight />
+          </button>
+          <span className={styles.newsViews}>
+            <FaEye /> {item.views || 0}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 const NewsPage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        const data = await api.getNews();
+        if (isMounted) {
+          setNews(data);
+          setError(null);
+        }
+      } catch (error) {
+        console.error("Error fetching news:", error);
+        if (isMounted) {
+          setError("Ошибка загрузки новостей");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchNews();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const fetchNews = async () => {
-    try {
-      const data = await api.getNews();
-      setNews(data);
-    } catch (error) {
-      console.error("Error fetching news:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString) => {
-    const options = { day: "numeric", month: "long", year: "numeric" };
-    return new Date(dateString).toLocaleDateString("ru-RU", options);
-  };
-
-  const openNewsModal = (newsItem) => {
+  const openNewsModal = useCallback((newsItem) => {
     setSelectedNews(newsItem);
     setShowModal(true);
-  };
+  }, []);
 
-  const handleViewsUpdated = (updatedNews) => {
-    setNews((prevNews) =>
-      prevNews.map((item) => (item.id === updatedNews.id ? updatedNews : item)),
+  const handleCloseModal = useCallback(() => {
+    setShowModal(false);
+    // Не очищаем selectedNews сразу, чтобы избежать мигания
+    setTimeout(() => {
+      setSelectedNews(null);
+    }, 300);
+  }, []);
+
+  const handleViewsUpdated = useCallback((updatedNews) => {
+    setNews((prevNews) => {
+      // Находим индекс обновленной новости
+      const index = prevNews.findIndex((item) => item.id === updatedNews.id);
+      if (index === -1) return prevNews;
+
+      // Проверяем, действительно ли изменились просмотры
+      if (prevNews[index].views === updatedNews.views) {
+        return prevNews;
+      }
+
+      // Создаем новый массив только если есть изменения
+      const newNews = [...prevNews];
+      newNews[index] = updatedNews;
+      return newNews;
+    });
+
+    // Обновляем selectedNews только если это та же новость
+    setSelectedNews((prev) =>
+      prev?.id === updatedNews.id ? updatedNews : prev,
     );
+  }, []);
 
-    setSelectedNews(updatedNews);
-  };
+  if (loading) {
+    return (
+      <>
+        <NavbarComponent />
+        <Container className="py-5">
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Загрузка...</span>
+            </div>
+          </div>
+        </Container>
+        <FooterComponent />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <NavbarComponent />
+        <Container className="py-5">
+          <div className="text-center py-5">
+            <p className="text-danger fs-4">{error}</p>
+            <Button
+              variant="primary"
+              onClick={() => window.location.reload()}
+              className="mt-3"
+            >
+              Попробовать снова
+            </Button>
+          </div>
+        </Container>
+        <FooterComponent />
+      </>
+    );
+  }
 
   return (
     <>
@@ -54,9 +175,7 @@ const NewsPage = () => {
       <Container className="py-5">
         <h1 className="display-4 text-center mb-5">Все новости</h1>
 
-        {loading ? (
-          <div className="text-center py-5">Загрузка новостей...</div>
-        ) : news.length === 0 ? (
+        {news.length === 0 ? (
           <div className="text-center py-5">
             <p className="fs-4 text-muted">Новости пока не добавлены</p>
           </div>
@@ -64,39 +183,7 @@ const NewsPage = () => {
           <Row className="g-4">
             {news.map((item) => (
               <Col key={item.id} md={6} lg={4} xl={3}>
-                <div className={styles.newsCard}>
-                  <div className={styles.newsImageContainer}>
-                    <img
-                      src={item.image || "/public/images/news-placeholder.jpg"}
-                      className={styles.newsImage}
-                      alt={item.title}
-                      onError={(e) => {
-                        e.target.src = "/public/images/news-placeholder.jpg";
-                      }}
-                    />
-                  </div>
-                  <div className={styles.newsContent}>
-                    <p className={styles.newsDate}>
-                      <FaCalendarAlt className="me-1" />
-                      {formatDate(item.date)}
-                    </p>
-                    <h4>{item.title}</h4>
-                    <p className={styles.newsExcerpt}>
-                      {item.excerpt || item.content?.substring(0, 100) + "..."}
-                    </p>
-                    <div className={styles.newsCardFooter}>
-                      <button
-                        className={styles.readMoreBtn}
-                        onClick={() => openNewsModal(item)}
-                      >
-                        Читать далее <FaArrowRight />
-                      </button>
-                      <span className={styles.newsViews}>
-                        <FaEye /> {item.views || 0}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <NewsCard item={item} onOpen={openNewsModal} />
               </Col>
             ))}
           </Row>
@@ -116,7 +203,7 @@ const NewsPage = () => {
 
       <NewsModal
         show={showModal}
-        onHide={() => setShowModal(false)}
+        onHide={handleCloseModal}
         news={selectedNews}
         onViewsUpdated={handleViewsUpdated}
       />

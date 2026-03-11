@@ -15,6 +15,7 @@ import NewsPage from "./pages/NewsPage";
 import TopicPage from "./pages/TopicPage";
 import AdminMenu from "./components/AdminMenu";
 import AdminReviewsPage from "./pages/AdminReviewsPage";
+import AdminEventsPage from "./pages/AdminEventsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./index.css";
 
@@ -39,6 +40,7 @@ function App() {
       <Route path="/admin/news" element={<AdminNewsPage />} />
 
       <Route path="/admin/menu" element={<AdminMenu />} />
+      <Route path="/admin/events" element={<AdminEventsPage />} />
 
       {/* 404 route */}
       <Route path="*" element={<NotFoundPage />} />

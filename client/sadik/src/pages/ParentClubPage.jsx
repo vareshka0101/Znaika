@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Container, Row, Col, Button, Alert, Form } from "react-bootstrap";
+import ForumTopicActions from "../components/ForumTopicActions";
 import { useNavigate } from "react-router-dom";
 import {
   FaPhoneAlt,
@@ -32,13 +33,16 @@ const ParentClubPage = () => {
   const navigate = useNavigate();
   const [secretCode, setSecretCode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasClubAccess, setHasClubAccess] = useState(false);
   const [error, setError] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
   const [forumTopics, setForumTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   const fetchForumTopics = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!hasClubAccess) return;
 
     setLoading(true);
     try {
@@ -49,19 +53,32 @@ const ParentClubPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [hasClubAccess]);
 
-  const checkUserAccess = useCallback(async () => {
-    try {
-      const response = await api.hasParentClubAccess();
-      if (response.has_access) {
-        setIsAuthenticated(true);
-        fetchForumTopics();
+  const checkAuthAndAccess = useCallback(() => {
+    const token = localStorage.getItem("token");
+    const savedCode = localStorage.getItem("parentClubCode");
+    const userStr = localStorage.getItem("user");
+    const user = userStr ? JSON.parse(userStr) : null;
+
+    if (token) {
+      setIsAuthenticated(true);
+
+      if (savedCode === "SECRET2026" || savedCode === "DEMO2026") {
+        setHasClubAccess(true);
+        if (forumTopics.length === 0) {
+          fetchForumTopics();
+        }
+      } else {
+        setHasClubAccess(false);
       }
-    } catch (error) {
-      console.error("Error checking access:", error);
+    } else {
+      setIsAuthenticated(false);
+      setHasClubAccess(false);
     }
-  }, [fetchForumTopics]);
+
+    setInitialized(true);
+  }, [forumTopics.length, fetchForumTopics]);
 
   useEffect(() => {
     AOS.init({
@@ -70,53 +87,94 @@ const ParentClubPage = () => {
       mirror: true,
     });
 
-    const token = localStorage.getItem("token");
-    const savedCode = localStorage.getItem("parentClubCode");
+    checkAuthAndAccess();
 
-    if (token) {
-      checkUserAccess();
-    }
+    const handleStorageChange = (e) => {
+      if (e.key === "token" || e.key === "parentClubCode" || e.key === "user") {
+        checkAuthAndAccess();
+      }
+    };
 
-    if ((savedCode === "SECRET2026" || savedCode === "DEMO2026") && token) {
-      setIsAuthenticated(true);
-      fetchForumTopics();
-    }
-  }, [checkUserAccess, fetchForumTopics]);
+    window.addEventListener("storage", handleStorageChange);
+
+    const interval = setInterval(() => {
+      const token = localStorage.getItem("token");
+      const savedCode = localStorage.getItem("parentClubCode");
+
+      if (token && (savedCode === "SECRET2026" || savedCode === "DEMO2026")) {
+        if (!hasClubAccess) {
+          checkAuthAndAccess();
+        }
+      }
+    }, 2000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [checkAuthAndAccess, hasClubAccess]);
 
   const handleCodeSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setInfoMessage("");
+
+    const token = localStorage.getItem("token");
+    const userStr = localStorage.getItem("user");
+    const user = userStr ? JSON.parse(userStr) : null;
 
     if (secretCode === "SECRET2026" || secretCode === "DEMO2026") {
-      setIsAuthenticated(true);
       localStorage.setItem("parentClubCode", secretCode);
 
-      const token = localStorage.getItem("token");
-      if (token) {
+      if (token && user) {
+        setIsAuthenticated(true);
+        setHasClubAccess(true);
+        setInfoMessage("");
+
+        checkAuthAndAccess();
+
         try {
           await api.checkParentClubAccess(secretCode);
         } catch (error) {
           console.error("Error saving access to DB:", error);
         }
-      }
 
-      await fetchForumTopics();
+        await fetchForumTopics();
+        setSecretCode("");
+      } else {
+        setInfoMessage(
+          "Код сохранен! Теперь войдите в систему, чтобы получить доступ к форуму.",
+        );
+      }
     } else {
-      setError(
-        "Неверный секретный код. Попробуйте снова или получите код на встрече клуба.",
-      );
+      setError("Неверный секретный код. Попробуйте снова.");
     }
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
+    setHasClubAccess(false);
     setSecretCode("");
     localStorage.removeItem("parentClubCode");
     setForumTopics([]);
+    setInfoMessage("");
   };
 
   const handleTopicCreated = (newTopic) => {
     setForumTopics((prev) => [newTopic, ...prev]);
+  };
+
+  const handleTopicDeleted = (topicId) => {
+    setForumTopics((prevTopics) =>
+      prevTopics.filter((topic) => topic.id !== topicId),
+    );
+  };
+
+  const handleTopicUpdated = (updatedTopic) => {
+    setForumTopics((prevTopics) =>
+      prevTopics.map((topic) =>
+        topic.id === updatedTopic.id ? updatedTopic : topic,
+      ),
+    );
   };
 
   const topics = [
@@ -157,6 +215,21 @@ const ParentClubPage = () => {
       year: "numeric",
     });
   };
+
+  if (!initialized) {
+    return (
+      <>
+        <NavbarComponent />
+        <Container className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Загрузка...</span>
+          </div>
+          <p className="mt-3">Проверка доступа...</p>
+        </Container>
+        <FooterComponent />
+      </>
+    );
+  }
 
   return (
     <>
@@ -231,40 +304,7 @@ const ParentClubPage = () => {
               </p>
             </div>
 
-            {!isAuthenticated ? (
-              <div className={styles.loginForm}>
-                <Form
-                  onSubmit={handleCodeSubmit}
-                  className="d-flex justify-content-center gap-3 flex-wrap"
-                >
-                  <Form.Control
-                    type="text"
-                    placeholder="Введите секретный код"
-                    value={secretCode}
-                    onChange={(e) => setSecretCode(e.target.value)}
-                    className={styles.secretCodeInput}
-                    required
-                  />
-                  <Button type="submit" variant="primary" className="px-5">
-                    Войти
-                  </Button>
-                </Form>
-                {error && (
-                  <Alert
-                    variant="danger"
-                    className="mt-3 text-center"
-                    style={{ maxWidth: "500px", margin: "0 auto" }}
-                  >
-                    {error}
-                  </Alert>
-                )}
-                <p className="text-muted text-center mt-3">
-                  <FaInfoCircle className="me-1" />
-                  Код можно получить на встречах родительского клуба или у
-                  администратора
-                </p>
-              </div>
-            ) : (
+            {hasClubAccess && isAuthenticated ? (
               <div className={styles.forumContent}>
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <h4>
@@ -284,7 +324,7 @@ const ParentClubPage = () => {
                       onClick={handleLogout}
                       size="sm"
                     >
-                      <FaLockOpen className="me-2" /> Выйти
+                      <FaLockOpen className="me-2" /> Выйти из клуба
                     </Button>
                   </div>
                 </div>
@@ -299,54 +339,63 @@ const ParentClubPage = () => {
                   <>
                     {forumTopics.length > 0 ? (
                       forumTopics.map((topic) => (
-                        <div
-                          key={topic.id}
-                          className={styles.forumThread}
-                          onClick={() =>
-                            navigate(`/parent-club/topic/${topic.id}`)
-                          }
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              navigate(`/parent-club/topic/${topic.id}`);
-                            }
-                          }}
-                        >
-                          <div className="d-flex align-items-center mb-2">
-                            <div
-                              className={styles.userAvatar}
-                              style={{ backgroundColor: "#58b4ae" }}
-                            >
-                              {topic.user?.name?.charAt(0) || "U"}
+                        <div key={topic.id} className={styles.forumThread}>
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div className="d-flex align-items-center mb-2 flex-grow-1">
+                              <div
+                                className={styles.userAvatar}
+                                style={{ backgroundColor: "#58b4ae" }}
+                              >
+                                {topic.user?.name?.charAt(0) || "U"}
+                              </div>
+                              <div>
+                                <strong>
+                                  {topic.user?.name || "Пользователь"}
+                                </strong>
+                                <span className="text-secondary ms-3">
+                                  <FaClock className="me-1" />{" "}
+                                  {formatDate(topic.created_at)}
+                                </span>
+                                {topic.is_pinned && (
+                                  <span className="ms-2 badge bg-warning text-dark">
+                                    Закреплено
+                                  </span>
+                                )}
+                                {topic.is_locked && (
+                                  <span className="ms-2 badge bg-secondary">
+                                    Закрыто
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                            <div>
-                              <strong>
-                                {topic.user?.name || "Пользователь"}
-                              </strong>
-                              <span className="text-secondary ms-3">
-                                <FaClock className="me-1" />{" "}
-                                {formatDate(topic.created_at)}
-                              </span>
-                            </div>
+                            <ForumTopicActions
+                              topic={topic}
+                              onTopicDeleted={handleTopicDeleted}
+                              onTopicUpdated={handleTopicUpdated}
+                            />
                           </div>
-                          <h5>{topic.title}</h5>
-                          <p>{topic.content?.substring(0, 150)}...</p>
+                          <h5
+                            onClick={() =>
+                              navigate(`/parent-club/topic/${topic.id}`)
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            {topic.title}
+                          </h5>
+                          <p
+                            onClick={() =>
+                              navigate(`/parent-club/topic/${topic.id}`)
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            {topic.content?.substring(0, 150)}...
+                          </p>
                           <div className={styles.postMeta}>
                             <FaComment className="me-2" />
                             {topic.posts_count || 0} ответов
                             <span className="mx-2">·</span>
                             <FaEye className="me-1" />
                             {topic.views || 0} просмотров
-                            {topic.posts && topic.posts.length > 0 && (
-                              <>
-                                <span className="mx-2">·</span>
-                                <span className="text-primary">
-                                  Последний ответ:{" "}
-                                  {formatDate(topic.posts[0].created_at)}
-                                </span>
-                              </>
-                            )}
                           </div>
                         </div>
                       ))
@@ -357,7 +406,6 @@ const ParentClubPage = () => {
                         </p>
                       </div>
                     )}
-
                     <div className="text-center mt-4">
                       <Button
                         variant="outline-dark"
@@ -370,6 +418,51 @@ const ParentClubPage = () => {
                     </div>
                   </>
                 )}
+              </div>
+            ) : (
+              <div className={styles.loginForm}>
+                <Form
+                  onSubmit={handleCodeSubmit}
+                  className="d-flex justify-content-center gap-3 flex-wrap"
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder="Введите секретный код"
+                    value={secretCode}
+                    onChange={(e) => setSecretCode(e.target.value)}
+                    className={styles.secretCodeInput}
+                    required
+                  />
+                  <Button type="submit" variant="primary" className="px-5">
+                    Получить доступ
+                  </Button>
+                </Form>
+
+                {error && (
+                  <Alert
+                    variant="danger"
+                    className="mt-3 text-center"
+                    style={{ maxWidth: "500px", margin: "0 auto" }}
+                  >
+                    {error}
+                  </Alert>
+                )}
+
+                {infoMessage && (
+                  <Alert
+                    variant="info"
+                    className="mt-3 text-center"
+                    style={{ maxWidth: "500px", margin: "0 auto" }}
+                  >
+                    {infoMessage}
+                  </Alert>
+                )}
+
+                <p className="text-muted text-center mt-3">
+                  <FaInfoCircle className="me-1" />
+                  Код можно получить на встречах родительского клуба или у
+                  администратора
+                </p>
               </div>
             )}
           </div>

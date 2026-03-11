@@ -50,7 +50,7 @@ class AuthController extends Controller
                     'required',
                     'string',
                     'max:255',
-                    'regex:/^[а-яА-ЯёЁa-zA-Z\s-]+$/u' // Только буквы, пробелы и дефисы
+                    'regex:/^[а-яА-ЯёЁa-zA-Z\s-]+$/u'
                 ],
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => ['required', 'confirmed', Password::min(8)],
@@ -58,13 +58,13 @@ class AuthController extends Controller
                     'required',
                     'string',
                     'max:20',
-                    'regex:/^[\+][0-9]{1,3}[0-9]{10}$/' // Формат +79991234567
+                    'regex:/^[\+][0-9]{1,3}[0-9]{10}$/'
                 ],
                 'childName' => [
                     'required',
                     'string',
                     'max:255',
-                    'regex:/^[а-яА-ЯёЁa-zA-Z\s-]+$/u' // Только буквы, пробелы и дефисы
+                    'regex:/^[а-яА-ЯёЁa-zA-Z\s-]+$/u'
                 ],
                 'childAge' => 'required|string|max:50',
             ], $messages);
@@ -81,7 +81,7 @@ class AuthController extends Controller
                 ], 422);
             }
 
-            // Дополнительная проверка на возраст
+
             $age = $request->childAge;
             if (!preg_match('/^[0-9]{1,2}\s*(лет|год|года)$/iu', $age)) {
                 return response()->json([
@@ -250,7 +250,7 @@ class AuthController extends Controller
             $validCodes = ['SECRET2026', 'DEMO2026'];
 
             if (in_array($request->secret_code, $validCodes)) {
-                // Save access for user if authenticated
+
                 if ($request->user()) {
                     $access = ParentClubAccess::updateOrCreate(
                         ['user_id' => $request->user()->id],

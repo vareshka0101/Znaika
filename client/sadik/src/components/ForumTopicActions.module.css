@@ -1,0 +1,29 @@
+.actionsMenu {
+    position: relative;
+    z-index: 10;
+}
+
+.actionsToggle {
+    color: #666;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+}
+
+.actionsToggle:hover {
+    color: #ff8a5c;
+    background: transparent;
+}
+
+.actionsToggle:focus {
+    box-shadow: none;
+}
+
+.deleteItem {
+    color: #dc3545;
+}
+
+.deleteItem:hover {
+    background-color: #dc3545;
+    color: white;
+}

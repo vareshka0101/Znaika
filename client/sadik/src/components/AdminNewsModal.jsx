@@ -185,7 +185,7 @@ const AdminNewsModal = ({ show, onHide, onNewsSaved, newsToEdit = null }) => {
                   name="image"
                   value={formData.image}
                   onChange={handleChange}
-                  placeholder="/public/images/news.jpg"
+                  placeholder="/images/news.jpg"
                   isInvalid={!!errors.image}
                 />
                 <Form.Control.Feedback type="invalid">

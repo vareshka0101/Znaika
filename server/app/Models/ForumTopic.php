@@ -24,7 +24,6 @@ class ForumTopic extends Model
         'is_locked' => 'boolean',
     ];
 
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -33,11 +32,5 @@ class ForumTopic extends Model
     public function posts()
     {
         return $this->hasMany(ForumPost::class);
-    }
-
-
-    public function getRepliesCountAttribute()
-    {
-        return $this->posts()->count();
     }
 }

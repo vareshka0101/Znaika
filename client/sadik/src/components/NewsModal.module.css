@@ -89,3 +89,70 @@
     border-top: 1px solid #eee;
     padding: 1rem 1.5rem;
 }
+
+/* client/sadik/src/components/NewsModal.module.css */
+
+.newsModal {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.newsModal :global(.modal-content) {
+    border: none;
+    animation: none;
+    /* Убираем анимацию */
+}
+
+.newsModalHeader {
+    background: linear-gradient(135deg, #58b4ae 0%, #3a9b95 100%);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+.modalNewsTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: white;
+}
+
+.modalNewsMeta {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modalNewsImage {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.newsTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.newsTag {
+    background: #f0f0f0;
+    color: #666;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.newsModalFooter {
+    border-top: 1px solid #eee;
+    padding: 1rem 1.5rem;
+}

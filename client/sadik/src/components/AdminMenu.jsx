@@ -159,7 +159,7 @@ const AdminMenu = () => {
         description: formData.description,
         category: formData.category,
         day: formData.day,
-        image_url: formData.image_preview || "/public/images/меню-картинка.png",
+        image_url: formData.image_preview || "/images/меню-картинка.png",
         created_at: new Date().toISOString(),
       };
 
@@ -471,7 +471,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "breakfast",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 2,
@@ -479,7 +479,7 @@ function getInitialMenuItems() {
       description: "Нежная овсяная каша на молоке с сезонными ягодами и медом.",
       category: "breakfast",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 3,
@@ -488,7 +488,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "lunch",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 4,
@@ -496,7 +496,7 @@ function getInitialMenuItems() {
       description: "Ароматный суп из тыквы с кокосовым молоком и семечками.",
       category: "lunch",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 5,
@@ -505,7 +505,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "dessert",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 6,
@@ -513,7 +513,7 @@ function getInitialMenuItems() {
       description: "Натуральное мороженое из свежих фруктов без сахара.",
       category: "dessert",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
 
     {
@@ -523,7 +523,7 @@ function getInitialMenuItems() {
         "Нежные сырники из творога с ванилью, подаются со сметаной и ягодным соусом.",
       category: "breakfast",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 8,
@@ -531,7 +531,7 @@ function getInitialMenuItems() {
       description: "РассЫпчатая гречневая каша на молоке с сливочным маслом.",
       category: "breakfast",
       day: "tuesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 9,
@@ -540,7 +540,7 @@ function getInitialMenuItems() {
         "Традиционный борщ с мясом, свеклой и капустой, подается со сметаной.",
       category: "lunch",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 10,
@@ -548,7 +548,7 @@ function getInitialMenuItems() {
       description: "Нежные куриные котлеты с картофельным пюре и подливкой.",
       category: "lunch",
       day: "tuesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 11,
@@ -556,7 +556,7 @@ function getInitialMenuItems() {
       description: "Свежие фрукты с йогуртовой заправкой.",
       category: "dessert",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
 
     {
@@ -565,7 +565,7 @@ function getInitialMenuItems() {
       description: "Пышный омлет с тертым сыром и зеленью.",
       category: "breakfast",
       day: "wednesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 13,
@@ -573,7 +573,7 @@ function getInitialMenuItems() {
       description: "Сладкая рисовая каша с тыквой и сливочным маслом.",
       category: "breakfast",
       day: "wednesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 14,
@@ -581,7 +581,7 @@ function getInitialMenuItems() {
       description: "Легкий суп из свежей рыбы с овощами.",
       category: "lunch",
       day: "wednesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 15,
@@ -589,7 +589,7 @@ function getInitialMenuItems() {
       description: "Макароны с тушеным мясом и луком.",
       category: "lunch",
       day: "wednesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 16,
@@ -597,7 +597,7 @@ function getInitialMenuItems() {
       description: "Натуральный йогурт с сезонными ягодами.",
       category: "dessert",
       day: "wednesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
   ];
 }

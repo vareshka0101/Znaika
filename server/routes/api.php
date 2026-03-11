@@ -14,12 +14,14 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\PricingController;
 use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\AdminEventController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 
 Route::prefix('v1')->group(function () {
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -27,29 +29,51 @@ Route::prefix('v1')->group(function () {
         Route::post('/parent-club/check-access', [AuthController::class, 'checkParentClubAccess']);
         Route::get('/parent-club/has-access', [AuthController::class, 'hasParentClubAccess']);
 
-
-        Route::get('/forum/topics', [ForumController::class, 'getTopics']);
-        Route::post('/forum/topics', [ForumController::class, 'createTopic']);
-        Route::get('/forum/topics/{id}', [ForumController::class, 'getTopic']);
+        // ФОРУМ МАРШРУТЫ - ИСПРАВЛЕНО
+        Route::get('/forum/topics', [ForumController::class, 'index']);
+        Route::post('/forum/topics', [ForumController::class, 'store']);
+        Route::get('/forum/topics/{id}', [ForumController::class, 'show']);
+        Route::put('/forum/topics/{id}', [ForumController::class, 'updateTopic']); // ДОБАВЛЕНО для обновления темы
         Route::post('/forum/topics/{id}/posts', [ForumController::class, 'addPost']);
-        Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
+        Route::delete('/forum/topics/{id}', [ForumController::class, 'destroy']);
 
+        // Маршруты для работы с постами
+        Route::put('/forum/topics/{topicId}/posts/{postId}', [ForumController::class, 'updatePost']); // ДОБАВЛЕНО для обновления поста
+        Route::delete('/forum/topics/{topicId}/posts/{postId}', [ForumController::class, 'deletePost']); // Удаление поста
 
+        // Новости
         Route::post('/news', [NewsController::class, 'store']);
         Route::put('/news/{id}', [NewsController::class, 'update']);
         Route::delete('/news/{id}', [NewsController::class, 'destroy']);
 
-
+        // Админские маршруты
         Route::prefix('admin')->group(function () {
             Route::get('/reviews', [ReviewController::class, 'adminIndex']);
             Route::get('/reviews/{id}', [ReviewController::class, 'adminShow']);
             Route::put('/reviews/{id}', [ReviewController::class, 'adminUpdate']);
             Route::delete('/reviews/{id}', [ReviewController::class, 'adminDestroy']);
             Route::patch('/reviews/{id}/approve', [ReviewController::class, 'toggleApproval']);
+
+            // Админские маршруты для форума (только специфичные админские функции)
+            Route::prefix('forum')->group(function () {
+                Route::patch('/topics/{id}/toggle-lock', [ForumController::class, 'toggleLock']);
+                Route::patch('/topics/{id}/toggle-pin', [ForumController::class, 'togglePin']);
+                // Обычные CRUD операции вынесены выше, чтобы были доступны авторам
+            });
+
+            // Маршруты для мероприятий
+            Route::get('/events', [AdminEventController::class, 'index']);
+            Route::get('/events/upcoming', [AdminEventController::class, 'getUpcoming']);
+            Route::get('/events/archive', [AdminEventController::class, 'getArchive']);
+            Route::get('/events/{id}', [AdminEventController::class, 'show']);
+            Route::post('/events', [AdminEventController::class, 'store']);
+            Route::put('/events/{id}', [AdminEventController::class, 'update']);
+            Route::delete('/events/{id}', [AdminEventController::class, 'destroy']);
+            Route::patch('/events/{id}/toggle-active', [AdminEventController::class, 'toggleActive']);
         });
     });
 
-
+    // Публичные маршруты
     Route::get('/teachers', [TeacherController::class, 'index']);
     Route::get('/teachers/{id}', [TeacherController::class, 'show']);
     Route::get('/events', [EventController::class, 'index']);
@@ -77,7 +101,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/settings/social', [SettingController::class, 'getSocialLinks']);
 });
 
-
 Route::get('/test-mail', function () {
     try {
         Mail::raw('Тестовое письмо', function ($message) {
@@ -89,3 +112,17 @@ Route::get('/test-mail', function () {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
 });
+
+// Добавьте в конец файла routes/api.php
+Route::get('/test-access', function (Request $request) {
+    $token = $request->bearerToken();
+    $user = $request->user();
+
+    return response()->json([
+        'has_token' => !is_null($token),
+        'has_user' => !is_null($user),
+        'user_id' => $user?->id,
+        'user_role' => $user?->role,
+        'headers' => $request->headers->all(),
+    ]);
+})->middleware('auth:sanctum');

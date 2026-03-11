@@ -155,27 +155,27 @@ const AboutPage = () => {
   const galleryImages = [
     {
       id: 1,
-      src: "/public/images/осенний.jpg",
+      src: "/images/осенний.jpg",
       alt: "Осеннее занятие",
       delay: 100,
     },
-    { id: 2, src: "/public/images/лепка.jpg", alt: "Лепка", delay: 150 },
-    { id: 3, src: "/public/images/физра.jpg", alt: "Физкультура", delay: 200 },
+    { id: 2, src: "/images/лепка.jpg", alt: "Лепка", delay: 150 },
+    { id: 3, src: "/images/физра.jpg", alt: "Физкультура", delay: 200 },
     {
       id: 4,
-      src: "/public/images/рисование.jpg",
+      src: "/images/рисование.jpg",
       alt: "Рисование",
       delay: 250,
     },
     {
       id: 5,
-      src: "/public/images/по математике.jpg",
+      src: "/images/по математике.jpg",
       alt: "Математика",
       delay: 300,
     },
     {
       id: 6,
-      src: "/public/images/новый год.jpg",
+      src: "/images/новый год.jpg",
       alt: "Новый год",
       delay: 350,
     },
@@ -187,7 +187,7 @@ const AboutPage = () => {
       title: "🌸 Философия гармонии",
       text: "Счастье — это когда тебя понимают. Учим видеть красоту в простых вещах.",
       image:
-        "/public/images/pngtree-children-planting-trees-environmental-conservation-and-teamwork-concept-image_16681784.jpg",
+        "/images/pngtree-children-planting-trees-environmental-conservation-and-teamwork-concept-image_16681784.jpg",
       alt: "Философия гармонии",
     },
     {

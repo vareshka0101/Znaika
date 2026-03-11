@@ -22,6 +22,7 @@ const CreateTopicModal = ({ show, onHide, onTopicCreated }) => {
     setLoading(true);
     setError("");
 
+    // Валидация
     if (!formData.title.trim()) {
       setError("Введите заголовок темы");
       setLoading(false);
@@ -33,15 +34,33 @@ const CreateTopicModal = ({ show, onHide, onTopicCreated }) => {
       return;
     }
 
-    try {
-      console.log("Sending topic data:", formData);
+    // Проверка авторизации
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Вы не авторизованы. Пожалуйста, войдите в систему.");
+      setLoading(false);
+      return;
+    }
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Вы не авторизованы. Пожалуйста, войдите в систему.");
-        setLoading(false);
-        return;
-      }
+    // Проверка наличия секретного кода (доступа к клубу)
+    const savedCode = localStorage.getItem("parentClubCode");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    // Администраторы имеют доступ без кода
+    if (
+      user.role !== "admin" &&
+      savedCode !== "SECRET2026" &&
+      savedCode !== "DEMO2026"
+    ) {
+      setError(
+        "У вас нет доступа к родительскому клубу. Требуется секретный код.",
+      );
+      setLoading(false);
+      return;
+    }
+
+    try {
+      console.log("Creating topic with data:", formData);
 
       const response = await api.createForumTopic(formData);
       console.log("Topic created successfully:", response);
@@ -49,27 +68,25 @@ const CreateTopicModal = ({ show, onHide, onTopicCreated }) => {
       const newTopic = response.data || response;
       onTopicCreated(newTopic);
 
+      // Закрываем модалку и сбрасываем форму
       onHide();
       setFormData({ title: "", content: "" });
     } catch (err) {
-      console.error("Full error object:", err);
+      console.error("Error creating topic:", err);
 
-      if (err.message.includes("Сервер недоступен")) {
-        setError(
-          "Сервер недоступен. Убедитесь, что сервер Laravel запущен (php artisan serve)",
-        );
-      } else if (err.status === 401) {
+      if (err.status === 401) {
         setError("Сессия истекла. Пожалуйста, войдите в систему снова.");
-
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
       } else if (err.status === 403) {
         setError(
           "Доступ запрещен. Требуется секретный код родительского клуба.",
         );
-      } else if (err.data && err.data.message) {
-        setError(err.data.message);
+        localStorage.removeItem("parentClubCode");
+      } else if (err.message) {
+        setError(err.message);
       } else {
-        setError(err.message || "Ошибка при создании темы");
+        setError("Ошибка при создании темы. Попробуйте позже.");
       }
     } finally {
       setLoading(false);
@@ -87,6 +104,7 @@ const CreateTopicModal = ({ show, onHide, onTopicCreated }) => {
             {error}
           </Alert>
         )}
+
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Заголовок</Form.Label>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Button, Form, Alert, Spinner } from "react-bootstrap";
+import ForumPostActions from "../components/ForumPostActions";
 import {
   FaArrowLeft,
   FaComment,
@@ -41,6 +42,20 @@ const TopicPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePostDeleted = (postId) => {
+    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+  };
+
+  // НОВЫЙ ОБРАБОТЧИК для обновления поста
+  const handlePostUpdated = (updatedPost) => {
+    console.log("Пост обновлен:", updatedPost);
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === updatedPost.id ? updatedPost : post,
+      ),
+    );
   };
 
   const handleSubmitPost = async (e) => {
@@ -159,15 +174,23 @@ const TopicPage = () => {
         ) : (
           posts.map((post) => (
             <div key={post.id} className={styles.postCard}>
-              <div className={styles.postHeader}>
-                <FaUserCircle className={styles.postAvatar} />
-                <span className={styles.postAuthor}>
-                  {post.user?.name || "Пользователь"}
-                </span>
-                <FaClock className="ms-3 me-1 text-secondary" />
-                <span className={styles.postDate}>
-                  {formatDate(post.created_at)}
-                </span>
+              <div className="d-flex justify-content-between align-items-start">
+                <div className={styles.postHeader}>
+                  <FaUserCircle className={styles.postAvatar} />
+                  <span className={styles.postAuthor}>
+                    {post.user?.name || "Пользователь"}
+                  </span>
+                  <FaClock className="ms-3 me-1 text-secondary" />
+                  <span className={styles.postDate}>
+                    {formatDate(post.created_at)}
+                  </span>
+                </div>
+                <ForumPostActions
+                  post={post}
+                  topicId={id}
+                  onPostDeleted={handlePostDeleted}
+                  onPostUpdated={handlePostUpdated}
+                />
               </div>
               <div className={styles.postContent}>
                 <p>{post.content}</p>

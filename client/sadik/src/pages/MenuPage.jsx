@@ -117,7 +117,7 @@ const MenuPage = () => {
       <NavbarComponent />
 
       <div className={styles.heroImage}>
-        <img src="/public/images/меню.jpg" alt="Декоративная картинка" />
+        <img src="/images/меню.jpg" alt="Декоративная картинка" />
       </div>
 
       <section className="py-5">
@@ -176,14 +176,12 @@ const MenuPage = () => {
                           <div className={styles.menuItemImg}>
                             <img
                               src={
-                                item.image_url ||
-                                "/public/images/меню-картинка.png"
+                                item.image_url || "/images/меню-картинка.png"
                               }
                               alt={item.name}
                               loading="lazy"
                               onError={(e) => {
-                                e.target.src =
-                                  "/public/images/меню-картинка.png";
+                                e.target.src = "/images/меню-картинка.png";
                               }}
                             />
                           </div>
@@ -229,14 +227,14 @@ function getMockData() {
         name: "Миска хлопьев на завтрак",
         description:
           "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-        image_url: "/public/images/меню-картинка.png",
+        image_url: "/images/меню-картинка.png",
       },
       {
         id: 2,
         name: "Овсяная каша с ягодами",
         description:
           "Нежная овсяная каша на молоке с сезонными ягодами и медом.",
-        image_url: "/public/images/wwwwww.png",
+        image_url: "/images/wwwwww.png",
       },
     ],
     lunch: [
@@ -245,13 +243,13 @@ function getMockData() {
         name: "Вегетарианская паста",
         description:
           "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-        image_url: "/public/images/wwwwww.png",
+        image_url: "/images/wwwwww.png",
       },
       {
         id: 4,
         name: "Тыквенный суп-пюре",
         description: "Ароматный суп из тыквы с кокосовым молоком и семечками.",
-        image_url: "/public/images/меню-картинка.png",
+        image_url: "/images/меню-картинка.png",
       },
     ],
     dessert: [
@@ -260,13 +258,13 @@ function getMockData() {
         name: "Яблочный пирог с карамелью",
         description:
           "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
-        image_url: "/public/images/меню-картинка.png",
+        image_url: "/images/меню-картинка.png",
       },
       {
         id: 6,
         name: "Фруктовое мороженое",
         description: "Натуральное мороженое из свежих фруктов без сахара.",
-        image_url: "/public/images/wwwwww.png",
+        image_url: "/images/wwwwww.png",
       },
     ],
   };
@@ -281,7 +279,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "breakfast",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 2,
@@ -289,7 +287,7 @@ function getInitialMenuItems() {
       description: "Нежная овсяная каша на молоке с сезонными ягодами и медом.",
       category: "breakfast",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 3,
@@ -298,7 +296,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "lunch",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 4,
@@ -306,7 +304,7 @@ function getInitialMenuItems() {
       description: "Ароматный суп из тыквы с кокосовым молоком и семечками.",
       category: "lunch",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 5,
@@ -315,7 +313,7 @@ function getInitialMenuItems() {
         "Наша команда – это наши клиенты. Bounded art preferred – это возможность доставить нам в разы больше удовольствия.",
       category: "dessert",
       day: "monday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 6,
@@ -323,7 +321,7 @@ function getInitialMenuItems() {
       description: "Натуральное мороженое из свежих фруктов без сахара.",
       category: "dessert",
       day: "monday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
 
     {
@@ -333,7 +331,7 @@ function getInitialMenuItems() {
         "Нежные сырники из творога с ванилью, подаются со сметаной и ягодным соусом.",
       category: "breakfast",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 8,
@@ -341,7 +339,7 @@ function getInitialMenuItems() {
       description: "РассЫпчатая гречневая каша на молоке с сливочным маслом.",
       category: "breakfast",
       day: "tuesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 9,
@@ -350,7 +348,7 @@ function getInitialMenuItems() {
         "Традиционный борщ с мясом, свеклой и капустой, подается со сметаной.",
       category: "lunch",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
     {
       id: 10,
@@ -358,7 +356,7 @@ function getInitialMenuItems() {
       description: "Нежные куриные котлеты с картофельным пюре и подливкой.",
       category: "lunch",
       day: "tuesday",
-      image_url: "/public/images/wwwwww.png",
+      image_url: "/images/wwwwww.png",
     },
     {
       id: 11,
@@ -366,7 +364,7 @@ function getInitialMenuItems() {
       description: "Свежие фрукты с йогуртовой заправкой.",
       category: "dessert",
       day: "tuesday",
-      image_url: "/public/images/меню-картинка.png",
+      image_url: "/images/меню-картинка.png",
     },
   ];
 }

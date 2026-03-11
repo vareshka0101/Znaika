@@ -8,19 +8,21 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('type');
-            $table->date('event_date')->nullable();
-            $table->string('time');
-            $table->string('duration')->nullable();
-            $table->text('description')->nullable();
-            $table->string('icon')->nullable();
-            $table->integer('sort_order')->default(0);
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('events')) {
+            Schema::create('events', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->string('type'); // upcoming или archive
+                $table->date('event_date')->nullable();
+                $table->string('time');
+                $table->string('duration')->nullable();
+                $table->text('description')->nullable();
+                $table->string('icon')->nullable();
+                $table->integer('sort_order')->default(0);
+                $table->boolean('is_active')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()
