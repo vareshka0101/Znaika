@@ -23,6 +23,10 @@ const AdminEventModal = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const modalShow = show === undefined ? false : show;
+    console.log("AdminEventModal - show:", modalShow);
+    console.log("AdminEventModal - eventToEdit:", eventToEdit);
+
     if (eventToEdit) {
       setFormData({
         title: eventToEdit.title || "",
@@ -106,7 +110,8 @@ const AdminEventModal = ({
       const data = await response.json();
 
       if (response.ok) {
-        onEventSaved(data.data || data);
+        const savedEvent = data.data || data;
+        onEventSaved(savedEvent);
         resetForm();
         onHide();
       } else {
@@ -122,8 +127,10 @@ const AdminEventModal = ({
     }
   };
 
+  const modalShow = show === undefined ? false : show;
+
   return (
-    <Modal show={show} onHide={onHide} centered size="lg">
+    <Modal show={modalShow} onHide={onHide} centered size="lg">
       <Modal.Header closeButton style={{ borderBottom: "2px solid #58b4ae" }}>
         <Modal.Title>
           {eventToEdit ? "Редактировать мероприятие" : "Создать мероприятие"}

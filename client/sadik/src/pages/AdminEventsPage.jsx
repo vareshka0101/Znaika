@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Table,
-  Button,
-  Alert,
-  Badge,
-  Tabs,
-  Tab,
-} from "react-bootstrap";
+import { Container, Table, Alert, Badge, Tabs, Tab } from "react-bootstrap";
 import {
   FaEdit,
   FaTrash,
@@ -66,6 +58,7 @@ const AdminEventsPage = () => {
       }
 
       const data = await response.json();
+      console.log("📦 Загруженные события:", data);
       setEvents(data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -76,8 +69,17 @@ const AdminEventsPage = () => {
   };
 
   const handleEdit = (event) => {
+    console.log("✏️ ===== НАЧАЛО handleEdit =====");
+    console.log("✏️ Событие:", event);
+    console.log("✏️ event.id =", event.id);
+    console.log("✏️ event.title =", event.title);
+
     setEditingEvent(event);
+    console.log("✏️ setEditingEvent выполнен");
+
     setShowModal(true);
+    console.log("✏️ setShowModal(true) выполнен");
+    console.log("✏️ ===== КОНЕЦ handleEdit =====");
   };
 
   const handleDelete = async (id) => {
@@ -111,6 +113,14 @@ const AdminEventsPage = () => {
       alert("Ошибка при удалении: " + error.message);
     }
   };
+
+  useEffect(() => {
+    console.log("🟢 showModal =", showModal);
+  }, [showModal]);
+
+  useEffect(() => {
+    console.log("🔵 editingEvent =", editingEvent);
+  }, [editingEvent]);
 
   const handleToggleActive = async (id, currentStatus) => {
     try {
@@ -185,16 +195,28 @@ const AdminEventsPage = () => {
           <h2 className={styles.title}>
             <FaCalendarAlt className="me-2" /> Управление мероприятиями
           </h2>
-          <Button
-            variant="primary"
+          <button
             onClick={() => {
+              console.log("👆 КЛИК ПО КНОПКЕ СОЗДАНИЯ");
               setEditingEvent(null);
               setShowModal(true);
             }}
-            className={styles.addButton}
+            style={{
+              backgroundColor: "#58b4ae",
+              color: "white",
+              border: "none",
+              borderRadius: "40px",
+              padding: "0.75rem 2rem",
+              fontWeight: "600",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              cursor: "pointer",
+              fontSize: "1rem",
+            }}
           >
-            <FaPlus className="me-2" /> Создать мероприятие
-          </Button>
+            <FaPlus /> Создать мероприятие
+          </button>
         </div>
 
         {error && (
@@ -294,37 +316,68 @@ const AdminEventsPage = () => {
                       )}
                     </td>
                     <td>
-                      <div className="d-flex gap-2">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleEdit(event)}
+                      <div style={{ display: "flex", gap: "5px" }}>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("👆 РЕДАКТИРОВАНИЕ РЕАЛЬНОГО СОБЫТИЯ");
+                            handleEdit(event);
+                          }}
+                          style={{
+                            backgroundColor: "transparent",
+                            border: "1px solid #007bff",
+                            color: "#007bff",
+                            padding: "6px 10px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
                           title="Редактировать"
                         >
-                          <FaEdit />
-                        </Button>
-                        <Button
-                          variant={
-                            event.is_active
-                              ? "outline-warning"
-                              : "outline-success"
-                          }
-                          size="sm"
+                          <FaEdit /> Ред
+                        </button>
+
+                        <button
                           onClick={() =>
                             handleToggleActive(event.id, event.is_active)
                           }
+                          style={{
+                            backgroundColor: "transparent",
+                            border: `1px solid ${event.is_active ? "#ffc107" : "#28a745"}`,
+                            color: event.is_active ? "#ffc107" : "#28a745",
+                            padding: "6px 10px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
                           title={event.is_active ? "Скрыть" : "Опубликовать"}
                         >
                           {event.is_active ? <FaEyeSlash /> : <FaEye />}
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
+                          {event.is_active ? "Скр" : "Оп"}
+                        </button>
+
+                        <button
                           onClick={() => handleDelete(event.id)}
+                          style={{
+                            backgroundColor: "transparent",
+                            border: "1px solid #dc3545",
+                            color: "#dc3545",
+                            padding: "6px 10px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
                           title="Удалить"
                         >
-                          <FaTrash />
-                        </Button>
+                          <FaTrash /> Уд
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -338,6 +391,7 @@ const AdminEventsPage = () => {
       <AdminEventModal
         show={showModal}
         onHide={() => {
+          console.log("❌ onHide вызван");
           setShowModal(false);
           setEditingEvent(null);
         }}

@@ -15,6 +15,26 @@ import styles from "./EventsPage.module.css";
 
 const EventsPage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [archiveEvents, setArchiveEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/events");
+      const data = await response.json();
+      console.log("📦 Загруженные события:", data);
+
+      setUpcomingEvents(
+        data.filter((e) => e.type === "upcoming" && e.is_active),
+      );
+      setArchiveEvents(data.filter((e) => e.type === "archive" && e.is_active));
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     AOS.init({
@@ -27,6 +47,9 @@ const EventsPage = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
+
+    fetchEvents();
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -37,69 +60,19 @@ const EventsPage = () => {
     });
   };
 
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "Час Чтения",
-      date: "22 февраля, пятница",
-      time: "14:00–15:30",
-      duration: "90 минут",
-      description: "Приглашаем малышей послушать сказки и обсудить героев.",
-      icon: FaCalendarCheck,
-    },
-    {
-      id: 2,
-      title: "Музыкальная и Танцевальная Вечеринка",
-      date: "22 февраля, пятница",
-      time: "14:00–15:30",
-      duration: "90 минут",
-      description: "Танцы, хороводы, музыкальные игры.",
-      icon: FaCalendarCheck,
-    },
-    {
-      id: 3,
-      title: "Праздник Культур",
-      date: "14:30–15:30",
-      time: "Длительность: 90 минут",
-      duration: "90 мин",
-      description: "Знакомство с традициями разных стран.",
-      icon: FaCalendarCheck,
-    },
-    {
-      id: 4,
-      title: "Прогулка На Природе",
-      date: "15 марта, вторник",
-      time: "14:30–15:30",
-      duration: "60 минут",
-      description: "Наблюдаем за птицами, собираем листья.",
-      icon: FaCalendarCheck,
-    },
-  ];
-
-  const archiveEvents = [
-    {
-      id: 1,
-      title: "Час Чтения",
-      date: "22 февраля",
-      time: "16:00–17:30",
-      icon: FaArchive,
-    },
-    {
-      id: 2,
-      title: "Музыкальная и Танцевальная Вечеринка",
-      date: "",
-      time: "16:00–17:30",
-      duration: "90 минут",
-      icon: FaArchive,
-    },
-    {
-      id: 3,
-      title: "Праздник Культур",
-      date: "26 октября",
-      time: "16:00–17:30",
-      icon: FaArchive,
-    },
-  ];
+  const formatEventDate = (dateString) => {
+    if (!dateString) return "Дата уточняется";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
   return (
     <>
@@ -116,79 +89,109 @@ const EventsPage = () => {
 
       <section className="py-5">
         <Container>
-          <h2
-            className={styles.sectionTitle}
-            id="planning"
-            data-aos="fade-right"
-          >
-            В Планировании
-          </h2>
-          <Row className="g-4 mb-5">
-            {upcomingEvents.map((event, index) => (
-              <Col
-                key={event.id}
-                md={6}
-                lg={4}
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Загрузка...</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <h2
+                className={styles.sectionTitle}
+                id="planning"
+                data-aos="fade-right"
               >
-                <div className={styles.eventCard}>
-                  <span className={styles.eventBadge}>
-                    <FaCalendarCheck className="me-1" /> планируется
-                  </span>
-                  <h3 className={styles.eventTitle}>{event.title}</h3>
-                  <div className={styles.eventDatetime}>
-                    <FaCalendarAlt /> {event.date}
-                  </div>
-                  <div className={styles.eventDatetime}>
-                    <FaClock /> {event.time}
-                  </div>
-                  {event.duration && (
-                    <div className={styles.eventDuration}>{event.duration}</div>
-                  )}
-                  <p className="mt-2">{event.description}</p>
-                </div>
-              </Col>
-            ))}
-          </Row>
+                В Планировании
+              </h2>
+              <Row className="g-4 mb-5">
+                {upcomingEvents.length === 0 ? (
+                  <Col>
+                    <p className="text-center text-muted">
+                      Нет предстоящих мероприятий
+                    </p>
+                  </Col>
+                ) : (
+                  upcomingEvents.map((event, index) => (
+                    <Col
+                      key={event.id}
+                      md={6}
+                      lg={4}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 100}
+                    >
+                      <div className={styles.eventCard}>
+                        <span className={styles.eventBadge}>
+                          <FaCalendarCheck className="me-1" /> планируется
+                        </span>
+                        <h3 className={styles.eventTitle}>{event.title}</h3>
+                        <div className={styles.eventDatetime}>
+                          <FaCalendarAlt /> {formatEventDate(event.event_date)}
+                        </div>
+                        <div className={styles.eventDatetime}>
+                          <FaClock /> {event.time}
+                        </div>
+                        {event.duration && (
+                          <div className={styles.eventDuration}>
+                            {event.duration}
+                          </div>
+                        )}
+                        {event.description && (
+                          <p className="mt-2">{event.description}</p>
+                        )}
+                      </div>
+                    </Col>
+                  ))
+                )}
+              </Row>
 
-          <h2
-            className={`${styles.sectionTitle} ${styles.archiveTitle}`}
-            id="archive"
-            data-aos="fade-right"
-          >
-            Архивные события
-          </h2>
-          <Row className="g-4">
-            {archiveEvents.map((event, index) => (
-              <Col
-                key={event.id}
-                md={4}
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
+              <h2
+                className={`${styles.sectionTitle} ${styles.archiveTitle}`}
+                id="archive"
+                data-aos="fade-right"
               >
-                <div className={styles.eventCard}>
-                  <span
-                    className={`${styles.eventBadge} ${styles.archiveBadge}`}
-                  >
-                    <FaArchive className="me-1" /> архив
-                  </span>
-                  <h3 className={styles.eventTitle}>{event.title}</h3>
-                  {event.date && (
-                    <div className={styles.eventDatetime}>
-                      <FaCalendarAlt /> {event.date}
-                    </div>
-                  )}
-                  <div className={styles.eventDatetime}>
-                    <FaClock /> {event.time}
-                  </div>
-                  {event.duration && (
-                    <div className={styles.eventDuration}>{event.duration}</div>
-                  )}
-                </div>
-              </Col>
-            ))}
-          </Row>
+                Архивные события
+              </h2>
+              <Row className="g-4">
+                {archiveEvents.length === 0 ? (
+                  <Col>
+                    <p className="text-center text-muted">
+                      Нет архивных мероприятий
+                    </p>
+                  </Col>
+                ) : (
+                  archiveEvents.map((event, index) => (
+                    <Col
+                      key={event.id}
+                      md={4}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 100}
+                    >
+                      <div className={styles.eventCard}>
+                        <span
+                          className={`${styles.eventBadge} ${styles.archiveBadge}`}
+                        >
+                          <FaArchive className="me-1" /> архив
+                        </span>
+                        <h3 className={styles.eventTitle}>{event.title}</h3>
+                        <div className={styles.eventDatetime}>
+                          <FaCalendarAlt /> {formatEventDate(event.event_date)}
+                        </div>
+                        <div className={styles.eventDatetime}>
+                          <FaClock /> {event.time}
+                        </div>
+                        {event.duration && (
+                          <div className={styles.eventDuration}>
+                            {event.duration}
+                          </div>
+                        )}
+                      </div>
+                    </Col>
+                  ))
+                )}
+              </Row>
+            </>
+          )}
         </Container>
       </section>
 
