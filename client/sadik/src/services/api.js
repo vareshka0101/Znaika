@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:8000/api/v1";
 
-// Вспомогательная функция для получения заголовков с кодом
 const getHeaders = (includeAuth = true) => {
   const headers = {
     Accept: "application/json",
@@ -8,14 +7,12 @@ const getHeaders = (includeAuth = true) => {
     "X-Requested-With": "XMLHttpRequest",
   };
 
-  // Добавляем код родительского клуба, если он есть
   const clubCode = localStorage.getItem("parentClubCode");
   if (clubCode) {
     headers["X-Club-Code"] = clubCode;
     console.log("Adding club code to headers:", clubCode);
   }
 
-  // Добавляем токен авторизации, если нужно и он есть
   if (includeAuth) {
     const token = localStorage.getItem("token");
     if (token) {
@@ -29,7 +26,7 @@ const getHeaders = (includeAuth = true) => {
 export const api = {
   async getTeachers() {
     const response = await fetch(`${API_URL}/teachers`, {
-      headers: getHeaders(false), // Не требует авторизации
+      headers: getHeaders(false),
     });
     if (!response.ok) throw new Error("Failed to fetch teachers");
     return response.json();
@@ -91,29 +88,25 @@ export const api = {
 
   async incrementNewsViews(id) {
     try {
-      console.log(`Calling increment views API for news ID: ${id}`);
+      console.log(`📞 API: increment views for news ${id}`);
 
       const response = await fetch(
         `http://localhost:8000/api/v1/news/${id}/views`,
         {
           method: "POST",
-          headers: getHeaders(false),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
         },
       );
 
       if (!response.ok) {
-        console.log("Trying fallback: fetching news with auto-increment");
-        const newsResponse = await fetch(
-          `http://localhost:8000/api/v1/news/${id}`,
-          { headers: getHeaders(false) },
-        );
-        if (newsResponse.ok) {
-          return await newsResponse.json();
-        }
-        throw new Error("Failed to increment views");
+        throw new Error(`HTTP error ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("📞 API response:", data);
       return data;
     } catch (error) {
       console.error("Error incrementing views:", error);
@@ -132,7 +125,7 @@ export const api = {
   async addReview(reviewData) {
     const response = await fetch(`${API_URL}/reviews`, {
       method: "POST",
-      headers: getHeaders(true), // Требует авторизации
+      headers: getHeaders(true),
       body: JSON.stringify(reviewData),
     });
     if (!response.ok) throw new Error("Failed to add review");
@@ -290,7 +283,6 @@ export const api = {
           const errorData = JSON.parse(errorText);
           errorMessage = errorData.message || errorMessage;
         } catch (e) {
-          // Если не JSON, используем текст
           if (errorText) errorMessage = errorText;
         }
 
@@ -346,7 +338,6 @@ export const api = {
     }
   },
 
-  // Добавьте после createForumTopic
   async updateForumTopic(topicId, data) {
     const headers = getHeaders(true);
     console.log(`Updating topic ${topicId}:`, data);
@@ -688,9 +679,6 @@ export const api = {
     return data;
   },
 
-  // НОВЫЙ МЕТОД: обновление поста (ТОЛЬКО ОДИН РАЗ!)
-  // В api.js убедитесь, что метод возвращает правильные данные
-  // В api.js замените существующий метод updateForumPost на этот:
   async updateForumPost(topicId, postId, data) {
     const headers = getHeaders(true);
     console.log(`Updating post ${postId} in topic ${topicId}:`, data);
@@ -716,7 +704,6 @@ export const api = {
           const errorData = JSON.parse(errorText);
           errorMessage = errorData.message || errorMessage;
         } catch (e) {
-          // Если не JSON, используем текст
           if (errorText) errorMessage = errorText;
         }
 
@@ -752,7 +739,6 @@ export const api = {
     }
   },
 
-  // НОВЫЙ МЕТОД: блокировка пользователя
   async toggleUserBan(userId) {
     const token = localStorage.getItem("token");
     const response = await fetch(
@@ -776,7 +762,6 @@ export const api = {
     return response.json();
   },
 
-  // НОВЫЙ МЕТОД: получение списка пользователей
   async getUsers() {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_URL}/admin/users`, {

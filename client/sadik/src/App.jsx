@@ -42,7 +42,6 @@ function App() {
       <Route path="/admin/menu" element={<AdminMenu />} />
       <Route path="/admin/events" element={<AdminEventsPage />} />
 
-      {/* 404 route */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

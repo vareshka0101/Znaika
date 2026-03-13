@@ -345,7 +345,7 @@ const NavbarComponent = () => {
                         >
                           <FaUtensils className="me-2" /> Меню
                         </NavDropdown.Item>
-                        {/* Добавлен пункт Отзывы */}
+
                         <NavDropdown.Item
                           onClick={() => navigate("/admin/reviews")}
                         >

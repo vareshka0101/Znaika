@@ -102,7 +102,6 @@ const ForumPostActions = ({ post, topicId, onPostDeleted, onPostUpdated }) => {
         </Dropdown.Menu>
       </Dropdown>
 
-      {/* Модалка редактирования */}
       <Modal
         show={showEditModal}
         onHide={() => setShowEditModal(false)}
@@ -143,7 +142,6 @@ const ForumPostActions = ({ post, topicId, onPostDeleted, onPostUpdated }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Модалка подтверждения удаления */}
       <Modal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}

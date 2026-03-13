@@ -155,7 +155,7 @@
     transform: translateY(0);
 }
 
-/* МОДАЛЬНОЕ ОКНО - С БЕЛЫМ ФОНОМ */
+
 .galleryModal :global(.modal-content) {
     background: white !important;
     border: none !important;
@@ -252,7 +252,7 @@
     color: white;
 }
 
-/* Изображение в модальном окне - заполняет пространство */
+
 .galleryModal img {
     width: 100%;
     height: auto;
@@ -290,7 +290,7 @@
     box-shadow: 0 15px 40px rgba(255, 138, 92, 0.6);
 }
 
-/* МЕДИА-ЗАПРОСЫ */
+
 @media (max-width: 768px) {
     .galleryHeaderSection h1 {
         font-size: 2.5rem;

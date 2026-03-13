@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
 
 
-/* src/pages/HomePage.module.css */
+
 .heroSection {
   padding: 80px 0;
   background: linear-gradient(135deg, #fef2df 0%, #fef5e7 100%);
@@ -37,7 +37,7 @@
     transform: scale(1.02);
 }
 
-/* Category Circles */
+
 .categoryCircle {
     width: 120px;
     height: 120px;
@@ -72,7 +72,7 @@
     background: #f6abb6;
 }
 
-/* Background colors */
+
 .bgSoftGreen {
     background: #f0f7f6;
 }
@@ -81,7 +81,7 @@
     background: #f8f9fa;
 }
 
-/* List with checkmarks */
+
 .listCheck {
     list-style: none;
     padding: 0;
@@ -102,7 +102,7 @@
     font-size: 1.2rem;
 }
 
-/* Teacher images */
+
 .teacherImg {
     width: 200px;
     height: 200px;
@@ -116,7 +116,7 @@
     transform: scale(1.05);
 }
 
-/* Testimonials */
+
 .testimonialCarousel {
     padding: 20px 0 40px;
 }
@@ -352,7 +352,7 @@
     transform: translateX(5px);
 }
 
-/* Contact Form */
+
 .contactForm {
     max-width: 600px;
     margin: 0 auto;

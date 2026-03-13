@@ -134,7 +134,6 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          {/* Редактирование - доступно автору ИЛИ администратору */}
           {(isAdmin || isAuthor) && (
             <Dropdown.Item onClick={() => setShowEditModal(true)}>
               <FaEdit className="me-2" />
@@ -142,7 +141,6 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
             </Dropdown.Item>
           )}
 
-          {/* Администратор может закреплять и блокировать */}
           {isAdmin && (
             <>
               <Dropdown.Item onClick={handleTogglePin}>
@@ -165,10 +163,8 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
             </>
           )}
 
-          {/* Разделитель только если есть и редактирование, и удаление */}
           {(isAdmin || isAuthor) && isAdmin && <Dropdown.Divider />}
 
-          {/* Удаление темы - доступно автору ИЛИ администратору */}
           {(isAdmin || isAuthor) && (
             <Dropdown.Item
               onClick={() => setShowDeleteModal(true)}
@@ -181,7 +177,6 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
         </Dropdown.Menu>
       </Dropdown>
 
-      {/* Модалка редактирования */}
       <Modal
         show={showEditModal}
         onHide={() => setShowEditModal(false)}
@@ -235,7 +230,6 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Модалка подтверждения удаления */}
       <Modal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
@@ -266,7 +260,6 @@ const ForumTopicActions = ({ topic, onTopicDeleted, onTopicUpdated }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Модалка подтверждения блокировки */}
       <Modal
         show={showLockModal}
         onHide={() => setShowLockModal(false)}

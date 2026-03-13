@@ -1,7 +1,7 @@
 .actionsMenu {
     position: relative;
     z-index: 1000;
-    /* Увеличиваем z-index */
+
 }
 
 .actionsToggle {
@@ -24,19 +24,19 @@
 
 .actionsToggle::after {
     display: none !important;
-    /* Убираем стрелку Bootstrap */
+  
 }
 
-/* Стили для выпадающего меню */
+
 :global(.dropdown-menu) {
     z-index: 9999 !important;
-    /* Очень высокий z-index */
+ 
     position: absolute !important;
     will-change: transform;
-    /* Оптимизация для анимации */
+
 }
 
-/* Стили для пунктов меню */
+
 .deleteItem {
     color: #dc3545;
 }
@@ -46,18 +46,18 @@
     color: white;
 }
 
-/* Исправляем мигание при наведении */
+
 :global(.dropdown-item) {
     transition: background-color 0.2s ease, color 0.2s ease;
     backface-visibility: hidden;
-    /* Убираем мерцание */
+
     -webkit-font-smoothing: antialiased;
 }
 
 :global(.dropdown-menu.show) {
     display: block;
     animation: none !important;
-    /* Убираем анимацию появления */
+
     opacity: 1 !important;
     visibility: visible !important;
 }

@@ -8,7 +8,6 @@ import NewsModal from "../components/NewsModal";
 import { api } from "../services/api";
 import styles from "./NewsPage.module.css";
 
-// Мемоизированный компонент карточки новости
 const NewsCard = memo(({ item, onOpen }) => {
   const formatDate = useCallback((dateString) => {
     try {
@@ -103,33 +102,26 @@ const NewsPage = () => {
 
   const handleCloseModal = useCallback(() => {
     setShowModal(false);
-    // Не очищаем selectedNews сразу, чтобы избежать мигания
     setTimeout(() => {
       setSelectedNews(null);
     }, 300);
   }, []);
 
   const handleViewsUpdated = useCallback((updatedNews) => {
-    setNews((prevNews) => {
-      // Находим индекс обновленной новости
-      const index = prevNews.findIndex((item) => item.id === updatedNews.id);
-      if (index === -1) return prevNews;
+    console.log("🔄 NewsPage: views updated", updatedNews);
 
-      // Проверяем, действительно ли изменились просмотры
-      if (prevNews[index].views === updatedNews.views) {
-        return prevNews;
-      }
-
-      // Создаем новый массив только если есть изменения
-      const newNews = [...prevNews];
-      newNews[index] = updatedNews;
-      return newNews;
-    });
-
-    // Обновляем selectedNews только если это та же новость
-    setSelectedNews((prev) =>
-      prev?.id === updatedNews.id ? updatedNews : prev,
+    setNews((prevNews) =>
+      prevNews.map((item) => (item.id === updatedNews.id ? updatedNews : item)),
     );
+
+    setSelectedNews(updatedNews);
+
+    window.dispatchEvent(
+      new CustomEvent("newsViewsUpdated", {
+        detail: updatedNews,
+      }),
+    );
+    console.log("📢 Событие отправлено на главную");
   }, []);
 
   if (loading) {

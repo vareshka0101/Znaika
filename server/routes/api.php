@@ -41,12 +41,13 @@ Route::prefix('v1')->group(function () {
         Route::put('/forum/topics/{topicId}/posts/{postId}', [ForumController::class, 'updatePost']); // ДОБАВЛЕНО для обновления поста
         Route::delete('/forum/topics/{topicId}/posts/{postId}', [ForumController::class, 'deletePost']); // Удаление поста
 
-        // Новости
+
         Route::post('/news', [NewsController::class, 'store']);
         Route::put('/news/{id}', [NewsController::class, 'update']);
         Route::delete('/news/{id}', [NewsController::class, 'destroy']);
 
-        // Админские маршруты
+
+        // админка
         Route::prefix('admin')->group(function () {
             Route::get('/reviews', [ReviewController::class, 'adminIndex']);
             Route::get('/reviews/{id}', [ReviewController::class, 'adminShow']);
@@ -54,14 +55,13 @@ Route::prefix('v1')->group(function () {
             Route::delete('/reviews/{id}', [ReviewController::class, 'adminDestroy']);
             Route::patch('/reviews/{id}/approve', [ReviewController::class, 'toggleApproval']);
 
-            // Админские маршруты для форума (только специфичные админские функции)
+            //админка для форума
             Route::prefix('forum')->group(function () {
                 Route::patch('/topics/{id}/toggle-lock', [ForumController::class, 'toggleLock']);
                 Route::patch('/topics/{id}/toggle-pin', [ForumController::class, 'togglePin']);
-                // Обычные CRUD операции вынесены выше, чтобы были доступны авторам
             });
 
-            // Маршруты для мероприятий
+            //  для мероприятий
             Route::get('/events', [AdminEventController::class, 'index']);
             Route::get('/events/upcoming', [AdminEventController::class, 'getUpcoming']);
             Route::get('/events/archive', [AdminEventController::class, 'getArchive']);
@@ -73,7 +73,8 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    // Публичные маршруты
+    // всеобщие маршруты
+    Route::post('/news/{id}/views', [NewsController::class, 'incrementViews']);
     Route::get('/teachers', [TeacherController::class, 'index']);
     Route::get('/teachers/{id}', [TeacherController::class, 'show']);
     Route::get('/events', [EventController::class, 'index']);
@@ -113,7 +114,7 @@ Route::get('/test-mail', function () {
     }
 });
 
-// Добавьте в конец файла routes/api.php
+
 Route::get('/test-access', function (Request $request) {
     $token = $request->bearerToken();
     $user = $request->user();

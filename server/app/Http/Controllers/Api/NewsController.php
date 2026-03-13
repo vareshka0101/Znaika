@@ -60,7 +60,6 @@ class NewsController extends Controller
             return response()->json(['error' => 'Ошибка увеличения просмотров'], 500);
         }
     }
-
     public function store(Request $request)
     {
         try {

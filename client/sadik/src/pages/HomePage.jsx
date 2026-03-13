@@ -92,44 +92,32 @@ const HomePage = () => {
 
   const [allTestimonials, setAllTestimonials] = useState(fallbackTestimonials);
 
-  const newsData = [
-    {
-      id: 1,
-      title: "Преимущества игрового обучения для детей дошкольного возраста",
-      date: "2026-02-10",
-      image: "/public/images/новость1.jpg",
-      views: 245,
-      excerpt:
-        "Исследования показывают, что дети лучше усваивают материал через игру. В нашей статье рассказываем о методиках игрового обучения...",
-    },
-    {
-      id: 2,
-      title: "Создание безопасной и инклюзивной среды в детском саду",
-      date: "2026-03-15",
-      image: "/public/images/новость2.jpg",
-      views: 189,
-      excerpt:
-        "Как сделать детский сад комфортным для каждого ребенка, включая детей с особенностями развития...",
-    },
-    {
-      id: 3,
-      title: "Советы по питанию для здоровых перекусов",
-      date: "2026-02-22",
-      image: "/public/images/новость 3.jpg",
-      views: 312,
-      excerpt:
-        "Простые и полезные рецепты перекусов, которые понравятся детям и сэкономят время родителям...",
-    },
-    {
-      id: 4,
-      title: "Идеи для творческих проектов в детском саду",
-      date: "2026-03-26",
-      image: "/public/images/новость4.jpg",
-      views: 156,
-      excerpt:
-        "Вдохновляющие идеи для поделок и творческих занятий с детьми от 3 до 6 лет...",
-    },
-  ];
+  const [newsData, setNewsData] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(true);
+
+  useEffect(() => {
+    const handleNewsUpdate = (event) => {
+      const updatedNews = event.detail;
+      console.log(
+        "🏠 HomePage получила обновление:",
+        updatedNews.id,
+        "просмотров:",
+        updatedNews.views,
+      );
+
+      setNewsData((prevNews) =>
+        prevNews.map((item) =>
+          item.id === updatedNews.id
+            ? { ...item, views: updatedNews.views }
+            : item,
+        ),
+      );
+    };
+
+    window.addEventListener("newsViewsUpdated", handleNewsUpdate);
+    return () =>
+      window.removeEventListener("newsViewsUpdated", handleNewsUpdate);
+  }, []);
 
   const classesData = [
     {
@@ -232,26 +220,53 @@ const HomePage = () => {
     let error = "";
     switch (name) {
       case "parentName":
-        if (!value.trim()) error = "Введите ваше имя";
+        if (!value || !value.trim()) {
+          error = "Введите ваше имя";
+        } else if (value.trim().length < 2) {
+          error = "Имя должно содержать минимум 2 символа";
+        } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value.trim())) {
+          error = "Имя может содержать только буквы, пробелы и дефисы";
+        }
         break;
+
       case "childName":
-        if (!value.trim()) error = "Введите имя ребенка";
+        if (!value || !value.trim()) {
+          error = "Введите имя ребенка";
+        } else if (value.trim().length < 2) {
+          error = "Имя должно содержать минимум 2 символа";
+        } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value.trim())) {
+          error = "Имя может содержать только буквы, пробелы и дефисы";
+        }
         break;
+
       case "childAge":
-        if (!value) error = "Выберите возраст ребенка";
+        if (!value) {
+          error = "Выберите возраст ребенка";
+        }
         break;
+
       case "phone":
-        if (!value.trim()) error = "Введите номер телефона";
-        else if (!/^[+]?[0-9\s-()]{10,}$/.test(value))
-          error = "Введите корректный номер телефона";
+        if (!value || !value.trim()) {
+          error = "Введите номер телефона";
+        } else {
+          const cleanedPhone = value.replace(/[\s\-\(\)]/g, "");
+          if (!/^(\+7|8)?\d{10}$/.test(cleanedPhone)) {
+            error =
+              "Введите корректный номер телефона (например: +7 (999) 123-45-67)";
+          }
+        }
         break;
+
       case "email":
-        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           error = "Введите корректный email";
+        }
         break;
+
       default:
         break;
     }
+
     setFormErrors((prev) => ({ ...prev, [name]: error }));
     return error;
   };
@@ -275,30 +290,45 @@ const HomePage = () => {
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
 
-    const errors = {};
-    Object.keys(registrationForm).forEach((key) => {
-      if (
-        key === "parentName" ||
-        key === "childName" ||
-        key === "childAge" ||
-        key === "phone"
-      ) {
-        const error = validateField(key, registrationForm[key]);
-        if (error) errors[key] = error;
+    setTouchedFields({
+      parentName: true,
+      childName: true,
+      childAge: true,
+      phone: true,
+      email: false,
+    });
+
+    const newErrors = {};
+    const requiredFields = ["parentName", "childName", "childAge", "phone"];
+
+    requiredFields.forEach((field) => {
+      const error = validateField(field, registrationForm[field]);
+      if (error) {
+        newErrors[field] = error;
       }
     });
 
-    if (Object.keys(errors).length > 0) {
-      setTouchedFields({
-        parentName: true,
-        childName: true,
-        childAge: true,
-        phone: true,
-      });
+    if (registrationForm.email) {
+      const emailError = validateField("email", registrationForm.email);
+      if (emailError) {
+        newErrors.email = emailError;
+      }
+    }
+
+    setFormErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      const firstError = Object.values(newErrors)[0];
+      alert(`Пожалуйста, исправьте ошибку: ${firstError}`);
       return;
     }
 
+    setLoading(true);
+    setError("");
+
     try {
+      console.log("Отправка данных:", registrationForm);
+
       const response = await fetch(
         "http://localhost:8000/api/v1/registration",
         {
@@ -312,6 +342,7 @@ const HomePage = () => {
       );
 
       const data = await response.json();
+      console.log("Ответ от сервера:", data);
 
       if (response.ok) {
         alert("Спасибо за заявку! Мы свяжемся с вами в ближайшее время.");
@@ -328,11 +359,18 @@ const HomePage = () => {
         setFormErrors({});
         setShowRegistrationModal(false);
       } else {
-        alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
+        if (data.errors) {
+          const errorMessages = Object.values(data.errors).flat().join("\n");
+          alert(`Ошибка валидации:\n${errorMessages}`);
+        } else {
+          alert("Ошибка: " + (data.message || "Не удалось отправить заявку"));
+        }
       }
     } catch (error) {
       console.error("Ошибка:", error);
       alert("Ошибка соединения с сервером");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -352,6 +390,27 @@ const HomePage = () => {
     setShowRegistrationModal(true);
     setSimpleForm({ phone: "", name: "", message: "" });
   };
+
+  const fetchNews = async () => {
+    try {
+      setNewsLoading(true);
+      const response = await fetch("http://localhost:8000/api/v1/news");
+      if (response.ok) {
+        const data = await response.json();
+
+        setNewsData(data.slice(0, 4));
+        console.log("📥 Загружены реальные новости:", data.slice(0, 4));
+      }
+    } catch (error) {
+      console.error("Ошибка загрузки новостей:", error);
+    } finally {
+      setNewsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
 
   const handleAddReview = async (newReview) => {
     try {
@@ -729,39 +788,50 @@ const HomePage = () => {
           <h2 className="display-5 text-center mb-5" data-aos="fade-up">
             Новости и статьи
           </h2>
-          <Row className="g-4">
-            {newsData.map((news, index) => (
-              <Col
-                key={news.id}
-                md={6}
-                lg={3}
-                data-aos="flip-up"
-                data-aos-delay={100 + index * 50}
-              >
-                <div className={styles.newsCard}>
-                  <div className={styles.newsImageContainer}>
-                    <img
-                      src={news.image}
-                      className={styles.newsImage}
-                      alt={news.title}
-                      loading="lazy"
-                    />
+
+          {newsLoading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Загрузка новостей...</span>
+              </div>
+            </div>
+          ) : (
+            <Row className="g-4">
+              {newsData.map((news, index) => (
+                <Col
+                  key={news.id}
+                  md={6}
+                  lg={3}
+                  data-aos="flip-up"
+                  data-aos-delay={100 + index * 50}
+                >
+                  <div className={styles.newsCard}>
+                    <div className={styles.newsImageContainer}>
+                      <img
+                        src={news.image || "/images/news-placeholder.jpg"}
+                        className={styles.newsImage}
+                        alt={news.title}
+                        onError={(e) => {
+                          e.target.src = "/images/news-placeholder.jpg";
+                        }}
+                      />
+                    </div>
+                    <p className={styles.newsDate}>
+                      <FaCalendarAlt className="me-1" />
+                      {formatDate(news.date)}
+                    </p>
+                    <h4>{news.title}</h4>
+                    <p className={styles.newsExcerpt}>{news.excerpt}</p>
+                    <div className={styles.newsCardFooter}>
+                      <span className={styles.newsViews}>
+                        <FaEye /> {news.views}
+                      </span>
+                    </div>
                   </div>
-                  <p className={styles.newsDate}>
-                    <FaCalendarAlt className="me-1" />
-                    {formatDate(news.date)}
-                  </p>
-                  <h4>{news.title}</h4>
-                  <p className={styles.newsExcerpt}>{news.excerpt}</p>
-                  <div className={styles.newsCardFooter}>
-                    <span className={styles.newsViews}>
-                      <FaEye /> {news.views}
-                    </span>
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
+                </Col>
+              ))}
+            </Row>
+          )}
 
           <div className="text-center mt-5" data-aos="fade-up">
             <Button
@@ -773,107 +843,8 @@ const HomePage = () => {
               ЧИТАЙТЕ ВСЕ НОВОСТИ
             </Button>
           </div>
+
           <hr className="my-5" />
-
-          <Row className="justify-content-center">
-            <Col
-              md={8}
-              className="text-center"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <h2 className="display-5 mb-4">
-                Как записать ребенка на занятия?
-              </h2>
-              <p className="fs-5">
-                Позвоните: <strong>+7 (495) 666-33-99</strong> или заполните
-                форму ниже.
-              </p>
-
-              <div
-                className="mb-4"
-                style={{ maxWidth: "600px", margin: "0 auto" }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    paddingBottom: "56.25%",
-                  }}
-                >
-                  <video
-                    controls
-                    className="rounded-5 shadow position-absolute top-0 start-0 w-100 h-100"
-                    poster="/public/images/11.jpg"
-                    style={{ objectFit: "cover" }}
-                  >
-                    <source
-                      src="/public/images/inner-kids-party-rock-d6jtutis_UvBev9Us.mp4"
-                      type="video/mp4"
-                    />
-                    Ваш браузер не поддерживает видео.
-                  </video>
-                </div>
-              </div>
-
-              <Form
-                className={styles.contactForm}
-                onSubmit={handleSimpleFormSubmit}
-                noValidate
-              >
-                <Row className="g-3">
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        placeholder="Контактный телефон *"
-                        className="rounded-pill"
-                        value={simpleForm.phone}
-                        onChange={handleSimpleFormChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя *"
-                        className="rounded-pill"
-                        value={simpleForm.name}
-                        onChange={handleSimpleFormChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12}>
-                    <Form.Group>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        rows={3}
-                        placeholder="Ваше сообщение"
-                        className="rounded-4"
-                        value={simpleForm.message}
-                        onChange={handleSimpleFormChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12}>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="px-5 py-2 rounded-pill"
-                    >
-                      ОТПРАВИТЬ
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </Row>
         </Container>
       </section>
 

@@ -1,78 +1,83 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { api } from "../services/api";
-import styles from "./NewsModal.module.css";
 
-const NewsModal = memo(({ show, onHide, news, onViewsUpdated }) => {
+const NewsModal = ({ show, onHide, news, onViewsUpdated }) => {
   const [currentNews, setCurrentNews] = useState(news);
   const hasIncrementedRef = useRef(false);
-  const modalIdRef = useRef(null);
+  const currentNewsIdRef = useRef(null);
 
-  // Сбрасываем состояние при смене новости
   useEffect(() => {
     if (news) {
+      console.log(
+        "📰 Modal получил новость:",
+        news.id,
+        "просмотров:",
+        news.views,
+      );
       setCurrentNews(news);
-      // Сбрасываем флаг только для новой новости
-      if (modalIdRef.current !== news.id) {
+
+      if (currentNewsIdRef.current !== news.id) {
+        console.log("🔄 Новая новость, сбрасываем флаг");
         hasIncrementedRef.current = false;
-        modalIdRef.current = news.id;
+        currentNewsIdRef.current = news.id;
       }
     }
   }, [news]);
 
-  // Увеличиваем просмотры только один раз при открытии
   useEffect(() => {
-    // Проверяем все условия для предотвращения множественных вызовов
-    if (!show || !currentNews?.id || hasIncrementedRef.current) {
+    if (!show || !currentNews?.id) return;
+
+    if (hasIncrementedRef.current) {
+      console.log("⏭️ Просмотры уже увеличены для этой новости, пропускаем");
       return;
     }
 
-    // Проверяем sessionStorage
     const viewedNews = JSON.parse(sessionStorage.getItem("viewedNews") || "{}");
-
-    if (viewedNews[currentNews.id]) {
+    if (viewedNews[`news_${currentNews.id}`]) {
+      console.log("⏭️ Новость уже просмотрена в этой сессии");
       hasIncrementedRef.current = true;
       return;
     }
 
-    // Увеличиваем просмотры
     const incrementViews = async () => {
       try {
-        console.log(`Incrementing views for news ID: ${currentNews.id}`);
+        console.log("📊 Увеличиваем просмотры для новости:", currentNews.id);
 
-        const updatedNews = await api.incrementNewsViews(currentNews.id);
+        const response = await fetch(
+          `http://localhost:8000/api/v1/news/${currentNews.id}/views`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
-        if (updatedNews) {
-          // Обновляем локальное состояние
-          setCurrentNews(updatedNews);
+        const data = await response.json();
+        console.log("📊 Ответ от сервера:", data);
 
-          // Уведомляем родителя
-          if (onViewsUpdated) {
-            onViewsUpdated(updatedNews);
-          }
-
-          // Сохраняем в sessionStorage
-          viewedNews[currentNews.id] = true;
-          sessionStorage.setItem("viewedNews", JSON.stringify(viewedNews));
+        if (data.success && data.data) {
+          console.log("✅ Просмотры увеличены:", data.data.views);
 
           hasIncrementedRef.current = true;
 
-          console.log(`Views incremented to: ${updatedNews.views}`);
+          viewedNews[`news_${currentNews.id}`] = true;
+          sessionStorage.setItem("viewedNews", JSON.stringify(viewedNews));
+
+          setCurrentNews(data.data);
+
+          if (onViewsUpdated) {
+            onViewsUpdated(data.data);
+          }
         }
       } catch (error) {
-        console.error("Error incrementing views:", error);
-        // В случае ошибки все равно помечаем как просмотренное, чтобы не спамить
-        viewedNews[currentNews.id] = true;
-        sessionStorage.setItem("viewedNews", JSON.stringify(viewedNews));
-        hasIncrementedRef.current = true;
+        console.error("❌ Ошибка:", error);
       }
     };
 
-    // Запускаем с задержкой
-    const timer = setTimeout(incrementViews, 500);
-
-    return () => clearTimeout(timer);
-  }, [show, currentNews?.id, onViewsUpdated]); // Убрали currentNews из зависимостей
+    incrementViews();
+  }, [show, currentNews?.id, onViewsUpdated]);
 
   if (!currentNews) return null;
 
@@ -85,27 +90,32 @@ const NewsModal = memo(({ show, onHide, news, onViewsUpdated }) => {
     }
   };
 
-  const handleClose = () => {
-    onHide();
-  };
-
   return (
-    <Modal
-      show={show}
-      onHide={handleClose}
-      size="lg"
-      centered
-      scrollable
-      dialogClassName={styles.newsModal}
-    >
-      <Modal.Header closeButton className={styles.newsModalHeader}>
-        <Modal.Title as="h3" className={styles.modalNewsTitle}>
+    <Modal show={show} onHide={onHide} size="lg" centered scrollable>
+      <Modal.Header
+        closeButton
+        style={{
+          background: "linear-gradient(135deg, #58b4ae 0%, #3a9b95 100%)",
+          color: "white",
+          borderBottom: "none",
+        }}
+      >
+        <Modal.Title as="h3" style={{ color: "white" }}>
           {currentNews.title}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className={styles.modalNewsContent}>
-          <div className={styles.modalNewsMeta}>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              color: "#666",
+              marginBottom: "1.5rem",
+              paddingBottom: "1rem",
+              borderBottom: "1px solid #eee",
+            }}
+          >
             <span>📅 {formatDate(currentNews.date)}</span>
             <span>👁️ {currentNews.views || 0} просмотров</span>
           </div>
@@ -113,8 +123,13 @@ const NewsModal = memo(({ show, onHide, news, onViewsUpdated }) => {
           <img
             src={currentNews.image || "/images/news-placeholder.jpg"}
             alt={currentNews.title}
-            className={styles.modalNewsImage}
-            loading="lazy"
+            style={{
+              width: "100%",
+              borderRadius: "15px",
+              marginBottom: "1.5rem",
+              maxHeight: "400px",
+              objectFit: "cover",
+            }}
             onError={(e) => {
               e.target.src = "/images/news-placeholder.jpg";
             }}
@@ -128,10 +143,28 @@ const NewsModal = memo(({ show, onHide, news, onViewsUpdated }) => {
             }}
           />
 
-          {currentNews.tags && currentNews.tags.length > 0 && (
-            <div className={styles.newsTags}>
+          {currentNews.tags?.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.5rem",
+                marginTop: "2rem",
+                paddingTop: "1.5rem",
+                borderTop: "1px solid #eee",
+              }}
+            >
               {currentNews.tags.map((tag, idx) => (
-                <span key={idx} className={styles.newsTag}>
+                <span
+                  key={idx}
+                  style={{
+                    background: "#f0f0f0",
+                    color: "#666",
+                    padding: "0.3rem 1rem",
+                    borderRadius: "20px",
+                    fontSize: "0.85rem",
+                  }}
+                >
                   #{tag}
                 </span>
               ))}
@@ -139,19 +172,13 @@ const NewsModal = memo(({ show, onHide, news, onViewsUpdated }) => {
           )}
         </div>
       </Modal.Body>
-      <Modal.Footer className={styles.newsModalFooter}>
-        <Button
-          variant="secondary"
-          onClick={handleClose}
-          className="rounded-pill"
-        >
+      <Modal.Footer style={{ borderTop: "1px solid #eee" }}>
+        <Button variant="secondary" onClick={onHide} className="rounded-pill">
           Закрыть
         </Button>
       </Modal.Footer>
     </Modal>
   );
-});
-
-NewsModal.displayName = "NewsModal";
+};
 
 export default NewsModal;

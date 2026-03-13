@@ -1,4 +1,4 @@
-/* src/components/NewsModal.module.css */
+
 .newsModal {
     border-radius: 20px;
     overflow: hidden;
@@ -90,7 +90,7 @@
     padding: 1rem 1.5rem;
 }
 
-/* client/sadik/src/components/NewsModal.module.css */
+
 
 .newsModal {
     border-radius: 20px;
@@ -100,7 +100,7 @@
 .newsModal :global(.modal-content) {
     border: none;
     animation: none;
-    /* Убираем анимацию */
+   
 }
 
 .newsModalHeader {
